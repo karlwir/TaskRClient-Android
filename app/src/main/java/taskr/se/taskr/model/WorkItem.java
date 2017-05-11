@@ -8,23 +8,20 @@ public class WorkItem {
 
     private final String title;
     private final String description;
-    private ItemStatus status;
+    private String status;
 
-    public WorkItem(String title, String description, ItemStatus status) {
+    public WorkItem(String title, String description, String status) {
         this.title = title;
         this.description = description;
         this.status = status;
     }
 
-    public void setStatus(ItemStatus status) {
-        this.status = status;
-    }
 
     public String getDescription() {
         return description;
     }
 
-    public ItemStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
@@ -32,7 +29,4 @@ public class WorkItem {
         return title;
     }
 
-    public enum ItemStatus {
-        UNSTARTED,STARTED,DONE
-    }
 }
