@@ -8,6 +8,10 @@ import java.util.List;
 
 public interface WorkItemRepository {
     // List<WorkItem> getWorkItems();
+    // List<WorkItem> getMyWorkItems();
+    // List<WorkItem> getUnstartedWorkItems();
+    // List<WorkItem> getStartedWorkItems();
+    // List<WorkItem> getDoneWorkItems();
     // WorkItem getWorkItem(String itemKey);
     // WorkItem addOrUpdateWorkItem(WorkItem workItem);
     // void deleteWorkItem(String itemKey);
