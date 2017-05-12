@@ -43,4 +43,7 @@ public class WorkItem {
         return title;
     }
 
+    public String getItemKey() {
+        return itemKey;
+    }
 }
