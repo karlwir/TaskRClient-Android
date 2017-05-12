@@ -46,4 +46,12 @@ public class WorkItem {
     public String getItemKey() {
         return itemKey;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public boolean hasBeenPersisted() {
+        return id != DEFAULT_ID;
+    }
 }
