@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
     // This method will be removed later
     private void fakeData() {
-        if(getWorkItems().size() < 5)  {
+        if(getWorkItems().size() < 0)  {
             for(int i = 0; i < 12; i++) {
                 WorkItem workItem = new WorkItem("Title" + i, "Description", "UNSTARTED");
                 addOrUpdateWorkItem(workItem);
@@ -72,17 +71,18 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
     @Override
     public List<WorkItem> getDoneWorkItems() {
-        return queryWorkItems(WorkItemsEntry.COLUMN_NAME_STATUS + " = ?", new String[]{"DONE"});
+        return queryWorkItems(WorkItemsEntry.COLUMN_NAME_STATUS + " = ?" , new String[]{"DONE"});
     }
 
     @Override
     public List<WorkItem> getMyWorkItems() {
+        // TODO
         return null;
     }
 
     @Override
     public WorkItem getWorkItem(long id) {
-        return null;
+        return queryWorkItem(WorkItemsEntry._ID + " = ?", new String[]{String.valueOf(id)});
     }
 
     @Override
@@ -100,8 +100,8 @@ public class WorkItemRepositorySql implements WorkItemRepository {
     }
 
     @Override
-    public void deleteWorkItem(WorkItem workItem) {
-
+    public void removeWorkItem(WorkItem workItem) {
+        database.delete(WorkItemsEntry.TABLE_NAME, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(workItem.getId()) });
     }
 
     private ContentValues getContentValues(WorkItem workItem) {
@@ -115,7 +115,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
     }
 
     private List<WorkItem> queryWorkItems(String where, String[] whereArg) {
-//        Log.d("TAG", whereArg.toString());
         Cursor cursor = database.query(
                 WorkItemsEntry.TABLE_NAME,
                 null,
@@ -127,26 +126,51 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         );
 
         WorkItemCursorWrapper workItemCursorWrapper = new WorkItemCursorWrapper(cursor);
-
         List<WorkItem> workItems = new ArrayList<>();
-        if(cursor.getCount() > 0) {
+
+        if(workItemCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
                 workItems.add(workItemCursorWrapper.getWorkItem());
             }
         }
 
+        cursor.close();
         workItemCursorWrapper.close();
 
         return workItems;
     }
 
+    private WorkItem queryWorkItem(String where, String[] whereArg) {
+        Cursor cursor = database.query(
+                WorkItemsEntry.TABLE_NAME,
+                null,
+                where,
+                whereArg,
+                null,
+                null,
+                null
+        );
+
+        WorkItemCursorWrapper workItemCursorWrapper = new WorkItemCursorWrapper(cursor);
+        WorkItem workItem = null;
+
+        if(workItemCursorWrapper.getCount() > 0) {
+            workItem = workItemCursorWrapper.getFirstWorkItem();
+        }
+        cursor.close();
+        workItemCursorWrapper.close();
+
+        return workItem;
+    }
+
+
     private class WorkItemCursorWrapper extends CursorWrapper {
 
-        public WorkItemCursorWrapper(Cursor cursor) {
+        WorkItemCursorWrapper(Cursor cursor) {
             super(cursor);
         }
 
-        public WorkItem getWorkItem() {
+        WorkItem getWorkItem() {
             long id = getLong(getColumnIndexOrThrow(WorkItemsEntry._ID));
             String itemKey = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_ITEMKEY));
             String title = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_TITLE));
@@ -156,7 +180,7 @@ public class WorkItemRepositorySql implements WorkItemRepository {
             return new WorkItem(id, itemKey, title, description, status);
         }
 
-        public WorkItem getFirstWorkItem() {
+        WorkItem getFirstWorkItem() {
             moveToFirst();
             return getWorkItem();
         }
