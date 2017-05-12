@@ -11,8 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import taskr.se.taskr.R;
 import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.repository.WorkItemRepository;
+import taskr.se.taskr.repository.WorkItemRepositorySql;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,12 +35,8 @@ public class ItemListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
-        // Dummy data
-        List<WorkItem> items = new ArrayList<>();
-        for(int i = 0; i < 20; i++) {
-            WorkItem workItem = new WorkItem("Title" + i, "Description", "Status");
-            items.add(workItem);
-        }
+        WorkItemRepository workItemRepository = WorkItemRepositorySql.getInstance(getContext());
+        List<WorkItem> items = workItemRepository.getWorkItems();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new ItemListAdapter(items));
