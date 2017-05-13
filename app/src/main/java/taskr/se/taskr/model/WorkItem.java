@@ -54,4 +54,6 @@ public class WorkItem {
     public boolean hasBeenPersisted() {
         return id != DEFAULT_ID;
     }
+
+
 }

@@ -36,7 +36,7 @@ public class ItemListFragment extends Fragment {
 
         // Dummy data
         List<WorkItem> items = new ArrayList<>();
-        for(int i = 0; i < 20; i++) {
+            for(int i = 0; i < 20; i++) {
             WorkItem workItem = new WorkItem("Title" + i, "Description", "Status");
             items.add(workItem);
         }
