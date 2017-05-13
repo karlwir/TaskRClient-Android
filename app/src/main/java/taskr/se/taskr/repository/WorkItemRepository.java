@@ -16,5 +16,5 @@ public interface WorkItemRepository {
      List<WorkItem> getMyWorkItems();
      WorkItem getWorkItem(long id);
      long addOrUpdateWorkItem(WorkItem workItem);
-     void deleteWorkItem(WorkItem workItem);
+     void removeWorkItem(WorkItem workItem);
 }
