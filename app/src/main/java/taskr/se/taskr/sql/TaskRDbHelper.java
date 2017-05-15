@@ -12,7 +12,7 @@ import taskr.se.taskr.sql.TaskRDbContract.*;
 
 public class TaskRDbHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "taskr.db";
-    private static final int DB_VERSION = 7;
+    private static final int DB_VERSION = 9;
     private static TaskRDbHelper instance;
 
     private static final String CREATE_TABLE_WORKITEMS =

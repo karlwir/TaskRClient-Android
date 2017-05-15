@@ -21,4 +21,5 @@ public interface WorkItemRepository {
     void removeWorkItem(WorkItem workItem);
     void assignWorkItem(WorkItem workItem, User user);
     void unAssignWorkItem(WorkItem workItem, User user);
+    void syncWorkItems(List<WorkItem> workItems);
 }

@@ -7,7 +7,7 @@ import java.util.Set;
  */
 
 public class WorkItem {
-    private static final long DEFAULT_ID = -1;
+    private static final long DEFAULT_ID = 0;
     private static final String DEFAULT_ITEMKEY = null;
 
     private final long id;
@@ -50,5 +50,11 @@ public class WorkItem {
 
     public boolean hasBeenPersisted() {
         return id != DEFAULT_ID;
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format("Workitem: %s, %s, %s, %s, %s", id, title, description, status, itemKey);
     }
 }

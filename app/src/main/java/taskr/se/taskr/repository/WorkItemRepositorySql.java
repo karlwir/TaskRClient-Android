@@ -36,25 +36,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
     private WorkItemRepositorySql(Context context) {
         database = TaskRDbHelper.getInstance(context).getWritableDatabase();
-        fakeData(); // creates som fake data if db is empty
-    }
-
-    // This method will be removed later
-    private void fakeData() {
-        if(getWorkItems().size() == 0)  {
-            for(int i = 0; i < 12; i++) {
-                WorkItem workItem = new WorkItem("Title" + i, "Description", "UNSTARTED");
-                addOrUpdateWorkItem(workItem);
-            }
-            for(int i = 0; i < 8; i++) {
-                WorkItem workItem = new WorkItem("Title" + i, "Description", "STARTED");
-                addOrUpdateWorkItem(workItem);
-            }
-            for(int i = 0; i < 7; i++) {
-                WorkItem workItem = new WorkItem("Title" + i, "Description", "DONE");
-                addOrUpdateWorkItem(workItem);
-            }
-        }
     }
 
     @Override
@@ -148,6 +129,39 @@ public class WorkItemRepositorySql implements WorkItemRepository {
             database.delete(UserWorkItemEntry.TABLE_NAME, UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
                     " = ? AND " + UserWorkItemEntry.COLUMN_NAME_USERID + "= ?", new String[] { String.valueOf(workItem.getId()), String.valueOf(user.getId()) });
         }
+    }
+
+    @Override
+    public void syncWorkItems(List<WorkItem> workItemsServer) {
+        List<WorkItem> workItemsLocal = getWorkItems();
+        for(WorkItem workItem : workItemsServer) {
+            WorkItem persistedVersion = getByItemKey(workItem.getItemKey());
+            if(persistedVersion == null) {
+                addOrUpdateWorkItem(workItem);
+            }
+            else {
+                ContentValues cv = getContentValues(workItem);
+                database.update(WorkItemsEntry.TABLE_NAME, cv, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(persistedVersion.getId()) });
+            }
+        }
+        if(workItemsLocal.size() > workItemsServer.size()) {
+            List<WorkItem> dontRemove = new ArrayList<>();
+            for (WorkItem workItemLocal : workItemsLocal) {
+                for(WorkItem workItemServer: workItemsServer) {
+                    if (workItemLocal.getItemKey().equals(workItemServer.getItemKey())) {
+                        dontRemove.add(workItemLocal);
+                    }
+                }
+            }
+            workItemsLocal.removeAll(dontRemove);
+            for (WorkItem workItemLocal : workItemsLocal) {
+                removeWorkItem(workItemLocal);
+            }
+        }
+    }
+
+    private WorkItem getByItemKey(String itemKey) {
+        return queryWorkItem(WorkItemsEntry.COLUMN_NAME_ITEMKEY + " = ?", new String[]{itemKey});
     }
 
     private ContentValues getContentValues(WorkItem workItem) {
