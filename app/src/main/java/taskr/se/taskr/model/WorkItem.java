@@ -15,23 +15,17 @@ public class WorkItem {
     private final String title;
     private final String description;
     private String status;
-    private Set<User> users;
 
-    public WorkItem(long id, String itemKey, String title, String description, String status, Set<User> users) {
+    public WorkItem(long id, String itemKey, String title, String description, String status) {
         this.id = id;
         this.itemKey = itemKey;
         this.title = title;
         this.description = description;
         this.status = status;
-        this.users = users;
-    }
-
-    public WorkItem(String title, String description, String status, Set<User> users) {
-        this(DEFAULT_ID, DEFAULT_ITEMKEY, title, description, status, users);
     }
 
     public WorkItem(String title, String description, String status) {
-        this(DEFAULT_ID, DEFAULT_ITEMKEY, title, description, status, null);
+        this(DEFAULT_ID, DEFAULT_ITEMKEY, title, description, status);
     }
 
     public String getDescription() {
