@@ -9,18 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import taskr.se.taskr.R;
-import taskr.se.taskr.home.HomeActivityContract.Presenter;
 
-public class HomeActivity extends AppCompatActivity implements HomeActivityContract.View {
+public class HomeActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context) {
         return new Intent(context, HomeActivity.class);
-    }
-
-    private Presenter presenter;
-
-    public HomeActivity() {
-        this.presenter = new HomeActivityPresenter();
     }
 
     @Override
