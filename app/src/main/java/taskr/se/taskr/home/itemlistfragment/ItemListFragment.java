@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +39,21 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
         int position = FragmentPagerItem.getPosition(getArguments());
-        presenter = new ItemListPresenterImpl(getContext(), position);
+        presenter = new ItemListPresenterImpl(this, position);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateAdapter();
+    }
+
+    @Override
+    public void navigateToDetailView(long id) {
+        Intent intent = ItemDetailActivity.createIntent(getContext());
+        intent.putExtra("id", id);
+        startActivity(intent);
+    }
+
+    @Override
+    public void updateAdapter() {
         ItemListAdapter adapter = new ItemListAdapter(presenter.getItems());
         adapter.setOnItemClickedListener(new Presenter.OnItemClickedListener() {
             @Override
@@ -52,13 +63,6 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
             }
         });
         recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void navigateToDetailView(long id) {
-        Intent intent = ItemDetailActivity.createIntent(getContext());
-        intent.putExtra("id", id);
-        startActivity(intent);
     }
 
     private static class ItemListAdapter extends RecyclerView.Adapter<ItemListViewHolder> {
