@@ -40,7 +40,7 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
     // This method will be removed later
     private void fakeData() {
-        if(getWorkItems().size() < 0)  {
+        if(getWorkItems().size() == 0)  {
             for(int i = 0; i < 12; i++) {
                 WorkItem workItem = new WorkItem("Title" + i, "Description", "UNSTARTED");
                 addOrUpdateWorkItem(workItem);
