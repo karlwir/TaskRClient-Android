@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import taskr.se.taskr.R;
+import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 
 /**
  * Created by Jacob on 2017-05-11.
