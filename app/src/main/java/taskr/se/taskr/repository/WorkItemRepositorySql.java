@@ -27,7 +27,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         if(instance == null) {
             instance = new WorkItemRepositorySql(context);
         }
-
         return instance;
     }
 
@@ -163,7 +162,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         return workItem;
     }
 
-
     private class WorkItemCursorWrapper extends CursorWrapper {
 
         WorkItemCursorWrapper(Cursor cursor) {
@@ -177,7 +175,7 @@ public class WorkItemRepositorySql implements WorkItemRepository {
             String description = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_DESCRIPTION));
             String status = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_STATUS));
 
-            return new WorkItem(id, itemKey, title, description, status);
+            return new WorkItem(id, itemKey, title, description, status, null);
         }
 
         WorkItem getFirstWorkItem() {
