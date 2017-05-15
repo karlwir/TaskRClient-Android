@@ -1,6 +1,7 @@
 package taskr.se.taskr.home;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -43,6 +44,7 @@ public class ItemListFragmentContainer extends Fragment {
                 .add("STARTED", ItemListFragment.class)
                 .add("DONE", ItemListFragment.class)
                 .add("MY TASKS", ItemListFragment.class).create());
+
         pager.setAdapter(pagerAdapter);
 
         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.view_pager_tab);
