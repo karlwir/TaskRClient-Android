@@ -1,12 +1,16 @@
 package taskr.se.taskr.repository;
 
+import java.util.List;
+
+import taskr.se.taskr.model.User;
+
 /**
  * Created by kawi01 on 2017-05-11.
  */
 
 public interface UserRepository {
-    // List<User> getUsers();
-    // User getUser(String itemKey);
-    // User addOrUpdateUser(User user);
-    // void deleteUser(String itemKey);
+     List<User> getUsers();
+     User getUser(long id);
+     long addOrUpdateUser(User user);
+     void removeUser(User user);
 }

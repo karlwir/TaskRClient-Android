@@ -1,5 +1,7 @@
 package taskr.se.taskr.model;
 
+import java.util.Set;
+
 /**
  * Created by Kevin on 2017-05-11.
  */
@@ -23,13 +25,8 @@ public class WorkItem {
     }
 
     public WorkItem(String title, String description, String status) {
-        this.id = DEFAULT_ID;
-        this.itemKey = DEFAULT_ITEMKEY;
-        this.title = title;
-        this.description = description;
-        this.status = status;
+        this(DEFAULT_ID, DEFAULT_ITEMKEY, title, description, status);
     }
-
 
     public String getDescription() {
         return description;

@@ -18,4 +18,18 @@ public class TaskRDbContract {
         public static final String COLUMN_NAME_STATUS = "status";
     }
 
+    public static class UsersEntry implements BaseColumns {
+        public static final String TABLE_NAME = "users";
+        public static final String COLUMN_NAME_ITEMKEY = "itemkey";
+        public static final String COLUMN_NAME_FIRSTNAME = "firstname";
+        public static final String COLUMN_NAME_LASTNAME = "lastname";
+        public static final String COLUMN_NAME_USERNAME = "username";
+    }
+
+    public static class UserWorkItemEntry implements BaseColumns {
+        public static final String TABLE_NAME = "user_workitem";
+        public static final String COLUMN_NAME_USERID = "user_id";
+        public static final String COLUMN_NAME_WORKITEMID = "workitem_id";
+    }
+
 }

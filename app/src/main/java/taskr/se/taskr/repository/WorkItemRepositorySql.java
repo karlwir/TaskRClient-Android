@@ -5,13 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.sql.TaskRDbContract;
 import taskr.se.taskr.sql.TaskRDbHelper;
 import taskr.se.taskr.sql.TaskRDbContract.WorkItemsEntry;
+import taskr.se.taskr.sql.TaskRDbContract.UserWorkItemEntry;
 
 
 /**
@@ -27,7 +31,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         if(instance == null) {
             instance = new WorkItemRepositorySql(context);
         }
-
         return instance;
     }
 
@@ -38,7 +41,7 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
     // This method will be removed later
     private void fakeData() {
-        if(getWorkItems().size() < 0)  {
+        if(getWorkItems().size() == 0)  {
             for(int i = 0; i < 12; i++) {
                 WorkItem workItem = new WorkItem("Title" + i, "Description", "UNSTARTED");
                 addOrUpdateWorkItem(workItem);
@@ -81,6 +84,31 @@ public class WorkItemRepositorySql implements WorkItemRepository {
     }
 
     @Override
+    public List<WorkItem> getWorkItemsByUser(User user) {
+
+        String query =
+                "SELECT * FROM " + WorkItemsEntry.TABLE_NAME + " INNER JOIN " +
+                        UserWorkItemEntry.TABLE_NAME + " ON " +
+                        WorkItemsEntry.TABLE_NAME + "." + WorkItemsEntry._ID + "="  + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
+                        " WHERE " + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_USERID + "=" + String.valueOf(user.getId()) + ";";
+
+
+        Cursor cursor = database.rawQuery(query, null);
+        WorkItemCursorWrapper workItemCursorWrapper = new WorkItemCursorWrapper(cursor);
+        List<WorkItem> workItems = new ArrayList<>();
+
+        if(workItemCursorWrapper.getCount() > 0) {
+            while(cursor.moveToNext()) {
+                workItems.add(workItemCursorWrapper.getWorkItem());
+            }
+        }
+
+        workItemCursorWrapper.close();
+
+        return workItems;
+    }
+
+    @Override
     public WorkItem getWorkItem(long id) {
         return queryWorkItem(WorkItemsEntry._ID + " = ?", new String[]{String.valueOf(id)});
     }
@@ -102,6 +130,24 @@ public class WorkItemRepositorySql implements WorkItemRepository {
     @Override
     public void removeWorkItem(WorkItem workItem) {
         database.delete(WorkItemsEntry.TABLE_NAME, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(workItem.getId()) });
+    }
+
+    @Override
+    public void assignWorkItem(WorkItem workItem, User user) {
+        if (workItem.hasBeenPersisted() && user.hasBeenPersisted()) {
+            ContentValues cv = new ContentValues();
+            cv.put(UserWorkItemEntry.COLUMN_NAME_WORKITEMID, workItem.getId());
+            cv.put(UserWorkItemEntry.COLUMN_NAME_USERID, user.getId());
+            database.insert(UserWorkItemEntry.TABLE_NAME, null, cv);
+        }
+    }
+
+    @Override
+    public void unAssignWorkItem(WorkItem workItem, User user) {
+        if (workItem.hasBeenPersisted() && user.hasBeenPersisted()) {
+            database.delete(UserWorkItemEntry.TABLE_NAME, UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
+                    " = ? AND " + UserWorkItemEntry.COLUMN_NAME_USERID + "= ?", new String[] { String.valueOf(workItem.getId()), String.valueOf(user.getId()) });
+        }
     }
 
     private ContentValues getContentValues(WorkItem workItem) {
@@ -134,7 +180,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
             }
         }
 
-        cursor.close();
         workItemCursorWrapper.close();
 
         return workItems;
@@ -157,12 +202,10 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         if(workItemCursorWrapper.getCount() > 0) {
             workItem = workItemCursorWrapper.getFirstWorkItem();
         }
-        cursor.close();
         workItemCursorWrapper.close();
 
         return workItem;
     }
-
 
     private class WorkItemCursorWrapper extends CursorWrapper {
 
