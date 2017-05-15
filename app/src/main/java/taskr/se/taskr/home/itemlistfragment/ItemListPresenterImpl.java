@@ -15,14 +15,37 @@ import java.util.List;
 public class ItemListPresenterImpl implements ItemListContract.Presenter {
 
     private List<WorkItem> items;
+    private final WorkItemRepository workItemRepository;
 
-    public ItemListPresenterImpl(Context context) {
-        WorkItemRepository workItemRepository = WorkItemRepositorySql.getInstance(context);
-        items = workItemRepository.getWorkItems();
+    public ItemListPresenterImpl(Context context, int position) {
+        workItemRepository = WorkItemRepositorySql.getInstance(context);
+        onPositionChange(position);
     }
 
     @Override
     public List<WorkItem> getItems() {
-        return new ArrayList<>(items);
+        if(items != null) return new ArrayList<>(items);
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void onPositionChange(int position) {
+        switch (position) {
+            case 0:
+                items = workItemRepository.getUnstartedWorkItems();
+                break;
+            case 1:
+                items = workItemRepository.getStartedWorkItems();
+                break;
+            case 2:
+                items = workItemRepository.getDoneWorkItems();
+                break;
+            case 3:
+                items = workItemRepository.getMyWorkItems();
+                break;
+            default:
+                items = workItemRepository.getWorkItems();
+                break;
+        }
     }
 }

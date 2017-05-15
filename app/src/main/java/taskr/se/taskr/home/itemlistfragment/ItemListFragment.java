@@ -6,10 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 import taskr.se.taskr.itemdetail.ItemDetailActivity;
@@ -36,7 +38,9 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        presenter = new ItemListPresenterImpl(getContext());
+
+        int position = FragmentPagerItem.getPosition(getArguments());
+        presenter = new ItemListPresenterImpl(getContext(), position);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ItemListAdapter adapter = new ItemListAdapter(presenter.getItems());
