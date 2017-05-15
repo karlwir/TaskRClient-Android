@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +22,9 @@ import taskr.se.taskr.sql.TaskRDbContract.UsersEntry;
 public class UserRepositorySql implements UserRepository {
 
     private final SQLiteDatabase database;
-    private static  UserRepositorySql instance;
+    private static UserRepositorySql instance;
 
-    private static synchronized UserRepositorySql getInstance (Context context) {
+    public static synchronized UserRepositorySql getInstance (Context context) {
         if (instance == null) {
             instance = new UserRepositorySql(context);
         }
@@ -32,6 +33,17 @@ public class UserRepositorySql implements UserRepository {
 
     private UserRepositorySql(Context context) {
         database = TaskRDbHelper.getInstance(context).getWritableDatabase();
+        fakeData(); // creates som fake data if db is empty
+    }
+
+    // This method will be removed later
+    private void fakeData() {
+        if(getUsers().size() == 0)  {
+            for(int i = 0; i < 8; i++) {
+                User user = new User("Firstname", "Lastname", "User" + i);
+                addOrUpdateUser(user);
+            }
+        }
     }
 
     @Override
@@ -134,7 +146,7 @@ public class UserRepositorySql implements UserRepository {
             String lastname = getString(getColumnIndexOrThrow(UsersEntry.COLUMN_NAME_LASTNAME));
             String username = getString(getColumnIndexOrThrow(UsersEntry.COLUMN_NAME_USERNAME));
 
-            return new User(id, itemKey, firstname, lastname, username, null);
+            return new User(id, itemKey, firstname, lastname, username);
         }
 
         User getFirstUser() {

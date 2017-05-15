@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,31 @@ public class WorkItemRepositorySql implements WorkItemRepository {
     }
 
     @Override
+    public List<WorkItem> getWorkItemsByUser(User user) {
+
+        String query =
+                "SELECT * FROM " + WorkItemsEntry.TABLE_NAME + " INNER JOIN " +
+                        UserWorkItemEntry.TABLE_NAME + " ON " +
+                        WorkItemsEntry.TABLE_NAME + "." + WorkItemsEntry._ID + "="  + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
+                        " WHERE " + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_USERID + "=" + String.valueOf(user.getId()) + ";";
+
+
+        Cursor cursor = database.rawQuery(query, null);
+        WorkItemCursorWrapper workItemCursorWrapper = new WorkItemCursorWrapper(cursor);
+        List<WorkItem> workItems = new ArrayList<>();
+
+        if(workItemCursorWrapper.getCount() > 0) {
+            while(cursor.moveToNext()) {
+                workItems.add(workItemCursorWrapper.getWorkItem());
+            }
+        }
+
+        workItemCursorWrapper.close();
+
+        return workItems;
+    }
+
+    @Override
     public WorkItem getWorkItem(long id) {
         return queryWorkItem(WorkItemsEntry._ID + " = ?", new String[]{String.valueOf(id)});
     }
@@ -108,10 +134,20 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
     @Override
     public void assignWorkItem(WorkItem workItem, User user) {
-        ContentValues cv = new ContentValues();
-        cv.put(UserWorkItemEntry.COLUMN_NAME_WORKITEMID, workItem.getId());
-        cv.put(UserWorkItemEntry.COLUMN_NAME_USERID, user.getId());
-        database.insert(UserWorkItemEntry.TABLE_NAME, null, cv);
+        if (workItem.hasBeenPersisted() && user.hasBeenPersisted()) {
+            ContentValues cv = new ContentValues();
+            cv.put(UserWorkItemEntry.COLUMN_NAME_WORKITEMID, workItem.getId());
+            cv.put(UserWorkItemEntry.COLUMN_NAME_USERID, user.getId());
+            database.insert(UserWorkItemEntry.TABLE_NAME, null, cv);
+        }
+    }
+
+    @Override
+    public void unAssignWorkItem(WorkItem workItem, User user) {
+        if (workItem.hasBeenPersisted() && user.hasBeenPersisted()) {
+            database.delete(UserWorkItemEntry.TABLE_NAME, UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
+                    " = ? AND " + UserWorkItemEntry.COLUMN_NAME_USERID + "= ?", new String[] { String.valueOf(workItem.getId()), String.valueOf(user.getId()) });
+        }
     }
 
     private ContentValues getContentValues(WorkItem workItem) {
@@ -184,7 +220,7 @@ public class WorkItemRepositorySql implements WorkItemRepository {
             String description = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_DESCRIPTION));
             String status = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_STATUS));
 
-            return new WorkItem(id, itemKey, title, description, status, null);
+            return new WorkItem(id, itemKey, title, description, status);
         }
 
         WorkItem getFirstWorkItem() {

@@ -16,23 +16,17 @@ public class User {
     private final String firstname;
     private final String lastname;
     private final String username;
-    private Set<WorkItem> workItems;
 
-    public User(long id, String itemKey, String firstname, String lastname, String username, Set<WorkItem> workItems) {
+    public User(long id, String itemKey, String firstname, String lastname, String username) {
         this.id = id;
         this.itemKey = itemKey;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
-        this.workItems = workItems;
-    }
-
-    public User(String firstname, String lastname, String username, Set<WorkItem> workItems) {
-        this(DEFAULT_ID, DEFAULT_ITEMKEY, firstname, lastname, username, workItems);
     }
 
     public User(String firstname, String lastname, String username) {
-        this(DEFAULT_ID, DEFAULT_ITEMKEY, firstname, lastname ,username, null);
+        this(DEFAULT_ID, DEFAULT_ITEMKEY, firstname, lastname, username);
     }
 
     public String getUsername() {
