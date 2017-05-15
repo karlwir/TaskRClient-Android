@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ItemListContract {
     interface View {
-        void navigateToDetailView(String itemKey);
+        void navigateToDetailView(long id);
     }
     interface Presenter {
         interface OnItemClickedListener {

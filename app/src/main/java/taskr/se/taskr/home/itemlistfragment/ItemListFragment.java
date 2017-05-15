@@ -43,17 +43,17 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         adapter.setOnItemClickedListener(new Presenter.OnItemClickedListener() {
             @Override
             public void onItemClicked(int id) {
-                String itemKey = presenter.getItems().get(id).getItemKey();
-                navigateToDetailView(itemKey);
+                long itemId = presenter.getItems().get(id).getId();
+                navigateToDetailView(itemId);
             }
         });
         recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void navigateToDetailView(String itemKey) {
+    public void navigateToDetailView(long id) {
         Intent intent = ItemDetailActivity.createIntent(getContext());
-        intent.putExtra("itemKey", itemKey);
+        intent.putExtra("id", id);
         startActivity(intent);
     }
 
