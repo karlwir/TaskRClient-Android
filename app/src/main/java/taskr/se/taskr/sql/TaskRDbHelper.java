@@ -31,6 +31,13 @@ public class TaskRDbHelper extends SQLiteOpenHelper {
                     UsersEntry.COLUMN_NAME_LASTNAME + " INTEGER NOT NULL, " +
                     UsersEntry.COLUMN_NAME_USERNAME + " TEXT NOT NULL);";
 
+    private static final String CREATE_TABLE_USER_WORKITEM =
+            "CREATE TABLE " + UserWorkItemEntry.TABLE_NAME + " (" +
+                    UserWorkItemEntry.COLUMN_NAME_USERID + " INTEGER NOT NULL, " +
+                    UserWorkItemEntry.COLUMN_NAME_WORKITEMID + " INTEGER NOT NULL, " +
+                    "FOREIGN KEY(" + UserWorkItemEntry.COLUMN_NAME_WORKITEMID + ") REFERENCES " + WorkItemsEntry.TABLE_NAME + "(" + WorkItemsEntry._ID + " )" +
+                    "FOREIGN KEY(" + UserWorkItemEntry.COLUMN_NAME_USERID + ") REFERENCES " + UsersEntry.TABLE_NAME + "(" + UsersEntry._ID + " ));";
+
     private static final String DROP_TABLE_WORKITEMS =
             "DROP TABLE IF EXISTS " + WorkItemsEntry.TABLE_NAME;
 

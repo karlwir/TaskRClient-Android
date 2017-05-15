@@ -9,9 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.sql.TaskRDbContract;
 import taskr.se.taskr.sql.TaskRDbHelper;
 import taskr.se.taskr.sql.TaskRDbContract.WorkItemsEntry;
+import taskr.se.taskr.sql.TaskRDbContract.UserWorkItemEntry;
 
 
 /**
@@ -103,6 +106,14 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         database.delete(WorkItemsEntry.TABLE_NAME, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(workItem.getId()) });
     }
 
+    @Override
+    public void assignWorkItem(WorkItem workItem, User user) {
+        ContentValues cv = new ContentValues();
+        cv.put(UserWorkItemEntry.COLUMN_NAME_WORKITEMID, workItem.getId());
+        cv.put(UserWorkItemEntry.COLUMN_NAME_USERID, user.getId());
+        database.insert(UserWorkItemEntry.TABLE_NAME, null, cv);
+    }
+
     private ContentValues getContentValues(WorkItem workItem) {
         ContentValues cv = new ContentValues();
         cv.put(WorkItemsEntry.COLUMN_NAME_ITEMKEY, workItem.getItemKey());
@@ -133,7 +144,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
             }
         }
 
-        cursor.close();
         workItemCursorWrapper.close();
 
         return workItems;
@@ -156,7 +166,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         if(workItemCursorWrapper.getCount() > 0) {
             workItem = workItemCursorWrapper.getFirstWorkItem();
         }
-        cursor.close();
         workItemCursorWrapper.close();
 
         return workItem;

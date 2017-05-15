@@ -2,6 +2,7 @@ package taskr.se.taskr.repository;
 
 import java.util.List;
 
+import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 
 /**
@@ -17,4 +18,5 @@ public interface WorkItemRepository {
      WorkItem getWorkItem(long id);
      long addOrUpdateWorkItem(WorkItem workItem);
      void removeWorkItem(WorkItem workItem);
+     void assignWorkItem(WorkItem workItem, User user);
 }

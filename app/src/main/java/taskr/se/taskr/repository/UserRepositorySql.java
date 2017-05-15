@@ -93,7 +93,6 @@ public class UserRepositorySql implements UserRepository {
             }
         }
 
-        cursor.close();
         userCursorWrapper.close();
 
         return users;
@@ -117,7 +116,6 @@ public class UserRepositorySql implements UserRepository {
             user = userCursorWrapper.getFirstUser();
         }
 
-        cursor.close();
         userCursorWrapper.close();
 
         return user;
