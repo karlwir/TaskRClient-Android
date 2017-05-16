@@ -142,7 +142,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
         for(WorkItem workItem : workItemsServer) {
             WorkItem persistedVersion = getByItemKey(workItem.getItemKey());
             if(persistedVersion == null) {
-                addOrUpdateWorkItem(workItem);
+                long id = addOrUpdateWorkItem(workItem);
             }
             else {
                 ContentValues cv = getContentValues(workItem);
@@ -153,8 +153,10 @@ class WorkItemRepositorySql implements WorkItemRepository {
             List<WorkItem> dontRemove = new ArrayList<>();
             for (WorkItem workItemLocal : workItemsLocal) {
                 for(WorkItem workItemServer: workItemsServer) {
-                    if (workItemLocal.getItemKey().equals(workItemServer.getItemKey())) {
-                        dontRemove.add(workItemLocal);
+                    if (workItemLocal.getItemKey() != null) {
+                        if (workItemLocal.getItemKey().equals(workItemServer.getItemKey())) {
+                            dontRemove.add(workItemLocal);
+                        }
                     }
                 }
             }
