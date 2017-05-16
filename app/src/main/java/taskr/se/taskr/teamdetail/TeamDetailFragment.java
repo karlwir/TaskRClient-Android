@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.database.DatabaseUtilsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class TeamDetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        TeamDetailFragmentBinding binding = DataBindingUtil.inflate(inflater , R.layout.team_detail_fragment, container , false);
+        TeamDetailFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.team_detail_fragment, container , false);
         final View view = binding.getRoot();
 
         Team team = new Team("Johns awesome team", "Teamet är AWESOME");
