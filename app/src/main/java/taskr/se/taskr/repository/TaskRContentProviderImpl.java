@@ -143,10 +143,20 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
-    public long addOrUpdateWorkItem(WorkItem workItem) {
-        //http
-        workItemRepository.addOrUpdateWorkItem(workItem);
-        return 0;
+    public long addOrUpdateWorkItem(final WorkItem workItem) {
+        final long id = workItemRepository.addOrUpdateWorkItem(workItem);
+        if (workItem.hasBeenSavedToServer()) {
+            workItemClient.putWorkItem(workItem);
+        } else {
+            workItemClient.postWorkItem(workItem, new OnResultEventListener() {
+                @Override
+                public void onResult(Object generatedKey) {
+                    WorkItem _workItem = new WorkItem(id, (String) generatedKey, workItem.getTitle(), workItem.getDescription(), workItem.getStatus());
+                    workItemRepository.addOrUpdateWorkItem(workItem);
+                }
+            });
+        }
+        return id;
     }
 
     @Override

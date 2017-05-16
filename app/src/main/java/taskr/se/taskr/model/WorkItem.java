@@ -15,6 +15,7 @@ public class WorkItem {
     private final String title;
     private final String description;
     private String status;
+    private long priority;
     private User user;
 
     public WorkItem(long id, String itemKey, String title, String description, String status) {
@@ -23,6 +24,7 @@ public class WorkItem {
         this.title = title;
         this.description = description;
         this.status = status;
+        priority = 0;
     }
 
     public WorkItem(String title, String description, String status) {
@@ -51,6 +53,10 @@ public class WorkItem {
 
     public boolean hasBeenPersisted() {
         return id != DEFAULT_ID;
+    }
+
+    public boolean hasBeenSavedToServer() {
+        return DEFAULT_ITEMKEY != null;
     }
 
     public User getUser() {
