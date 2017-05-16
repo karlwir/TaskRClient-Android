@@ -33,10 +33,8 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
 
         String titleString = title.get();
         String descriptionString = description.get();
-        Log.d("SAVE METHOD", "save: ");
         if(titleString != null && descriptionString != null) {
            interactor.saveWorkItem(titleString, descriptionString, this);
-            Log.d("SAVE METHOD", "save: IN IF");
         }
     }
 
@@ -50,7 +48,7 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
 
     @Override
     public void onSuccess() {
-       // TaskRContentProviderImpl.getInstance(context).addOrUpdateWorkItem(new WorkItem(title.get(), description.get(), "UNSTARTED"));
+        TaskRContentProviderImpl.getInstance(context).addOrUpdateWorkItem(new WorkItem(title.get(), description.get(), "UNSTARTED"));
         context.startActivity(HomeActivity.createIntent(context));
     }
 }

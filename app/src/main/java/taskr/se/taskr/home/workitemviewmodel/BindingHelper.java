@@ -9,8 +9,8 @@ import android.widget.EditText;
 
 public class BindingHelper {
 
-    @BindingAdapter("bind:error")
+    @BindingAdapter("app:error")
     public static void setError(EditText editText, String errorMessage){
-        editText.setText(errorMessage);
+        editText.setError(errorMessage);
     }
 }
