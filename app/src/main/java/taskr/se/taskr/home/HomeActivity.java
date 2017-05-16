@@ -17,7 +17,9 @@ import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
 public class HomeActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context) {
-        return new Intent(context, HomeActivity.class);
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     @Override
