@@ -54,7 +54,7 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
 
     @Override
     public void notifyChange() {
-        setTabPosition(position);
+        //setTabPosition(position);
         view.updateAdapter();
     }
 }
