@@ -161,7 +161,8 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public void removeWorkItem(WorkItem workItem) {
-
+        workItemRepository.removeWorkItem(workItem);
+        workItemClient.deleteWorkItem(workItem);
     }
 
     @Override

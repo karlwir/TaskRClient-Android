@@ -38,11 +38,15 @@ class WorkItemHttpClient {
     }
 
     public void postWorkItem(WorkItem workItem, OnResultEventListener listner) {
-            new PostTask(workItem, listner).execute();
+        new PostTask(workItem, listner).execute();
     }
 
     public void putWorkItem(WorkItem workItem) {
         new PutTask(workItem).execute();
+    }
+
+    public void deleteWorkItem(WorkItem workItem) {
+        new DeleteTask(workItem).execute();
     }
 
     private static class GetTask extends AsyncTask<Void, Void, List<WorkItem>> {
@@ -98,8 +102,7 @@ class WorkItemHttpClient {
             RequestBody body = RequestBody.create(JSON, json);
 
             Request request = new Request.Builder()
-                    .url(WORKITEMS_BASE_URL)
-                    .url(workItem.getItemKey())
+                    .url(WORKITEMS_BASE_URL + "/" + workItem.getItemKey())
                     .addHeader("api-key", "secretkey")
                     .put(body)
                     .build();
@@ -143,12 +146,39 @@ class WorkItemHttpClient {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return generatedKey;
         }
 
         @Override
         protected void onPostExecute(String generatedKey) {
             listener.onResult(generatedKey);
+        }
+    }
+
+    private static class DeleteTask extends AsyncTask<Void, Void, Void> {
+        private WorkItem workItem;
+
+        public DeleteTask(WorkItem workItem) {
+            this.workItem = workItem;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url(WORKITEMS_BASE_URL + "/" + workItem.getItemKey())
+                    .addHeader("api-key", "secretkey")
+                    .delete()
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 }
