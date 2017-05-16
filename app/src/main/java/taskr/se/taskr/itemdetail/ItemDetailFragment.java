@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.FragmentItemDetailBinding;
+import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.repository.WorkItemRepositorySql;
 
 /**
  * Created by Kevin on 2017-05-11.
  */
+
 
 public class ItemDetailFragment extends Fragment{
 
@@ -22,7 +25,10 @@ public class ItemDetailFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentItemDetailBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_item_detail,container, false);
         View view = binding.getRoot();
-        binding.setViewModel(new ItemDetailViewModel(getActivity()));
+        Bundle bundle = getArguments();
+        Long id = bundle.getLong("id");
+        WorkItem item = WorkItemRepositorySql.getInstance(this.getActivity()).getWorkItem(id);
+        binding.setWorkitem(item);
         return view;
 
 
