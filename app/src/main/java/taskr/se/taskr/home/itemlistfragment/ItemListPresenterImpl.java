@@ -1,8 +1,7 @@
 package taskr.se.taskr.home.itemlistfragment;
 
-import taskr.se.taskr.home.ItemListFragmentContainer;
 import taskr.se.taskr.model.WorkItem;
-import taskr.se.taskr.repository.*;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 import java.util.ArrayList;
 import java.util.List;
