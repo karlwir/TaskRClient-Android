@@ -3,17 +3,15 @@ package taskr.se.taskr.repository;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
-import taskr.se.taskr.sql.TaskRDbContract;
 import taskr.se.taskr.sql.TaskRDbHelper;
+import taskr.se.taskr.sql.TaskRDbContract.UsersEntry;
 import taskr.se.taskr.sql.TaskRDbContract.WorkItemsEntry;
 import taskr.se.taskr.sql.TaskRDbContract.UserWorkItemEntry;
 
@@ -22,7 +20,7 @@ import taskr.se.taskr.sql.TaskRDbContract.UserWorkItemEntry;
  * Created by kawi01 on 2017-05-12.
  */
 
-public class WorkItemRepositorySql implements WorkItemRepository {
+class WorkItemRepositorySql implements WorkItemRepository {
 
     private final SQLiteDatabase database;
     private static WorkItemRepositorySql instance;
@@ -73,7 +71,6 @@ public class WorkItemRepositorySql implements WorkItemRepository {
                         WorkItemsEntry.TABLE_NAME + "." + WorkItemsEntry._ID + "="  + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
                         " WHERE " + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_USERID + "=" + String.valueOf(user.getId()) + ";";
 
-
         Cursor cursor = database.rawQuery(query, null);
         WorkItemCursorWrapper workItemCursorWrapper = new WorkItemCursorWrapper(cursor);
         List<WorkItem> workItems = new ArrayList<>();
@@ -87,6 +84,14 @@ public class WorkItemRepositorySql implements WorkItemRepository {
         workItemCursorWrapper.close();
 
         return workItems;
+    }
+
+    @Override
+    public List<WorkItem> searchWorkItem(String query) {
+        List<WorkItem> byTitle = queryWorkItems(WorkItemsEntry.COLUMN_NAME_TITLE + " LIKE ?", new String[]{"%" + query + "%"});
+        List<WorkItem> byDesc = queryWorkItems(WorkItemsEntry.COLUMN_NAME_DESCRIPTION + " LIKE ?", new String[]{"%" + query + "%"});
+        byTitle.addAll(byDesc);
+        return byTitle;
     }
 
     @Override
@@ -190,7 +195,9 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
         if(workItemCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
-                workItems.add(workItemCursorWrapper.getWorkItem());
+                WorkItem workItem =workItemCursorWrapper.getWorkItem();
+                addWorkitemUser(workItem);
+                workItems.add(workItem);
             }
         }
 
@@ -215,32 +222,32 @@ public class WorkItemRepositorySql implements WorkItemRepository {
 
         if(workItemCursorWrapper.getCount() > 0) {
             workItem = workItemCursorWrapper.getFirstWorkItem();
+            addWorkitemUser(workItem);
         }
         workItemCursorWrapper.close();
 
         return workItem;
     }
 
-    private class WorkItemCursorWrapper extends CursorWrapper {
+    private WorkItem addWorkitemUser(WorkItem workItem) {
+        String query =
+                "SELECT * FROM " + UsersEntry.TABLE_NAME + " INNER JOIN " +
+                        UserWorkItemEntry.TABLE_NAME + " ON " +
+                        UsersEntry.TABLE_NAME + "." + UsersEntry._ID + "="  + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_USERID +
+                        " WHERE " + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_WORKITEMID + "=" + String.valueOf(workItem.getId()) + ";";
 
-        WorkItemCursorWrapper(Cursor cursor) {
-            super(cursor);
+        Cursor cursor = database.rawQuery(query, null);
+        UserCursorWrapper userCursorWrapper = new UserCursorWrapper(cursor);
+        List<User> users = new ArrayList<>();
+
+        if(userCursorWrapper.getCount() > 0) {
+            User user = userCursorWrapper.getFirstUser();
+            workItem.setUser(user);
         }
 
-        WorkItem getWorkItem() {
-            long id = getLong(getColumnIndexOrThrow(WorkItemsEntry._ID));
-            String itemKey = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_ITEMKEY));
-            String title = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_TITLE));
-            String description = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_DESCRIPTION));
-            String status = getString(getColumnIndexOrThrow(WorkItemsEntry.COLUMN_NAME_STATUS));
+        userCursorWrapper.close();
 
-            return new WorkItem(id, itemKey, title, description, status);
-        }
-
-        WorkItem getFirstWorkItem() {
-            moveToFirst();
-            return getWorkItem();
-        }
-
+        return workItem;
     }
+
 }

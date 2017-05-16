@@ -16,6 +16,7 @@ public interface WorkItemRepository {
     List<WorkItem> getDoneWorkItems();
     List<WorkItem> getMyWorkItems();
     List<WorkItem> getWorkItemsByUser(User user);
+    List<WorkItem> searchWorkItem(String query);
     WorkItem getWorkItem(long id);
     long addOrUpdateWorkItem(WorkItem workItem);
     void removeWorkItem(WorkItem workItem);

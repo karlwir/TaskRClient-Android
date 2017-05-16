@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.FragmentItemDetailBinding;
 import taskr.se.taskr.model.WorkItem;
-import taskr.se.taskr.repository.WorkItemRepositorySql;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 /**
  * Created by Kevin on 2017-05-11.
@@ -27,7 +27,7 @@ public class ItemDetailFragment extends Fragment{
         View view = binding.getRoot();
         Bundle bundle = getArguments();
         Long id = bundle.getLong("id");
-        WorkItem item = WorkItemRepositorySql.getInstance(this.getActivity()).getWorkItem(id);
+        WorkItem item = TaskRContentProviderImpl.getInstance(this.getActivity()).getWorkItem(id);
         binding.setWorkitem(item);
         return view;
 
