@@ -2,7 +2,6 @@ package taskr.se.taskr.repository;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -12,9 +11,12 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 import taskr.se.taskr.model.WorkItem;
 
 /**
@@ -32,18 +34,30 @@ class WorkItemHttpClient {
     }
 
     public void getWorkItems(OnResultEventListener<List<WorkItem>> listener) {
-        new GetTask<List<WorkItem>>(listener).execute();
+        new GetTask(listener).execute();
     }
 
-    private static class GetTask<T> extends AsyncTask<Void, Void, T> {
-        private final OnResultEventListener<T> listener;
+    public void postWorkItem(WorkItem workItem, OnResultEventListener listner) {
+        new PostTask(workItem, listner).execute();
+    }
 
-        private GetTask(OnResultEventListener<T> listener) {
+    public void putWorkItem(WorkItem workItem) {
+        new PutTask(workItem).execute();
+    }
+
+    public void deleteWorkItem(WorkItem workItem) {
+        new DeleteTask(workItem).execute();
+    }
+
+    private static class GetTask extends AsyncTask<Void, Void, List<WorkItem>> {
+        private final OnResultEventListener<List<WorkItem>> listener;
+
+        private GetTask(OnResultEventListener<List<WorkItem>> listener) {
             this.listener = listener;
         }
 
         @Override
-        protected T doInBackground(Void... voids) {
+        protected List<WorkItem> doInBackground(Void... voids) {
             OkHttpClient client = new OkHttpClient();
             String responseString = null;
 
@@ -61,14 +75,110 @@ class WorkItemHttpClient {
             Gson gson = new Gson();
 
             Type collectionType = new TypeToken<Collection<WorkItem>>(){}.getType();
-            T workItems = gson.fromJson(responseString, collectionType);
+            List<WorkItem> workItems = gson.fromJson(responseString, collectionType);
 
             return workItems;
         }
 
         @Override
-        protected void onPostExecute(T result) {
+        protected void onPostExecute(List<WorkItem> result) {
             listener.onResult(result);
+        }
+    }
+
+    private static class PutTask extends AsyncTask<Void, Void, Void> {
+        private WorkItem workItem;
+
+        public PutTask(WorkItem workItem) {
+            this.workItem = workItem;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            OkHttpClient client = new OkHttpClient();
+            Gson gson = new Gson();
+            String json = gson.toJson(workItem);
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, json);
+
+            Request request = new Request.Builder()
+                    .url(WORKITEMS_BASE_URL + "/" + workItem.getItemKey())
+                    .addHeader("api-key", "secretkey")
+                    .put(body)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    private static class PostTask extends AsyncTask<Void, Void, String> {
+        private WorkItem workItem;
+        private OnResultEventListener listener;
+        private String generatedKey;
+
+        public PostTask(WorkItem workItem, OnResultEventListener listener) {
+            this.workItem = workItem;
+            this.listener = listener;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            OkHttpClient client = new OkHttpClient();
+            Gson gson = new Gson();
+            String json = gson.toJson(workItem);
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, json);
+
+            Request request = new Request.Builder()
+                    .url(WORKITEMS_BASE_URL)
+                    .addHeader("api-key", "secretkey")
+                    .post(body)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                generatedKey = response.header("generatedkey");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return generatedKey;
+        }
+
+        @Override
+        protected void onPostExecute(String generatedKey) {
+            listener.onResult(generatedKey);
+        }
+    }
+
+    private static class DeleteTask extends AsyncTask<Void, Void, Void> {
+        private WorkItem workItem;
+
+        public DeleteTask(WorkItem workItem) {
+            this.workItem = workItem;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url(WORKITEMS_BASE_URL + "/" + workItem.getItemKey())
+                    .addHeader("api-key", "secretkey")
+                    .delete()
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 }

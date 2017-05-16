@@ -13,17 +13,16 @@ import java.util.List;
 public class ItemListPresenterImpl implements ItemListContract.Presenter {
 
     private List<WorkItem> items;
-    private final TaskRContentProvider taskRContentProvider;
+    private final TaskRContentProviderImpl taskRContentProvider;
+    private final ItemListFragment view;
+    private final int position;
 
-    public ItemListPresenterImpl(final ItemListFragment view, int position) {
-        taskRContentProvider = TaskRContentProviderImpl.getInstance(view.getContext(), new RefreshItemsListener() {
-            @Override
-            public void refreshItems() {
-                view.updateAdapter();
-
-            }
-        });
+    public ItemListPresenterImpl(final ItemListFragment view, final int position) {
+        taskRContentProvider = TaskRContentProviderImpl.getInstance(view.getContext());
+        this.view = view;
+        this.position = position;
         setTabPosition(position);
+        taskRContentProvider.registerObserver(this);
     }
 
     @Override
@@ -51,5 +50,11 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
                 items = taskRContentProvider.getWorkItems();
                 break;
         }
+    }
+
+    @Override
+    public void notifyChange() {
+        setTabPosition(position);
+        view.updateAdapter();
     }
 }

@@ -17,4 +17,3 @@ public interface TeamRepository {
     void addTeamMember(Team team, User user);
     void removeTeamMember(Team team, User user);
 }
-    
