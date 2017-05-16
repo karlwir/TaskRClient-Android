@@ -82,19 +82,43 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getUnstartedWorkItems() {
-        getWorkItems();
+        workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+            @Override
+            public void onResult(List<WorkItem> result) {
+                if (result != null) {
+                    syncWorkItems(result);
+                }
+                refreshItemsListener.refreshItems();
+            }
+        });
         return workItemRepository.getUnstartedWorkItems();
     }
 
     @Override
     public List<WorkItem> getStartedWorkItems() {
-        getWorkItems();
+        workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+            @Override
+            public void onResult(List<WorkItem> result) {
+                if (result != null) {
+                    syncWorkItems(result);
+                }
+                refreshItemsListener.refreshItems();
+            }
+        });
         return workItemRepository.getStartedWorkItems();
     }
 
     @Override
     public List<WorkItem> getDoneWorkItems() {
-        getWorkItems();
+        workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+            @Override
+            public void onResult(List<WorkItem> result) {
+                if (result != null) {
+                    syncWorkItems(result);
+                }
+                refreshItemsListener.refreshItems();
+            }
+        });
         return workItemRepository.getDoneWorkItems();
     }
 
@@ -120,6 +144,8 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public long addOrUpdateWorkItem(WorkItem workItem) {
+        //http
+        workItemRepository.addOrUpdateWorkItem(workItem);
         return 0;
     }
 
@@ -160,6 +186,16 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public void deleteTeam(Team team) {
+
+    }
+
+    @Override
+    public void addTeamMember(Team team, User user) {
+
+    }
+
+    @Override
+    public void removeTeamMember(Team team, User user) {
 
     }
 }

@@ -20,6 +20,7 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
             @Override
             public void refreshItems() {
                 view.updateAdapter();
+
             }
         });
         setTabPosition(position);
