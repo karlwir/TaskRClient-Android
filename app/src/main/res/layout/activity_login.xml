@@ -7,12 +7,12 @@
         android:layout_height="match_parent"
         tools:context="taskr.se.taskr.LoginActivity">
 
-        <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:contentDescription="Start picture"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:src="@drawable/firstpagenu" />-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Start picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/firstpagenu" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,12 +44,12 @@
             android:text="Manage your\n       work"
             android:layout_gravity="center_horizontal"/>
 
-        <!--<ImageButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="390dp"-->
-            <!--android:src="@drawable/googlepic"-->
-            <!--android:onClick="loginButton"-->
-            <!--android:layout_gravity="center_horizontal" />-->
+    <com.google.android.gms.common.SignInButton
+       android:id="@+id/sign_in_button"
+        android:onClick="loginButton"
+        android:layout_width="250dp"
+        android:layout_marginTop="175dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     </FrameLayout>
