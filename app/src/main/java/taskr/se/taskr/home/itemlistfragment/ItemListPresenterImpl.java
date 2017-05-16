@@ -2,8 +2,7 @@ package taskr.se.taskr.home.itemlistfragment;
 
 import android.content.Context;
 import taskr.se.taskr.model.WorkItem;
-import taskr.se.taskr.repository.WorkItemRepository;
-import taskr.se.taskr.repository.WorkItemRepositorySql;
+import taskr.se.taskr.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,15 @@ import java.util.List;
 public class ItemListPresenterImpl implements ItemListContract.Presenter {
 
     private List<WorkItem> items;
-    private final WorkItemRepository workItemRepository;
+    private final TaskRContentProvider taskRContentProvider;
 
-    public ItemListPresenterImpl(Context context, int position) {
-        workItemRepository = WorkItemRepositorySql.getInstance(context);
+    public ItemListPresenterImpl(final ItemListFragment view, int position) {
+        taskRContentProvider = TaskRContentProviderImpl.getInstance(view.getContext(), new RefreshItemsListener() {
+            @Override
+            public void refreshItems() {
+                view.updateAdapter();
+            }
+        });
         onPositionChange(position);
     }
 
@@ -32,19 +36,19 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
     public void onPositionChange(int position) {
         switch (position) {
             case 0:
-                items = workItemRepository.getUnstartedWorkItems();
+                items = taskRContentProvider.getUnstartedWorkItems();
                 break;
             case 1:
-                items = workItemRepository.getStartedWorkItems();
+                items = taskRContentProvider.getStartedWorkItems();
                 break;
             case 2:
-                items = workItemRepository.getDoneWorkItems();
+                items = taskRContentProvider.getDoneWorkItems();
                 break;
             case 3:
-                items = workItemRepository.getMyWorkItems();
+                items = taskRContentProvider.getMyWorkItems();
                 break;
             default:
-                items = workItemRepository.getWorkItems();
+                items = taskRContentProvider.getWorkItems();
                 break;
         }
     }
