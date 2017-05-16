@@ -1,6 +1,5 @@
 package taskr.se.taskr.home.itemlistfragment;
 
-import android.content.Context;
 import taskr.se.taskr.model.WorkItem;
 import taskr.se.taskr.repository.*;
 
@@ -23,7 +22,7 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
                 view.updateAdapter();
             }
         });
-        onPositionChange(position);
+        setTabPosition(position);
     }
 
     @Override
@@ -33,7 +32,7 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
     }
 
     @Override
-    public void onPositionChange(int position) {
+    public void setTabPosition(int position) {
         switch (position) {
             case 0:
                 items = taskRContentProvider.getUnstartedWorkItems();

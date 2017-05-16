@@ -18,6 +18,6 @@ interface ItemListContract {
             void onItemClicked(int id);
         }
         List<WorkItem> getItems();
-        void onPositionChange(int position);
+        void setTabPosition(int position);
     }
 }

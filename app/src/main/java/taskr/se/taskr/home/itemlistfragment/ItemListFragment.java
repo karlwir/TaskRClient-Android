@@ -45,12 +45,6 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         updateAdapter();
     }
 
-    @Override
-    public void navigateToDetailView(long id) {
-        Intent intent = ItemDetailActivity.createIntent(getContext());
-        intent.putExtra("id", id);
-        startActivity(intent);
-    }
 
     @Override
     public void updateAdapter() {
@@ -63,6 +57,13 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void navigateToDetailView(long id) {
+        Intent intent = ItemDetailActivity.createIntent(getContext());
+        intent.putExtra("id", id);
+        startActivity(intent);
     }
 
     private static class ItemListAdapter extends RecyclerView.Adapter<ItemListViewHolder> {
