@@ -1,12 +1,16 @@
 package taskr.se.taskr.repository;
 
+import java.util.List;
+
+import taskr.se.taskr.model.Team;
+
 /**
  * Created by kawi01 on 2017-05-11.
  */
 
 public interface TeamRepository {
-    // List<Teams> getTeams();
-    // Team getTeam(String itemKey);
-    // Team addOrUpdateTeam(Team team);
-    // void deleteTeam(String itemKey);
+    List<Team> getTeams();
+    Team getTeam(long id);
+    long addOrUpdateTeam(Team team);
+    void deleteTeam(Team team);
 }

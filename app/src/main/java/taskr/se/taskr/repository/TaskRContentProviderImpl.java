@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 
@@ -140,5 +141,25 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     @Override
     public void syncWorkItems(List<WorkItem> workItems) {
         workItemRepository.syncWorkItems(workItems);
+    }
+
+    @Override
+    public List<Team> getTeams() {
+        return null;
+    }
+
+    @Override
+    public Team getTeam(long id) {
+        return null;
+    }
+
+    @Override
+    public long addOrUpdateTeam(Team team) {
+        return 0;
+    }
+
+    @Override
+    public void deleteTeam(Team team) {
+
     }
 }
