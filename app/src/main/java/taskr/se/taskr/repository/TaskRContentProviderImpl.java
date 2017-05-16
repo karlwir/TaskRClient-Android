@@ -1,12 +1,14 @@
 package taskr.se.taskr.repository;
 
 import android.content.Context;
-
-import java.util.List;
-
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 
 /**
  * Created by kawi01 on 2017-05-15.
@@ -17,33 +19,31 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private final UserRepository userRepository;
     private final WorkItemHttpClient workItemClient;
     private final WorkItemRepository workItemRepository;
-    private final RefreshItemsListener refreshItemsListener;
     private static TaskRContentProviderImpl instance;
+    private List<Presenter> observers;
 
     public static synchronized TaskRContentProviderImpl getInstance(Context context) {
         if(instance == null) {
-            instance = new TaskRContentProviderImpl(context, new RefreshItemsListener() {
-                @Override
-                public void refreshItems() {
-
-                }
-            });
+            instance = new TaskRContentProviderImpl(context);
         }
         return instance;
     }
 
-    public static synchronized TaskRContentProviderImpl getInstance(Context context, RefreshItemsListener refreshItemsListener) {
-        if(instance == null) {
-            instance = new TaskRContentProviderImpl(context, refreshItemsListener);
-        }
-        return instance;
-    }
-
-    private TaskRContentProviderImpl(Context context, RefreshItemsListener refreshItemsListener) {
+    private TaskRContentProviderImpl(Context context) {
         userRepository = UserRepositorySql.getInstance(context);
         workItemRepository = WorkItemRepositorySql.getInstance(context);
         workItemClient = WorkItemHttpClient.getInstance(context);
-        this.refreshItemsListener = refreshItemsListener;
+        observers = new ArrayList<>();
+    }
+
+    public void registerObserver(Presenter presenter) {
+        observers.add(presenter);
+    }
+
+    private void notifyObservers() {
+        for(Presenter presenter : observers) {
+            presenter.notifyChange();
+        }
     }
 
     @Override
@@ -74,7 +74,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                refreshItemsListener.refreshItems();
+                notifyObservers();
             }
         });
         return workItemRepository.getWorkItems();
@@ -88,7 +88,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                refreshItemsListener.refreshItems();
+                notifyObservers();
             }
         });
         return workItemRepository.getUnstartedWorkItems();
@@ -102,7 +102,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                refreshItemsListener.refreshItems();
+                notifyObservers();
             }
         });
         return workItemRepository.getStartedWorkItems();
@@ -116,7 +116,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                refreshItemsListener.refreshItems();
+                notifyObservers();
             }
         });
         return workItemRepository.getDoneWorkItems();
