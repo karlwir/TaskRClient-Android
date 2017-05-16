@@ -20,7 +20,7 @@ import taskr.se.taskr.sql.TaskRDbContract.UserWorkItemEntry;
  * Created by kawi01 on 2017-05-12.
  */
 
-public class WorkItemRepositorySql implements WorkItemRepository {
+class WorkItemRepositorySql implements WorkItemRepository {
 
     private final SQLiteDatabase database;
     private static WorkItemRepositorySql instance;

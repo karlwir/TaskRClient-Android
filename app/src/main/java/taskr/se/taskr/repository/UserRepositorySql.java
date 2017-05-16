@@ -19,7 +19,7 @@ import taskr.se.taskr.sql.TaskRDbContract.UsersEntry;
  * Created by kawi01 on 2017-05-15.
  */
 
-public class UserRepositorySql implements UserRepository {
+class UserRepositorySql implements UserRepository {
 
     private final SQLiteDatabase database;
     private static UserRepositorySql instance;

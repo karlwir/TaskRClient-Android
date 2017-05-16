@@ -115,7 +115,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public WorkItem getWorkItem(long id) {
-        return null;
+        return workItemRepository.getWorkItem(id);
     }
 
     @Override

@@ -8,7 +8,7 @@ import taskr.se.taskr.model.Team;
  * Created by kawi01 on 2017-05-16.
  */
 
-public class TeamRepositorySql implements TeamRepository {
+class TeamRepositorySql implements TeamRepository {
     @Override
     public List<Team> getTeams() {
         return null;
