@@ -15,6 +15,7 @@ public class WorkItem {
     private final String title;
     private final String description;
     private String status;
+    private User user;
 
     public WorkItem(long id, String itemKey, String title, String description, String status) {
         this.id = id;
@@ -52,6 +53,13 @@ public class WorkItem {
         return id != DEFAULT_ID;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public String toString() {
