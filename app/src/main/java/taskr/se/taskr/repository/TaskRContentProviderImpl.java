@@ -67,63 +67,63 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
-    public List<WorkItem> getWorkItems() {
+    public List<WorkItem> getWorkItems(final boolean notifyObservers) {
         workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                notifyObservers();
+                if(notifyObservers) notifyObservers();
             }
         });
-        return workItemRepository.getWorkItems();
+        return workItemRepository.getWorkItems(false);
     }
 
     @Override
-    public List<WorkItem> getUnstartedWorkItems() {
+    public List<WorkItem> getUnstartedWorkItems(final boolean notifyObservers) {
         workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                notifyObservers();
+                if(notifyObservers) notifyObservers();
             }
         });
-        return workItemRepository.getUnstartedWorkItems();
+        return workItemRepository.getUnstartedWorkItems(false);
     }
 
     @Override
-    public List<WorkItem> getStartedWorkItems() {
+    public List<WorkItem> getStartedWorkItems(final boolean notifyObservers) {
         workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                notifyObservers();
+                if(notifyObservers) notifyObservers();
             }
         });
-        return workItemRepository.getStartedWorkItems();
+        return workItemRepository.getStartedWorkItems(false);
     }
 
     @Override
-    public List<WorkItem> getDoneWorkItems() {
+    public List<WorkItem> getDoneWorkItems(final boolean notifyObservers) {
         workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
                     syncWorkItems(result);
                 }
-                notifyObservers();
+                if(notifyObservers) notifyObservers();
             }
         });
-        return workItemRepository.getDoneWorkItems();
+        return workItemRepository.getDoneWorkItems(false);
     }
 
     @Override
-    public List<WorkItem> getMyWorkItems() {
+    public List<WorkItem> getMyWorkItems(final boolean notifyObservers) {
         return null;
     }
 

@@ -18,7 +18,7 @@ public interface ItemListContract {
             void onItemClicked(int id);
         }
         List<WorkItem> getItems();
-        void setTabPosition(int position);
+        void setTabPosition(boolean notifyObservers);
         void notifyChange();
     }
 }

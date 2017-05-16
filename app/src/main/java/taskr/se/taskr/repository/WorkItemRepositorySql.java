@@ -37,27 +37,27 @@ class WorkItemRepositorySql implements WorkItemRepository {
     }
 
     @Override
-    public List<WorkItem> getWorkItems() {
+    public List<WorkItem> getWorkItems(boolean notifyObserver) {
         return queryWorkItems(null, null);
     }
 
     @Override
-    public List<WorkItem> getUnstartedWorkItems() {
+    public List<WorkItem> getUnstartedWorkItems(boolean notifyObserver) {
         return queryWorkItems(WorkItemsEntry.COLUMN_NAME_STATUS + " = ?", new String[]{"UNSTARTED"});
     }
 
     @Override
-    public List<WorkItem> getStartedWorkItems() {
+    public List<WorkItem> getStartedWorkItems(boolean notifyObserver) {
         return queryWorkItems(WorkItemsEntry.COLUMN_NAME_STATUS + " = ?", new String[]{"STARTED"});
     }
 
     @Override
-    public List<WorkItem> getDoneWorkItems() {
+    public List<WorkItem> getDoneWorkItems(boolean notifyObserver) {
         return queryWorkItems(WorkItemsEntry.COLUMN_NAME_STATUS + " = ?" , new String[]{"DONE"});
     }
 
     @Override
-    public List<WorkItem> getMyWorkItems() {
+    public List<WorkItem> getMyWorkItems(boolean notifyObserver) {
         // TODO
         return null;
     }
@@ -138,7 +138,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
     @Override
     public void syncWorkItems(List<WorkItem> workItemsServer) {
-        List<WorkItem> workItemsLocal = getWorkItems();
+        List<WorkItem> workItemsLocal = getWorkItems(false);
         for(WorkItem workItem : workItemsServer) {
             WorkItem persistedVersion = getByItemKey(workItem.getItemKey());
             if(persistedVersion == null) {

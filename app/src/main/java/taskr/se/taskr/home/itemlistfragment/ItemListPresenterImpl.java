@@ -1,5 +1,6 @@
 package taskr.se.taskr.home.itemlistfragment;
 
+import taskr.se.taskr.home.ItemListFragmentContainer;
 import taskr.se.taskr.model.WorkItem;
 import taskr.se.taskr.repository.*;
 
@@ -21,7 +22,7 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
         taskRContentProvider = TaskRContentProviderImpl.getInstance(view.getContext());
         this.view = view;
         this.position = position;
-        setTabPosition(position);
+        setTabPosition(true);
         taskRContentProvider.registerObserver(this);
     }
 
@@ -32,29 +33,29 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
     }
 
     @Override
-    public void setTabPosition(int position) {
+    public void setTabPosition(boolean notifyObservers) {
         switch (position) {
             case 0:
-                items = taskRContentProvider.getUnstartedWorkItems();
+                items = taskRContentProvider.getUnstartedWorkItems(notifyObservers);
                 break;
             case 1:
-                items = taskRContentProvider.getStartedWorkItems();
+                items = taskRContentProvider.getStartedWorkItems(notifyObservers);
                 break;
             case 2:
-                items = taskRContentProvider.getDoneWorkItems();
+                items = taskRContentProvider.getDoneWorkItems(notifyObservers);
                 break;
             case 3:
-                items = taskRContentProvider.getMyWorkItems();
+                items = taskRContentProvider.getMyWorkItems(notifyObservers);
                 break;
             default:
-                items = taskRContentProvider.getWorkItems();
+                items = taskRContentProvider.getWorkItems(notifyObservers);
                 break;
         }
     }
 
     @Override
     public void notifyChange() {
-        //setTabPosition(position);
+        setTabPosition(false);
         view.updateAdapter();
     }
 }
