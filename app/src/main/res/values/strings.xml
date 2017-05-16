@@ -4,5 +4,8 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="status">Status</string>
+    <string name="name">Name</string>
+    <string name="members">Members</string>
+    <string name="add_member">+ ADD MEMBERS</string>
     <string name="search">search</string>
 </resources>
