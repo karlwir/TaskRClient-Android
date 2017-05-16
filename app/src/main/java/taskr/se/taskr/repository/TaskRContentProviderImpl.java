@@ -108,6 +108,11 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
+    public List<WorkItem> searchWorkItem(String query) {
+        return workItemRepository.searchWorkItem(query);
+    }
+
+    @Override
     public WorkItem getWorkItem(long id) {
         return null;
     }

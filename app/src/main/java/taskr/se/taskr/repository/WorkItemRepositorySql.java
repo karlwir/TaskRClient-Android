@@ -87,6 +87,14 @@ public class WorkItemRepositorySql implements WorkItemRepository {
     }
 
     @Override
+    public List<WorkItem> searchWorkItem(String query) {
+        List<WorkItem> byTitle = queryWorkItems(WorkItemsEntry.COLUMN_NAME_TITLE + " LIKE ?", new String[]{"%" + query + "%"});
+        List<WorkItem> byDesc = queryWorkItems(WorkItemsEntry.COLUMN_NAME_DESCRIPTION + " LIKE ?", new String[]{"%" + query + "%"});
+        byTitle.addAll(byDesc);
+        return byTitle;
+    }
+
+    @Override
     public WorkItem getWorkItem(long id) {
         return queryWorkItem(WorkItemsEntry._ID + " = ?", new String[]{String.valueOf(id)});
     }
