@@ -1,5 +1,7 @@
 package taskr.se.taskr.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,7 +18,7 @@ public class WorkItem {
     private final String description;
     private String status;
     private long priority;
-    private User user;
+    private List<User> users = new ArrayList<>();
 
     public WorkItem(long id, String itemKey, String title, String description, String status) {
         this.id = id;
@@ -59,16 +61,16 @@ public class WorkItem {
         return DEFAULT_ITEMKEY != null;
     }
 
-    public User getUser() {
-        return user;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void addUser(User user) {
+        users.add(user);
     }
 
     @Override
     public String toString() {
-        return String.format("Workitem: %s, %s, %s, %s, %s", id, title, description, status, itemKey);
+        return String.format("Workitem: %s, %s, %s, %s, %s, %s", id, title, description, status, itemKey, users.size());
     }
 }

@@ -25,16 +25,16 @@ import taskr.se.taskr.model.WorkItem;
  * This class is still quite experimental and far from done
  */
 
-class WorkItemHttpClient {
+class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
 
-    private static final String WORKITEMS_BASE_URL = "http://kw-taskmanager-api.herokuapp.com/workitems";
+    private static final String BASE_URL = "http://kw-taskmanager-api.herokuapp.com/workitems/";
 
     public static synchronized WorkItemHttpClient getInstance(Context context) {
         return new WorkItemHttpClient();
     }
 
     public void getWorkItems(OnResultEventListener<List<WorkItem>> listener) {
-        new GetTask(listener).execute();
+        new GetTask(listener, BASE_URL).execute();
     }
 
     public void postWorkItem(WorkItem workItem, OnResultEventListener listner) {
@@ -49,42 +49,52 @@ class WorkItemHttpClient {
         new DeleteTask(workItem).execute();
     }
 
-    private static class GetTask extends AsyncTask<Void, Void, List<WorkItem>> {
-        private final OnResultEventListener<List<WorkItem>> listener;
+    @Override
+    protected List<WorkItem> deserializeResultList(String responseString) {
+        Gson gson = new Gson();
 
-        private GetTask(OnResultEventListener<List<WorkItem>> listener) {
-            this.listener = listener;
-        }
+        Type collectionType = new TypeToken<Collection<WorkItem>>(){}.getType();
+        List<WorkItem> result = gson.fromJson(responseString, collectionType);
 
-        @Override
-        protected List<WorkItem> doInBackground(Void... voids) {
-            OkHttpClient client = new OkHttpClient();
-            String responseString = null;
-
-            Request request = new Request.Builder()
-                    .url(WORKITEMS_BASE_URL)
-                    .addHeader("api-key", "secretkey")
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                responseString = response.body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Gson gson = new Gson();
-
-            Type collectionType = new TypeToken<Collection<WorkItem>>(){}.getType();
-            List<WorkItem> workItems = gson.fromJson(responseString, collectionType);
-
-            return workItems;
-        }
-
-        @Override
-        protected void onPostExecute(List<WorkItem> result) {
-            listener.onResult(result);
-        }
+        return result;
     }
+
+//    private static class GetTask extends AsyncTask<Void, Void, List<WorkItem>> {
+//        private final OnResultEventListener<List<WorkItem>> listener;
+//
+//        private GetTask(OnResultEventListener<List<WorkItem>> listener) {
+//            this.listener = listener;
+//        }
+//
+//        @Override
+//        protected List<WorkItem> doInBackground(Void... voids) {
+//            OkHttpClient client = new OkHttpClient();
+//            String responseString = null;
+//
+//            Request request = new Request.Builder()
+//                    .url(BASE_URL)
+//                    .addHeader("api-key", "secretkey")
+//                    .build();
+//
+//            try (Response response = client.newCall(request).execute()) {
+//                responseString = response.body().string();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            Gson gson = new Gson();
+//
+//            Type collectionType = new TypeToken<Collection<WorkItem>>(){}.getType();
+//            List<WorkItem> workItems = gson.fromJson(responseString, collectionType);
+//
+//            return workItems;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<WorkItem> result) {
+//            listener.onResult(result);
+//        }
+//    }
 
     private static class PutTask extends AsyncTask<Void, Void, Void> {
         private WorkItem workItem;
@@ -98,11 +108,11 @@ class WorkItemHttpClient {
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
             String json = gson.toJson(workItem);
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(JSON, json);
+            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(mediaType, json);
 
             Request request = new Request.Builder()
-                    .url(WORKITEMS_BASE_URL + "/" + workItem.getItemKey())
+                    .url(BASE_URL + "/" + workItem.getItemKey())
                     .addHeader("api-key", "secretkey")
                     .put(body)
                     .build();
@@ -135,7 +145,7 @@ class WorkItemHttpClient {
             RequestBody body = RequestBody.create(JSON, json);
 
             Request request = new Request.Builder()
-                    .url(WORKITEMS_BASE_URL)
+                    .url(BASE_URL)
                     .addHeader("api-key", "secretkey")
                     .post(body)
                     .build();
@@ -167,7 +177,7 @@ class WorkItemHttpClient {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url(WORKITEMS_BASE_URL + "/" + workItem.getItemKey())
+                    .url(BASE_URL + "/" + workItem.getItemKey())
                     .addHeader("api-key", "secretkey")
                     .delete()
                     .build();

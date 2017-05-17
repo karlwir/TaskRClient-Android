@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import taskr.se.taskr.model.User;
+import taskr.se.taskr.model.WorkItem;
 import taskr.se.taskr.sql.TaskRDbContract;
 import taskr.se.taskr.sql.TaskRDbHelper;
 import taskr.se.taskr.sql.TaskRDbContract.UsersEntry;
@@ -73,6 +74,43 @@ class UserRepositorySql implements UserRepository {
     @Override
     public void removeUser(User user) {
         database.delete(UsersEntry.TABLE_NAME, UsersEntry._ID + " = ?", new String[] { String.valueOf(user.getId()) });
+    }
+
+    @Override
+    public void syncUsers(List<User> usersServer, boolean removeUnsyncedLocals) {
+        List<User> usersLocal = getUsers();
+        for(User user : usersServer) {
+            User persistedVersion = getByItemKey(user.getItemKey());
+            if (persistedVersion == null) {
+
+                Long id = addOrUpdateUser(user);
+            } else {
+                ContentValues cv = getContentValues(user);
+                database.update(UsersEntry.TABLE_NAME, cv, UsersEntry._ID + " = ?", new String[] { String.valueOf(persistedVersion.getId()) });
+            }
+        }
+        if (removeUnsyncedLocals) {
+            List<User> dontRemove = new ArrayList<>();
+            if (usersLocal.size() > usersServer.size()) {
+                for (User userLocal : usersLocal) {
+                    for (User userServer : usersServer) {
+                        if (userLocal.getItemKey() != null){
+                            if (userLocal.getItemKey().equals(userServer.getItemKey())) {
+                                dontRemove.add(userLocal);
+                            }
+                        }
+                    }
+                }
+                usersLocal.removeAll(dontRemove);
+                for (User user : usersLocal) {
+                    removeUser(user);
+                }
+            }
+        }
+    }
+
+    private User getByItemKey(String itemKey) {
+        return queryUser(UsersEntry.COLUMN_NAME_ITEMKEY + " = ?", new String[]{itemKey});
     }
 
     private ContentValues getContentValues(User user) {

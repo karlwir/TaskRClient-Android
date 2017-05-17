@@ -7,12 +7,19 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.support.v7.widget.SearchView;
 
+import java.util.List;
+
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
+import taskr.se.taskr.model.User;
+import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.repository.TaskRContentProvider;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -30,8 +37,16 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
-                startActivity(intent);
+//                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
+//                startActivity(intent);
+
+            TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(getApplicationContext());
+            provider.getWorkItems(true);
+            List<User> users = provider.getUsers();
+            for(User user : users) {
+                Log.d("TAG", user.toString());
+            }
+
             }
         });
     }

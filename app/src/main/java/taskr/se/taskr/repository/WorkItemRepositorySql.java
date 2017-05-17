@@ -143,8 +143,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
             WorkItem persistedVersion = getByItemKey(workItem.getItemKey());
             if(persistedVersion == null) {
                 long id = addOrUpdateWorkItem(workItem);
-            }
-            else {
+            } else {
                 ContentValues cv = getContentValues(workItem);
                 database.update(WorkItemsEntry.TABLE_NAME, cv, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(persistedVersion.getId()) });
             }
@@ -244,7 +243,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
         if(userCursorWrapper.getCount() > 0) {
             User user = userCursorWrapper.getFirstUser();
-            workItem.setUser(user);
+            workItem.addUser(user);
         }
 
         userCursorWrapper.close();

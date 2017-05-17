@@ -1,6 +1,8 @@
 package taskr.se.taskr.repository;
 
 import android.content.Context;
+import android.util.Log;
+
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
@@ -48,7 +50,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<User> getUsers() {
-        return null;
+        return userRepository.getUsers();
     }
 
     @Override
@@ -64,6 +66,10 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     @Override
     public void removeUser(User user) {
 
+    }
+
+    public void syncUsers(List<User> users, boolean removeUnsyncedLocals) {
+        userRepository.syncUsers(users, removeUnsyncedLocals);
     }
 
     @Override
@@ -177,6 +183,11 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public void syncWorkItems(List<WorkItem> workItems) {
+        for (WorkItem workItem : workItems) {
+            if (workItem.getUsers().size() > 0) {
+                syncUsers(workItem.getUsers(), false);
+            }
+        }
         workItemRepository.syncWorkItems(workItems);
     }
 
