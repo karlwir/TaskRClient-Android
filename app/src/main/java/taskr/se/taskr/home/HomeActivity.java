@@ -1,6 +1,5 @@
 package taskr.se.taskr.home;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,24 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.support.v7.widget.SearchView;
 import android.view.View.OnClickListener;
-
-import java.util.List;
-
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
-import taskr.se.taskr.model.User;
-import taskr.se.taskr.model.WorkItem;
-import taskr.se.taskr.repository.TaskRContentProvider;
-import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private ItemListFragment searchResultFragment;
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -63,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
 
-        MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+        final MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
@@ -88,8 +82,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
-                Fragment fragment = new ItemListFragment();
-                fm.beginTransaction().replace(R.id.fragment_list_container, fragment)
+                searchResultFragment = ItemListFragment.newInstance();
+                fm.beginTransaction().replace(R.id.fragment_list_container, searchResultFragment)
                         .commit();
             }
         });
@@ -102,8 +96,8 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 Log.d("OnQueryTextChange", "onQueryTextChange: ");
+                if(newText != null && searchResultFragment != null) searchResultFragment.onEditSearchInput(newText);
                 return true;
             }
         });

@@ -16,6 +16,7 @@ import taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 import taskr.se.taskr.itemdetail.ItemDetailActivity;
 import taskr.se.taskr.model.WorkItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +27,14 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
 
     private RecyclerView recyclerView;
     private Presenter presenter;
+
+    public static ItemListFragment newInstance() {
+        Bundle args = new Bundle();
+        args.putInt("position", -1);
+        ItemListFragment fragment = new ItemListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -39,10 +48,42 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
         int position = FragmentPagerItem.getPosition(getArguments());
+        if(getArguments().getInt("position") == -1) position = -1;
         presenter = new ItemListPresenterImpl(this, position);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateAdapter();
+    }
+
+    public void onEditSearchInput(String searchQuery) {
+        List<WorkItem> items = presenter.getItems();
+        List<WorkItem> filteredItems = filterItems(items, searchQuery);
+        updateAdapter(filteredItems);
+    }
+
+    private List<WorkItem> filterItems(List<WorkItem> items, String searchQuery) {
+        List<WorkItem> result = new ArrayList<>();
+        for(WorkItem item : items) {
+            String title = item.getTitle().toLowerCase();
+            String description = item.getDescription().toLowerCase();
+            searchQuery = searchQuery.toLowerCase();
+            if(title.contains(searchQuery) || description.contains(searchQuery)) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
+    private void updateAdapter(final List<WorkItem> items) {
+        ItemListAdapter adapter = new ItemListAdapter(items);
+        adapter.setOnItemClickedListener(new Presenter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(int id) {
+                long itemId = items.get(id).getId();
+                navigateToDetailView(itemId);
+            }
+        });
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
