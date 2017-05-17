@@ -34,21 +34,10 @@ class UserRepositorySql implements UserRepository {
 
     private UserRepositorySql(Context context) {
         database = TaskRDbHelper.getInstance(context).getWritableDatabase();
-        fakeData(); // creates som fake data if db is empty
-    }
-
-    // This method will be removed later
-    private void fakeData() {
-        if(getUsers().size() == 0)  {
-            for(int i = 0; i < 8; i++) {
-                User user = new User("Firstname", "Lastname", "User" + i);
-                addOrUpdateUser(user);
-            }
-        }
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsers(boolean notifyObservers) {
         return queryUsers(null, null);
     }
 
@@ -78,7 +67,7 @@ class UserRepositorySql implements UserRepository {
 
     @Override
     public void syncUsers(List<User> usersServer, boolean removeUnsyncedLocals) {
-        List<User> usersLocal = getUsers();
+        List<User> usersLocal = getUsers(false);
         for(User user : usersServer) {
             User persistedVersion = getByItemKey(user.getItemKey());
             if (persistedVersion == null) {
