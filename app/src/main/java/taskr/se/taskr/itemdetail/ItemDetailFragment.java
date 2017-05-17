@@ -39,6 +39,5 @@ public class ItemDetailFragment extends Fragment{
         binding.setWorkitem(item);
         return view;
 
-
     }
 }
