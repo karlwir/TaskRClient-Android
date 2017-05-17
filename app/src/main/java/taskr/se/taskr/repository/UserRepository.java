@@ -9,7 +9,7 @@ import taskr.se.taskr.model.User;
  */
 
 public interface UserRepository {
-    List<User> getUsers();
+    List<User> getUsers(boolean notifyObservers);
     User getUser(long id);
     long addOrUpdateUser(User user);
     void removeUser(User user);

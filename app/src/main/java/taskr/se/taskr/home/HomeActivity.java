@@ -42,13 +42,6 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
                 startActivity(intent);
 
-//            TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(getApplicationContext());
-//            provider.getWorkItems(true);
-//            List<User> users = provider.getUsers();
-//            for(User user : users) {
-//                Log.d("TAG", user.toString());
-//            }
-
             }
         });
     }

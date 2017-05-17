@@ -136,6 +136,35 @@ abstract class BaseHttpClient<T extends BaseEntity> {
         }
     }
 
+    protected class DeleteTask extends AsyncTask<Void, Void, Void> {
+        private final T entity;
+        private final String url;
+
+        public DeleteTask(T entity, String url) {
+            this.entity = entity;
+            this.url = url;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("api-key", "secretkey")
+                    .delete()
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
     private String serializeEnity(T entity) {
         Gson gson = new Gson();
         String json = gson.toJson(entity);
@@ -143,5 +172,13 @@ abstract class BaseHttpClient<T extends BaseEntity> {
         return json;
     };
 
-    protected abstract List<T> deserializeResultList(String responseString);
+
+    private List<T> deserializeResultList(String responseString) {
+        Gson gson = new Gson();
+        List<T> resultList = gson.fromJson(responseString, getCollectionType());
+
+        return resultList;
+    };
+
+    protected abstract Type getCollectionType();
 }

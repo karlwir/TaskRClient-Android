@@ -23,4 +23,12 @@ public abstract class BaseEntity {
     public long getId() {
         return id;
     }
+
+    public boolean hasBeenPersisted() {
+        return id != DEFAULT_ID;
+    }
+
+    public boolean hasBeenSavedToServer() {
+        return DEFAULT_ITEMKEY != null;
+    }
 }

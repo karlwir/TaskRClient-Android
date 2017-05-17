@@ -39,14 +39,6 @@ public class WorkItem extends BaseEntity {
         return title;
     }
 
-    public boolean hasBeenPersisted() {
-        return id != DEFAULT_ID;
-    }
-
-    public boolean hasBeenSavedToServer() {
-        return DEFAULT_ITEMKEY != null;
-    }
-
     public List<User> getUsers() {
         return users;
     }

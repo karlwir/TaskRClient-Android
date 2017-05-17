@@ -35,10 +35,6 @@ public class User extends  BaseEntity {
         return lastname;
     }
 
-    public boolean hasBeenPersisted() {
-        return id != DEFAULT_ID;
-    }
-
     @Override
     public String toString() {
         return String.format("User: %s, %s, %s, %s, %s", id, firstname, lastname, username, itemKey);

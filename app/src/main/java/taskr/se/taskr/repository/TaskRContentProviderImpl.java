@@ -1,7 +1,6 @@
 package taskr.se.taskr.repository;
 
 import android.content.Context;
-import android.util.Log;
 
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
@@ -19,7 +18,8 @@ import static taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     private final UserRepository userRepository;
-    private final WorkItemHttpClient workItemClient;
+    private final UserHttpClient userHttpClient;
+    private final WorkItemHttpClient workItemHttpClient;
     private final WorkItemRepository workItemRepository;
     private static TaskRContentProviderImpl instance;
     private List<Presenter> observers;
@@ -33,8 +33,9 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     private TaskRContentProviderImpl(Context context) {
         userRepository = UserRepositorySql.getInstance(context);
+        userHttpClient = UserHttpClient.getInstance();
         workItemRepository = WorkItemRepositorySql.getInstance(context);
-        workItemClient = WorkItemHttpClient.getInstance(context);
+        workItemHttpClient = WorkItemHttpClient.getInstance();
         observers = new ArrayList<>();
     }
 
@@ -49,23 +50,44 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
-    public List<User> getUsers() {
-        return userRepository.getUsers();
+    public List<User> getUsers(final boolean notifyObservers) {
+        userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
+            @Override
+            public void onResult(List<User> result) {
+                if (result != null) {
+                    syncUsers(result, true);
+                }
+            }
+        });
+        return userRepository.getUsers(notifyObservers);
     }
 
     @Override
     public User getUser(long id) {
-        return null;
+        return userRepository.getUser(id);
     }
 
     @Override
-    public long addOrUpdateUser(User user) {
-        return 0;
+    public long addOrUpdateUser(final User user) {
+        final long id = userRepository.addOrUpdateUser(user);
+        if (user.hasBeenSavedToServer()) {
+            userHttpClient.putUser(user);
+        } else {
+            userHttpClient.postUser(user, new OnResultEventListener<String>() {
+                @Override
+                public void onResult(String generatedKey) {
+                    User _user = new User(id, generatedKey, user.getFirstname(), user.getLastname(), user.getUsername() );
+                    userRepository.addOrUpdateUser(_user);
+                }
+            });
+        }
+        return id;
     }
 
     @Override
     public void removeUser(User user) {
-
+        userRepository.removeUser(user);
+        userHttpClient.deleteUser(user);
     }
 
     public void syncUsers(List<User> users, boolean removeUnsyncedLocals) {
@@ -74,7 +96,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getWorkItems(final boolean notifyObservers) {
-        workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
@@ -88,7 +110,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getUnstartedWorkItems(final boolean notifyObservers) {
-        workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
@@ -102,7 +124,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getStartedWorkItems(final boolean notifyObservers) {
-        workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
@@ -116,7 +138,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getDoneWorkItems(final boolean notifyObservers) {
-        workItemClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
             @Override
             public void onResult(List<WorkItem> result) {
                 if (result != null) {
@@ -152,13 +174,13 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     public long addOrUpdateWorkItem(final WorkItem workItem) {
         final long id = workItemRepository.addOrUpdateWorkItem(workItem);
         if (workItem.hasBeenSavedToServer()) {
-            workItemClient.putWorkItem(workItem);
+            workItemHttpClient.putWorkItem(workItem);
         } else {
-            workItemClient.postWorkItem(workItem, new OnResultEventListener() {
+            workItemHttpClient.postWorkItem(workItem, new OnResultEventListener() {
                 @Override
                 public void onResult(Object generatedKey) {
                     WorkItem _workItem = new WorkItem(id, (String) generatedKey, workItem.getTitle(), workItem.getDescription(), workItem.getStatus());
-                    workItemRepository.addOrUpdateWorkItem(workItem);
+                    workItemRepository.addOrUpdateWorkItem(_workItem);
                 }
             });
         }
@@ -168,7 +190,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     @Override
     public void removeWorkItem(WorkItem workItem) {
         workItemRepository.removeWorkItem(workItem);
-        workItemClient.deleteWorkItem(workItem);
+        workItemHttpClient.deleteWorkItem(workItem);
     }
 
     @Override
