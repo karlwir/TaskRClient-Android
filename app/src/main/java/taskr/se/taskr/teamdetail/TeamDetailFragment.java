@@ -1,5 +1,6 @@
 package taskr.se.taskr.teamdetail;
 
+import android.content.Intent;
 import android.database.DatabaseUtils;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ public class TeamDetailFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         TeamDetailFragmentBinding binding = DataBindingUtil.inflate(inflater , R.layout.team_detail_fragment, container , false);
         final View view = binding.getRoot();
 
@@ -37,6 +38,9 @@ public class TeamDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity() , "HELLO", Toast.LENGTH_SHORT).show();
+
+                 Intent intent = AddUserActivity.createIntent(getContext());
+                 startActivity(intent);
             }
         });
 
