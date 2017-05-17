@@ -37,15 +37,15 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
-//                startActivity(intent);
+                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
+                startActivity(intent);
 
-            TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(getApplicationContext());
-            provider.getWorkItems(true);
-            List<User> users = provider.getUsers();
-            for(User user : users) {
-                Log.d("TAG", user.toString());
-            }
+//            TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(getApplicationContext());
+//            provider.getWorkItems(true);
+//            List<User> users = provider.getUsers();
+//            for(User user : users) {
+//                Log.d("TAG", user.toString());
+//            }
 
             }
         });

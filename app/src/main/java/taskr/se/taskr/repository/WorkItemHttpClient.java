@@ -38,11 +38,12 @@ class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
     }
 
     public void postWorkItem(WorkItem workItem, OnResultEventListener listner) {
-        new PostTask(workItem, listner).execute();
+        new PostTask(workItem, listner, BASE_URL).execute();
     }
 
     public void putWorkItem(WorkItem workItem) {
-        new PutTask(workItem).execute();
+        String url = String.format("%s/%s", BASE_URL, workItem.getItemKey());
+        new PutTask(workItem, url).execute();
     }
 
     public void deleteWorkItem(WorkItem workItem) {
@@ -96,74 +97,74 @@ class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
 //        }
 //    }
 
-    private static class PutTask extends AsyncTask<Void, Void, Void> {
-        private WorkItem workItem;
+//    private static class PutTask extends AsyncTask<Void, Void, Void> {
+//        private WorkItem workItem;
+//
+//        public PutTask(WorkItem workItem) {
+//            this.workItem = workItem;
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            OkHttpClient client = new OkHttpClient();
+//            Gson gson = new Gson();
+//            String json = gson.toJson(workItem);
+//            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+//            RequestBody body = RequestBody.create(mediaType, json);
+//
+//            Request request = new Request.Builder()
+//                    .url(BASE_URL + "/" + workItem.getItemKey())
+//                    .addHeader("api-key", "secretkey")
+//                    .put(body)
+//                    .build();
+//
+//            try {
+//                Response response = client.newCall(request).execute();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//    }
 
-        public PutTask(WorkItem workItem) {
-            this.workItem = workItem;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
-            String json = gson.toJson(workItem);
-            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(mediaType, json);
-
-            Request request = new Request.Builder()
-                    .url(BASE_URL + "/" + workItem.getItemKey())
-                    .addHeader("api-key", "secretkey")
-                    .put(body)
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
-    private static class PostTask extends AsyncTask<Void, Void, String> {
-        private WorkItem workItem;
-        private OnResultEventListener listener;
-        private String generatedKey;
-
-        public PostTask(WorkItem workItem, OnResultEventListener listener) {
-            this.workItem = workItem;
-            this.listener = listener;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
-            String json = gson.toJson(workItem);
-            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            RequestBody body = RequestBody.create(JSON, json);
-
-            Request request = new Request.Builder()
-                    .url(BASE_URL)
-                    .addHeader("api-key", "secretkey")
-                    .post(body)
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-                generatedKey = response.header("generatedkey");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return generatedKey;
-        }
-
-        @Override
-        protected void onPostExecute(String generatedKey) {
-            listener.onResult(generatedKey);
-        }
-    }
+//    private static class PostTask extends AsyncTask<Void, Void, String> {
+//        private WorkItem workItem;
+//        private OnResultEventListener listener;
+//        private String generatedKey;
+//
+//        public PostTask(WorkItem workItem, OnResultEventListener listener) {
+//            this.workItem = workItem;
+//            this.listener = listener;
+//        }
+//
+//        @Override
+//        protected String doInBackground(Void... params) {
+//            OkHttpClient client = new OkHttpClient();
+//            Gson gson = new Gson();
+//            String json = gson.toJson(workItem);
+//            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+//            RequestBody body = RequestBody.create(JSON, json);
+//
+//            Request request = new Request.Builder()
+//                    .url(BASE_URL)
+//                    .addHeader("api-key", "secretkey")
+//                    .post(body)
+//                    .build();
+//
+//            try {
+//                Response response = client.newCall(request).execute();
+//                generatedKey = response.header("generatedkey");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return generatedKey;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String generatedKey) {
+//            listener.onResult(generatedKey);
+//        }
+//    }
 
     private static class DeleteTask extends AsyncTask<Void, Void, Void> {
         private WorkItem workItem;

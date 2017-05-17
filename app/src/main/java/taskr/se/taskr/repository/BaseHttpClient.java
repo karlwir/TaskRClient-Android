@@ -16,16 +16,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import taskr.se.taskr.model.BaseEntity;
 import taskr.se.taskr.model.WorkItem;
 
 /**
  * Created by kawi01 on 2017-05-17.
  */
 
-abstract class BaseHttpClient<T> {
+abstract class BaseHttpClient<T extends BaseEntity> {
+
+    protected MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
 
     protected class GetTask extends AsyncTask<Void, Void, List<T>> {
-
         private final OnResultEventListener<List<T>> listener;
         private final String url;
 
@@ -52,9 +54,6 @@ abstract class BaseHttpClient<T> {
 
             List<T> result = deserializeResultList(responseString);
 
-            for (Object o : result) {
-                Log.d("TAG", o.toString());
-            }
             return result;
         }
 
@@ -63,6 +62,86 @@ abstract class BaseHttpClient<T> {
             listener.onResult(result);
         }
     }
+
+    protected class PutTask extends AsyncTask<Void, Void, Void> {
+        private final T entity;
+        private final String url;
+
+        public PutTask(T entity, String url) {
+            this.entity = entity;
+            this.url = url;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            OkHttpClient client = new OkHttpClient();
+
+            String json = serializeEnity(entity);
+
+            RequestBody body = RequestBody.create(mediaType, json);
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("api-key", "secretkey")
+                    .put(body)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    protected class PostTask extends AsyncTask<Void, Void, String> {
+        private final T entity;
+        private final OnResultEventListener listener;
+        private final String url;
+        private String generatedKey;
+
+        public PostTask(T entity, OnResultEventListener listener, String url) {
+            this.entity = entity;
+            this.listener = listener;
+            this.url = url;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            OkHttpClient client = new OkHttpClient();
+
+            String json = serializeEnity(entity);
+
+            RequestBody body = RequestBody.create(mediaType, json);
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("api-key", "secretkey")
+                    .post(body)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                generatedKey = response.header("generatedkey");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return generatedKey;
+        }
+
+        @Override
+        protected void onPostExecute(String generatedKey) {
+            listener.onResult(generatedKey);
+        }
+    }
+
+    private String serializeEnity(T entity) {
+        Gson gson = new Gson();
+        String json = gson.toJson(entity);
+
+        return json;
+    };
 
     protected abstract List<T> deserializeResultList(String responseString);
 }

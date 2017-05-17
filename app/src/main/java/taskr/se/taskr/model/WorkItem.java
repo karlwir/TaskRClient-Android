@@ -8,12 +8,7 @@ import java.util.Set;
  * Created by Kevin on 2017-05-11.
  */
 
-public class WorkItem {
-    private static final long DEFAULT_ID = 0;
-    private static final String DEFAULT_ITEMKEY = null;
-
-    private final long id;
-    private final String itemKey;
+public class WorkItem extends BaseEntity {
     private final String title;
     private final String description;
     private String status;
@@ -21,8 +16,7 @@ public class WorkItem {
     private List<User> users = new ArrayList<>();
 
     public WorkItem(long id, String itemKey, String title, String description, String status) {
-        this.id = id;
-        this.itemKey = itemKey;
+        super(id, itemKey);
         this.title = title;
         this.description = description;
         this.status = status;
@@ -43,14 +37,6 @@ public class WorkItem {
 
     public String getTitle() {
         return title;
-    }
-
-    public String getItemKey() {
-        return itemKey;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public boolean hasBeenPersisted() {
