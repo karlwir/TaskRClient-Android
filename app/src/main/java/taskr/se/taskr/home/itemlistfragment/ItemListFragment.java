@@ -45,7 +45,6 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         updateAdapter();
     }
 
-
     @Override
     public void updateAdapter() {
         ItemListAdapter adapter = new ItemListAdapter(presenter.getItems());

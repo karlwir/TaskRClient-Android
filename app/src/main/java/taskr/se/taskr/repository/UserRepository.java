@@ -9,8 +9,9 @@ import taskr.se.taskr.model.User;
  */
 
 public interface UserRepository {
-     List<User> getUsers();
-     User getUser(long id);
-     long addOrUpdateUser(User user);
-     void removeUser(User user);
+    List<User> getUsers(boolean notifyObservers);
+    User getUser(long id);
+    long addOrUpdateUser(User user);
+    void removeUser(User user);
+    void syncUsers(List<User> users, boolean removeUnsyncedLocals);
 }

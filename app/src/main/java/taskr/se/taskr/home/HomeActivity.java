@@ -5,19 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.support.v7.widget.SearchView;
 
+import java.util.List;
+
 import taskr.se.taskr.R;
+import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
+import taskr.se.taskr.model.User;
+import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.repository.TaskRContentProvider;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 public class HomeActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context) {
-        return new Intent(context, HomeActivity.class);
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     @Override
@@ -30,8 +39,9 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+
             }
         });
     }

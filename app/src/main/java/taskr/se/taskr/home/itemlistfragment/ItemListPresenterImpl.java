@@ -1,7 +1,7 @@
 package taskr.se.taskr.home.itemlistfragment;
 
 import taskr.se.taskr.model.WorkItem;
-import taskr.se.taskr.repository.*;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +13,16 @@ import java.util.List;
 public class ItemListPresenterImpl implements ItemListContract.Presenter {
 
     private List<WorkItem> items;
-    private final TaskRContentProvider taskRContentProvider;
+    private final TaskRContentProviderImpl taskRContentProvider;
+    private final ItemListFragment view;
+    private final int position;
 
-    public ItemListPresenterImpl(final ItemListFragment view, int position) {
-        taskRContentProvider = TaskRContentProviderImpl.getInstance(view.getContext(), new RefreshItemsListener() {
-            @Override
-            public void refreshItems() {
-                view.updateAdapter();
-            }
-        });
-        setTabPosition(position);
+    public ItemListPresenterImpl(final ItemListFragment view, final int position) {
+        taskRContentProvider = TaskRContentProviderImpl.getInstance(view.getContext());
+        this.view = view;
+        this.position = position;
+        setTabPosition(true);
+        taskRContentProvider.registerObserver(this);
     }
 
     @Override
@@ -32,23 +32,29 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
     }
 
     @Override
-    public void setTabPosition(int position) {
+    public void setTabPosition(boolean notifyObservers) {
         switch (position) {
             case 0:
-                items = taskRContentProvider.getUnstartedWorkItems();
+                items = taskRContentProvider.getUnstartedWorkItems(notifyObservers);
                 break;
             case 1:
-                items = taskRContentProvider.getStartedWorkItems();
+                items = taskRContentProvider.getStartedWorkItems(notifyObservers);
                 break;
             case 2:
-                items = taskRContentProvider.getDoneWorkItems();
+                items = taskRContentProvider.getDoneWorkItems(notifyObservers);
                 break;
             case 3:
-                items = taskRContentProvider.getMyWorkItems();
+                items = taskRContentProvider.getMyWorkItems(notifyObservers);
                 break;
             default:
-                items = taskRContentProvider.getWorkItems();
+                items = taskRContentProvider.getWorkItems(notifyObservers);
                 break;
         }
+    }
+
+    @Override
+    public void notifyChange() {
+        setTabPosition(false);
+        view.updateAdapter();
     }
 }

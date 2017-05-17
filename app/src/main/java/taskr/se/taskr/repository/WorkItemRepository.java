@@ -10,11 +10,11 @@ import taskr.se.taskr.model.WorkItem;
  */
 
 public interface WorkItemRepository {
-    List<WorkItem> getWorkItems();
-    List<WorkItem> getUnstartedWorkItems();
-    List<WorkItem> getStartedWorkItems();
-    List<WorkItem> getDoneWorkItems();
-    List<WorkItem> getMyWorkItems();
+    List<WorkItem> getWorkItems(boolean notifyObservers);
+    List<WorkItem> getUnstartedWorkItems(boolean notifyObservers);
+    List<WorkItem> getStartedWorkItems(boolean notifyObservers);
+    List<WorkItem> getDoneWorkItems(boolean notifyObservers);
+    List<WorkItem> getMyWorkItems(boolean notifyObservers);
     List<WorkItem> getWorkItemsByUser(User user);
     List<WorkItem> searchWorkItem(String query);
     WorkItem getWorkItem(long id);

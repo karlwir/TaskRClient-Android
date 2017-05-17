@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.android.gms.common.SignInButton;
+
 import taskr.se.taskr.home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -13,11 +15,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-    }
+
+        SignInButton button = (SignInButton) findViewById(R.id.sign_in_button);
 
 
-    public void loginButton(View view) {
-        startActivity(HomeActivity.createIntent(this));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(HomeActivity.createIntent(getApplicationContext()));
+            }
+        });
     }
 }
-

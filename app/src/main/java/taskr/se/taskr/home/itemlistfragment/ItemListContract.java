@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Jacob on 2017-05-13.
  */
 
-interface ItemListContract {
+public interface ItemListContract {
     interface View {
         void navigateToDetailView(long id);
         void updateAdapter();
@@ -18,6 +18,7 @@ interface ItemListContract {
             void onItemClicked(int id);
         }
         List<WorkItem> getItems();
-        void setTabPosition(int position);
+        void setTabPosition(boolean notifyObservers);
+        void notifyChange();
     }
 }

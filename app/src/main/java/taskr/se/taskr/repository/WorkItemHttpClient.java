@@ -1,20 +1,11 @@
 package taskr.se.taskr.repository;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import taskr.se.taskr.model.WorkItem;
 
 /**
@@ -23,52 +14,35 @@ import taskr.se.taskr.model.WorkItem;
  * This class is still quite experimental and far from done
  */
 
-class WorkItemHttpClient {
+class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
 
-    private static final String WORKITEMS_BASE_URL = "http://kw-taskmanager-api.herokuapp.com/workitems";
+    private static final String BASE_URL = "http://kw-taskmanager-api.herokuapp.com/workitems";
 
-    public static synchronized WorkItemHttpClient getInstance(Context context) {
+    static synchronized WorkItemHttpClient getInstance() {
         return new WorkItemHttpClient();
     }
 
-    public void getWorkItems(OnResultEventListener<List<WorkItem>> listener) {
-        new GetTask<List<WorkItem>>(listener).execute();
+    void getWorkItems(OnResultEventListener<List<WorkItem>> listener) {
+        new GetTask(listener, BASE_URL).execute();
     }
 
-    private static class GetTask<T> extends AsyncTask<Void, Void, T> {
-        private final OnResultEventListener<T> listener;
-
-        private GetTask(OnResultEventListener<T> listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        protected T doInBackground(Void... voids) {
-            OkHttpClient client = new OkHttpClient();
-            String responseString = null;
-
-            Request request = new Request.Builder()
-                    .url(WORKITEMS_BASE_URL)
-                    .addHeader("api-key", "secretkey")
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                responseString = response.body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Gson gson = new Gson();
-
-            Type collectionType = new TypeToken<Collection<WorkItem>>(){}.getType();
-            T workItems = gson.fromJson(responseString, collectionType);
-
-            return workItems;
-        }
-
-        @Override
-        protected void onPostExecute(T result) {
-            listener.onResult(result);
-        }
+    void postWorkItem(WorkItem workItem, OnResultEventListener listener) {
+        new PostTask(workItem, listener, BASE_URL).execute();
     }
+
+    void putWorkItem(WorkItem workItem) {
+        String url = String.format("%s/%s", BASE_URL, workItem.getItemKey());
+        new PutTask(workItem, url).execute();
+    }
+
+    void deleteWorkItem(WorkItem workItem) {
+        String url = String.format("%s/%s", BASE_URL, workItem.getItemKey());
+        new DeleteTask(workItem, url).execute();
+    }
+
+    @Override
+    protected Type getCollectionType() {
+        return new TypeToken<Collection<WorkItem>>(){}.getType();
+    }
+
 }

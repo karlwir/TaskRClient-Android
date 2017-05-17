@@ -16,19 +16,16 @@
             android:name=".home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme">
-
         </activity>
-
         <activity android:name=".itemdetail.ItemDetailActivity"/>
         <activity android:name=".teamdetail.AddUserActivity"/>
-
         <activity android:name=".teamdetail.TeamDetailActivity">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
-
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".home.workitemviewmodel.AddWorkItemActivity"></activity>
     </application>
 
 </manifest>
