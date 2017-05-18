@@ -110,8 +110,10 @@ class TeamRepositorySql implements TeamRepository {
         }
         if (localUnscyncedTeams.size() > teamsServer.size()) {
             localUnscyncedTeams.removeAll(syncedPersistedTeams);
-            for (Team oldTeam : localUnscyncedTeams) {
-                removeTeam(oldTeam);
+            for (Team team : localUnscyncedTeams) {
+                if(team.hasBeenSavedToServer()) {
+                    removeTeam(team);
+                }
             }
         }
     }

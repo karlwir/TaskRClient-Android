@@ -84,7 +84,9 @@ class UserRepositorySql implements UserRepository {
         if (removeUnsyncedLocals && localUnsyncedUsers.size() > syncedPersistedUsers.size()) {
             localUnsyncedUsers.removeAll(syncedPersistedUsers);
             for (User user : localUnsyncedUsers) {
-                removeUser(user);
+                if (user.hasBeenSavedToServer()) {
+                    removeUser(user);
+                }
             }
         }
 

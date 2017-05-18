@@ -119,6 +119,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
     @Override
     public void removeWorkItem(WorkItem workItem) {
+        Log.d("Todelete: ", workItem.toString());
         database.delete(WorkItemsEntry.TABLE_NAME, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(workItem.getId()) });
     }
 
@@ -167,7 +168,9 @@ class WorkItemRepositorySql implements WorkItemRepository {
         if(localUnsyncedWorkItems.size() > syncedPersistedWorkItems.size()) {
             localUnsyncedWorkItems.removeAll(syncedPersistedWorkItems);
             for (WorkItem workItem : localUnsyncedWorkItems) {
-                removeWorkItem(workItem);
+                if(workItem.hasBeenSavedToServer()) {
+                    removeWorkItem(workItem);
+                }
             }
         }
 
@@ -293,6 +296,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
             return true;
         }
         cursorWrapper.close();
+
         return false;
     }
 
@@ -309,7 +313,6 @@ class WorkItemRepositorySql implements WorkItemRepository {
                 assignments.add(assignment);
             }
         }
-
         cursorWrapper.close();
 
         return assignments;
