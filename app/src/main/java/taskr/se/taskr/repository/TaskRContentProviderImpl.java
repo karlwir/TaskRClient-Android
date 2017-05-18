@@ -7,6 +7,7 @@ import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,9 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private final TeamHttpClient teamHttpClient;
     private static TaskRContentProviderImpl instance;
     private List<Presenter> observers;
+    private static final long SYNC_TIMEOUT = 5000;
     private Long lastWorkitemSyncTimeStamp;
+    private Long lastTeamSyncTimeStamp;
 
     public static synchronized TaskRContentProviderImpl getInstance(Context context) {
         if(instance == null) {
@@ -217,15 +220,15 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     public List<WorkItem> syncWorkItems(List<WorkItem> workItems) {
         Long timeStamp = System.currentTimeMillis();
 
-        if ( lastWorkitemSyncTimeStamp == null || timeStamp - lastWorkitemSyncTimeStamp - 5000 > 0) {
+        if ( lastWorkitemSyncTimeStamp == null || timeStamp - lastWorkitemSyncTimeStamp - SYNC_TIMEOUT > 0) {
             List<Map<String, User>> assignmentsOnServer = new ArrayList<>();
             for (WorkItem workItem : workItems) {
                 if (workItem.getUsers().size() > 0) {
                     List<User> syncedUsersWithAssignments = syncUsers(workItem.getUsers(), false);
 
-                    for(int i= 0; i < syncedUsersWithAssignments.size(); i++ ) {
+                    for(User user : syncedUsersWithAssignments) {
                         Map<String, User> assignment = new HashMap<>();
-                        assignment.put(workItem.getItemKey(), syncedUsersWithAssignments.get(i));
+                        assignment.put(workItem.getItemKey(), user);
                         assignmentsOnServer.add(assignment);
                     }
                 }
@@ -298,6 +301,25 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public void syncTeams(List<Team> teams) {
-        teamRepository.syncTeams(teams);
+        Long timeStamp = System.currentTimeMillis();
+        if ( lastTeamSyncTimeStamp == null || timeStamp - lastTeamSyncTimeStamp - SYNC_TIMEOUT > 0) {
+            List<Map.Entry<String, User>> mebershipsOnServer = new ArrayList<>();
+            for (Team team : teams) {
+                if(team.getMembers().size() > 0) {
+                    List<User> syncedMembers = syncUsers(team.getMembers(), false);
+                    for (User user : syncedMembers) {
+                        Map.Entry<String, User> membership = new AbstractMap.SimpleEntry<>(team.getItemKey(), user);
+                        mebershipsOnServer.add(membership);
+                    }
+                }
+            }
+            teamRepository.syncTeams(teams);
+            syncTeamMemberships(mebershipsOnServer);
+            lastTeamSyncTimeStamp = timeStamp;
+        }
+    }
+
+    public void syncTeamMemberships(List<Map.Entry<String, User>> mebershipsOnServer) {
+        teamRepository.syncTeamMemberships(mebershipsOnServer);
     }
 }

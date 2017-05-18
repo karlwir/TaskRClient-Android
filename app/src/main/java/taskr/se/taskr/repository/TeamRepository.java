@@ -1,6 +1,7 @@
 package taskr.se.taskr.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
@@ -17,4 +18,5 @@ public interface TeamRepository {
     void addTeamMember(Team team, User user);
     void removeTeamMember(Team team, User user);
     void syncTeams(List<Team> teams);
+    void syncTeamMemberships(List<Map.Entry<String, User>> mebershipsOnServer);
 }

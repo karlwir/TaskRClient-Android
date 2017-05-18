@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
@@ -66,36 +68,91 @@ class TeamRepositorySql implements TeamRepository {
 
     @Override
     public void addTeamMember(Team team, User user) {
-        if (team.hasBeenPersisted() && user.hasBeenPersisted()) {
-            ContentValues cv = new ContentValues();
-            cv.put(UserTeamEntry.COLUMN_NAME_TEAMID, team.getId());
-            cv.put(UserTeamEntry.COLUMN_NAME_USERID, user.getId());
-            database.insert(UserTeamEntry.TABLE_NAME, null, cv);
+        if (team.hasBeenPersisted() && user.hasBeenPersisted() && !membershipPersisted(team, user)) {
+            addTeamMember(team.getId(), user.getId());
         }
+    }
+
+    private void addTeamMember(Long teamId, Long userId) {
+        ContentValues cv = new ContentValues();
+        cv.put(UserTeamEntry.COLUMN_NAME_TEAMID, teamId);
+        cv.put(UserTeamEntry.COLUMN_NAME_USERID, userId);
+        database.insert(UserTeamEntry.TABLE_NAME, null, cv);
     }
 
     @Override
     public void removeTeamMember(Team team, User user) {
-        if (team.hasBeenPersisted() && user.hasBeenPersisted() && membershipPersisted(team, user)) {
-            ContentValues cv = new ContentValues();
-            cv.put(UserTeamEntry.COLUMN_NAME_TEAMID, team.getId());
-            cv.put(UserTeamEntry.COLUMN_NAME_USERID, user.getId());
-            database.insert(UserTeamEntry.TABLE_NAME, null, cv);
+        if (team.hasBeenPersisted() && user.hasBeenPersisted()) {
+            removeTeamMember(team.getId(), user.getId());
         }
+    }
+
+    private void removeTeamMember(Long teamId, Long userId) {
+        database.delete(UserTeamEntry.TABLE_NAME, UserTeamEntry.COLUMN_NAME_TEAMID +
+                " = ? AND " + UserTeamEntry.COLUMN_NAME_USERID + "= ?", new String[] { String.valueOf(teamId), String.valueOf(userId) });
     }
 
     @Override
     public void syncTeams(List<Team> teamsServer) {
         List<Team> localUnscyncedTeams = getTeams(false);
+        List<Team> syncedPersistedTeams = new ArrayList<>();
         for (Team team : teamsServer) {
+            Long id;
             Team persistedVersion = getByItemKey(team.getItemKey());
             if(persistedVersion == null) {
-                long id = addOrUpdateTeam(team);
+                id = addOrUpdateTeam(team);
             } else {
+                id = team.getId();
                 ContentValues cv = getContentValues(team);
-                database.update(TeamsEntry.TABLE_NAME, cv, TeamsEntry._ID + " = ?", new String[] { String.valueOf(team.getId()) });
+                database.update(TeamsEntry.TABLE_NAME, cv, TeamsEntry._ID + " = ?", new String[] { String.valueOf(id) });
+            }
+            syncedPersistedTeams.add(getTeam(id));
+        }
+        if (localUnscyncedTeams.size() > teamsServer.size()) {
+            localUnscyncedTeams.removeAll(syncedPersistedTeams);
+            for (Team oldTeam : localUnscyncedTeams) {
+                removeTeam(oldTeam);
             }
         }
+    }
+
+    @Override
+    public void syncTeamMemberships(List<Map.Entry<String, User>> mebershipsOnServer) {
+        List<Map.Entry<Long, Long>> syncedPersistedMemberships = new ArrayList<>();
+        List<Map.Entry<Long, Long>> localUnsyncedMemberships = getAllMemberships();
+
+        for (Map.Entry<String, User> membership : mebershipsOnServer) {
+            Team team = getByItemKey(membership.getKey());
+            User user = membership.getValue();
+            addTeamMember(team, user);
+            Map.Entry<Long, Long> syncedPersistedMembership = new AbstractMap.SimpleEntry<>(team.getId(), user.getId());
+            syncedPersistedMemberships.add(syncedPersistedMembership);
+        }
+        if (localUnsyncedMemberships.size() > syncedPersistedMemberships.size()) {
+            localUnsyncedMemberships.removeAll(syncedPersistedMemberships);
+            for (Map.Entry<Long, Long> oldMembership :localUnsyncedMemberships) {
+                removeTeamMember(oldMembership.getKey(), oldMembership.getValue());
+            }
+        }
+
+    }
+
+    private List<Map.Entry<Long,Long>> getAllMemberships() {
+        String query = "SELECT * FROM " + UserTeamEntry.TABLE_NAME;
+
+        Cursor cursor = database.rawQuery(query, null);
+        RelationCursorWrapper cursorWrapper = new RelationCursorWrapper(cursor, UserTeamEntry.COLUMN_NAME_TEAMID, UserTeamEntry.COLUMN_NAME_USERID);
+        List<Map.Entry<Long,Long>> memberships = new ArrayList<>();
+
+        if (cursorWrapper.getCount() > 0) {
+            while(cursor.moveToNext()) {
+                Map.Entry<Long, Long> entry = cursorWrapper.getEntry();
+                memberships.add(entry);
+            }
+        }
+        cursorWrapper.close();
+
+        return memberships;
     }
 
     private List<Team> queryTeams(String where, String[] whereArg) {
