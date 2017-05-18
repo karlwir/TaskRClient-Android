@@ -25,6 +25,8 @@
     <EditText
         android:text="@={viewModel.title}"
         android:hint="@string/title"
+        android:inputType="text"
+        android:maxLines="1"
         app:error="@{viewModel.titleError}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -38,6 +40,8 @@
     <EditText
         android:text="@={viewModel.description}"
         android:hint="@string/description"
+        android:inputType="text"
+        android:maxLines="1"
         app:error="@{viewModel.descriptionError}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

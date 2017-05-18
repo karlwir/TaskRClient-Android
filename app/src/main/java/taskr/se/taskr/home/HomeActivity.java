@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
+import taskr.se.taskr.teamdetail.TeamDetailActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -25,7 +26,6 @@ public class HomeActivity extends AppCompatActivity {
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
     }
 
@@ -40,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
                 startActivity(intent);
+                finish();
 
             }
         });
@@ -61,7 +62,9 @@ public class HomeActivity extends AppCompatActivity {
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                
+               Intent intent =  TeamDetailActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                finish();
                 return false;
             }
         });

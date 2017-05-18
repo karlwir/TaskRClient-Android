@@ -104,6 +104,7 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         Intent intent = ItemDetailActivity.createIntent(getContext());
         intent.putExtra("id", id);
         startActivity(intent);
+        getActivity().finish();
     }
 
     private static class ItemListAdapter extends RecyclerView.Adapter<ItemListViewHolder> {
