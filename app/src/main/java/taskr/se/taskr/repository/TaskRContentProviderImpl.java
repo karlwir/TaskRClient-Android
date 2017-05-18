@@ -161,7 +161,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getWorkItemsByUser(User user) {
-        return null;
+        return workItemRepository.getWorkItemsByUser(user);
     }
 
     @Override
