@@ -32,7 +32,6 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
     }
 
     public void save() {
-
         String titleString = title.get();
         String descriptionString = description.get();
         if(titleString != null && descriptionString != null) {
@@ -42,10 +41,12 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
 
     @Override
     public void onTitleError() {titleError.set("Invalid name.");
+
     }
 
     @Override
     public void onDescriptionError() {descriptionError.set("Invalid description.");
+
     }
 
     @Override
@@ -53,10 +54,11 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
         finish = true;
         TaskRContentProviderImpl.getInstance(context).addOrUpdateWorkItem(new WorkItem(title.get(), description.get(), "UNSTARTED"));
         context.startActivity(HomeActivity.createIntent(context));
+
     }
+
     public static boolean isFinished(){
         return finish;
     }
-
 
 }

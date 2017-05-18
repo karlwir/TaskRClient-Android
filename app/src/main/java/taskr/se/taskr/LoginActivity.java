@@ -1,5 +1,6 @@
 package taskr.se.taskr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,7 +23,9 @@ public class LoginActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(HomeActivity.createIntent(getApplicationContext()));
+                Intent intent = HomeActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                finish();
             }
         });
     }

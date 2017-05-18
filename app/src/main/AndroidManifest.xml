@@ -25,6 +25,7 @@
         <activity android:name=".itemdetail.ItemDetailActivity"></activity>
         <activity android:name=".home.workitemviewmodel.AddWorkItemActivity"></activity>
         <activity android:name=".teamdetail.TeamDetailActivity"></activity>
+        <activity android:name=".teamdetail.AddUserActivity"></activity>
     </application>
 
 </manifest>
