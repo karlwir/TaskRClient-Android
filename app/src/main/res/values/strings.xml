@@ -9,4 +9,7 @@
     <string name="add_member">+ ADD MEMBERS</string>
     <string name="search">search</string>
     <string name="add_workitem">Save</string>
+    <string name="firstname">Firstname</string>
+    <string name="lastname">Lastname</string>
+    <string name="username">Username</string>
 </resources>
