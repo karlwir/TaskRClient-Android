@@ -205,8 +205,6 @@ class WorkItemRepositorySql implements WorkItemRepository {
                 }
             }
         }
-        Log.d("Local size:", String.valueOf(localUnsyncedAssignments.size()));
-        Log.d("Synced size:", String.valueOf(syncedPersistedAssignments.size()));
     }
 
     private WorkItem getByItemKey(String itemKey) {

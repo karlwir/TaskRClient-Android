@@ -199,12 +199,14 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public void assignWorkItem(WorkItem workItem, User user) {
-
+        workItemRepository.assignWorkItem(workItem, user);
+        workItemHttpClient.assignWorkItem(workItem, user);
     }
 
     @Override
     public void unAssignWorkItem(WorkItem workItem, User user) {
-
+        workItemRepository.unAssignWorkItem(workItem, user);
+        workItemHttpClient.unAssignWorkItem(workItem, user);
     }
 
     @Override
