@@ -11,6 +11,7 @@ public class User extends  BaseEntity {
     private final String firstname;
     private final String lastname;
     private final String username;
+    private final boolean active = true;
 
     public User(long id, String itemKey, String firstname, String lastname, String username) {
         super(id, itemKey);

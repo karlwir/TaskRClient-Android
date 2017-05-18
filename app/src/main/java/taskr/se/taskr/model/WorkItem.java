@@ -12,7 +12,7 @@ public class WorkItem extends BaseEntity {
     private final String title;
     private final String description;
     private String status;
-    private long priority;
+    private long priority = 0;
     private List<User> users = new ArrayList<>();
 
     public WorkItem(long id, String itemKey, String title, String description, String status) {
@@ -20,7 +20,6 @@ public class WorkItem extends BaseEntity {
         this.title = title;
         this.description = description;
         this.status = status;
-        priority = 0;
     }
 
     public WorkItem(String title, String description, String status) {
