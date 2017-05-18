@@ -9,4 +9,5 @@
     <string name="add_member">+ ADD MEMBERS</string>
     <string name="search">search</string>
     <string name="add_workitem">Save</string>
+    <string name="team_detail">Teams</string>
 </resources>

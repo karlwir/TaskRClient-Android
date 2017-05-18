@@ -57,6 +57,15 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
 
+        MenuItem menuItem = menu.findItem(R.id.menu_options);
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                
+                return false;
+            }
+        });
+
         final MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
