@@ -1,6 +1,7 @@
 package taskr.se.taskr.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
@@ -22,5 +23,6 @@ public interface WorkItemRepository {
     void removeWorkItem(WorkItem workItem);
     void assignWorkItem(WorkItem workItem, User user);
     void unAssignWorkItem(WorkItem workItem, User user);
-    void syncWorkItems(List<WorkItem> workItems);
+    List<WorkItem> syncWorkItems(List<WorkItem> workItems);
+    void syncWorkItemAssignments(List<Map<String, User>> assignments);
 }

@@ -25,6 +25,9 @@ import taskr.se.taskr.model.WorkItem;
 
 abstract class BaseHttpClient<T extends BaseEntity> {
 
+    protected static final String WORKITEM_BASE_URL = "http://kw-taskmanager-api.herokuapp.com/workitems";
+    protected static final String USER_BASE_URL = "http://kw-taskmanager-api.herokuapp.com/users";
+
     protected MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
 
     protected class GetTask extends AsyncTask<Void, Void, List<T>> {
@@ -137,11 +140,9 @@ abstract class BaseHttpClient<T extends BaseEntity> {
     }
 
     protected class DeleteTask extends AsyncTask<Void, Void, Void> {
-        private final T entity;
         private final String url;
 
-        public DeleteTask(T entity, String url) {
-            this.entity = entity;
+        public DeleteTask(String url) {
             this.url = url;
         }
 

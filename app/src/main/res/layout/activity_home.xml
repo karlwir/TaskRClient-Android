@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/fragment_list_container"
     android:layout_height="match_parent"
     tools:context="taskr.se.taskr.home.HomeActivity">
 
@@ -13,13 +14,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <fragment
+  <!--  <fragment
             android:id="@+id/item_list_fragment"
-            android:name="taskr.se.taskr.home.ItemListFragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    <include layout="@layout/content_home" />
+    <include layout="@layout/content_home" /> -->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

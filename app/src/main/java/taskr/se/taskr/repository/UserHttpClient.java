@@ -14,28 +14,26 @@ import taskr.se.taskr.model.User;
 
 class UserHttpClient extends BaseHttpClient<User> {
 
-    private static final String BASE_URL = "http://kw-taskmanager-api.herokuapp.com/users";
-
     static synchronized UserHttpClient getInstance() {
         return new UserHttpClient();
     }
 
     void getUsers(OnResultEventListener<List<User>> listener) {
-        new GetTask(listener, BASE_URL).execute();
+        new GetTask(listener, USER_BASE_URL).execute();
     }
 
     void postUser(User user, OnResultEventListener listener) {
-        new PostTask(user, listener, BASE_URL).execute();
+        new PostTask(user, listener, USER_BASE_URL).execute();
     }
 
     void putUser(User user) {
-        String url = String.format("%s/%s", BASE_URL, user.getItemKey());
+        String url = String.format("%s/%s", USER_BASE_URL, user.getItemKey());
         new PutTask(user, url).execute();
     }
 
     void deleteUser(User user) {
-        String url = String.format("%s/%s", BASE_URL, user.getItemKey());
-        new DeleteTask(user, url).execute();
+        String url = String.format("%s/%s", USER_BASE_URL, user.getItemKey());
+        new DeleteTask(url).execute();
     }
 
     @Override

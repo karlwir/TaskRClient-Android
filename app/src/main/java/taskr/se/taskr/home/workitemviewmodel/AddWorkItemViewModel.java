@@ -1,6 +1,8 @@
 package taskr.se.taskr.home.workitemviewmodel;
 
 import android.content.Context;
+import android.databinding.Observable;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.util.Log;
 import android.widget.Button;
@@ -15,11 +17,11 @@ import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAddedListener{
 
+    private static boolean finish;
     public ObservableField<String> title = new ObservableField<>();
     public ObservableField<String> description = new ObservableField<>();
     public ObservableField<String> titleError = new ObservableField<>();
     public ObservableField<String> descriptionError = new ObservableField<>();
-
 
     private final Context context;
     private final AddWorkItemInteractor interactor;
@@ -48,9 +50,12 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
 
     @Override
     public void onSuccess() {
-        Log.d("VIEWMODEL", "onSuccess: ");
+        finish = true;
         TaskRContentProviderImpl.getInstance(context).addOrUpdateWorkItem(new WorkItem(title.get(), description.get(), "UNSTARTED"));
         context.startActivity(HomeActivity.createIntent(context));
+    }
+    public static boolean isFinished(){
+        return finish;
     }
 
 
