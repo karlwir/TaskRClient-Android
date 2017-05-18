@@ -12,7 +12,6 @@ import taskr.se.taskr.model.WorkItem;
 /**
  * Created by kawi01 on 2017-05-15.
  *
- * This class is still quite experimental and far from done
  */
 
 class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
@@ -25,7 +24,7 @@ class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
         new GetTask(listener, WORKITEM_BASE_URL).execute();
     }
 
-    void postWorkItem(WorkItem workItem, OnResultEventListener listener) {
+    void postWorkItem(WorkItem workItem, OnResultEventListener<String> listener) {
         new PostTask(workItem, listener, WORKITEM_BASE_URL).execute();
     }
 
@@ -39,12 +38,12 @@ class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
         new DeleteTask(url).execute();
     }
 
-    public void assignWorkItem(WorkItem workItem, User user) {
+    void assignWorkItem(WorkItem workItem, User user) {
         String url = String.format("%s/%s/workitems/", USER_BASE_URL, user.getItemKey());
         new PutTask(workItem, url).execute();
     }
 
-    public void unAssignWorkItem(WorkItem workItem, User user) {
+    void unAssignWorkItem(WorkItem workItem, User user) {
         String url = String.format("%s/%s/workitems/%s", USER_BASE_URL, user.getItemKey(), workItem.getItemKey());
         new DeleteTask(url).execute();
     }

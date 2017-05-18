@@ -24,9 +24,11 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private final UserHttpClient userHttpClient;
     private final WorkItemHttpClient workItemHttpClient;
     private final WorkItemRepository workItemRepository;
+    private final TeamRepository teamRepository;
+    private final TeamHttpClient teamHttpClient;
     private static TaskRContentProviderImpl instance;
     private List<Presenter> observers;
-    private Long lastWorkitemSyncTimeStamp = null;
+    private Long lastWorkitemSyncTimeStamp;
 
     public static synchronized TaskRContentProviderImpl getInstance(Context context) {
         if(instance == null) {
@@ -40,6 +42,8 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         userHttpClient = UserHttpClient.getInstance();
         workItemRepository = WorkItemRepositorySql.getInstance(context);
         workItemHttpClient = WorkItemHttpClient.getInstance();
+        teamRepository = TeamRepositorySql.getInstance(context);
+        teamHttpClient = TeamHttpClient.getInstance();
         observers = new ArrayList<>();
     }
 
@@ -180,10 +184,10 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         if (workItem.hasBeenSavedToServer()) {
             workItemHttpClient.putWorkItem(workItem);
         } else {
-            workItemHttpClient.postWorkItem(workItem, new OnResultEventListener() {
+            workItemHttpClient.postWorkItem(workItem, new OnResultEventListener<String>() {
                 @Override
-                public void onResult(Object generatedKey) {
-                    WorkItem _workItem = new WorkItem(id, (String) generatedKey, workItem.getTitle(), workItem.getDescription(), workItem.getStatus());
+                public void onResult(String generatedKey) {
+                    WorkItem _workItem = new WorkItem(id, generatedKey, workItem.getTitle(), workItem.getDescription(), workItem.getStatus());
                     workItemRepository.addOrUpdateWorkItem(_workItem);
                 }
             });
@@ -239,32 +243,61 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
-    public List<Team> getTeams() {
-        return null;
+    public List<Team> getTeams(final boolean notifyObservers) {
+        teamHttpClient.getTeams(new OnResultEventListener<List<Team>>() {
+            @Override
+            public void onResult(List<Team> result) {
+                if (result != null) {
+                    syncTeams(result);
+                }
+                if(notifyObservers) notifyObservers();
+            }
+        });
+        return teamRepository.getTeams(false);
     }
 
     @Override
     public Team getTeam(long id) {
-        return null;
+        return teamRepository.getTeam(id);
     }
 
     @Override
-    public long addOrUpdateTeam(Team team) {
-        return 0;
+    public long addOrUpdateTeam(final Team team) {
+        final long id = teamRepository.addOrUpdateTeam(team);
+        if(team.hasBeenSavedToServer()) {
+            teamHttpClient.putTeam(team);
+        } else {
+            teamHttpClient.postTeam(team, new OnResultEventListener<String>() {
+                @Override
+                public void onResult(String generatedKey) {
+                    Team _team = new Team(id, generatedKey, team.getName(), team.getDescription());
+                    teamRepository.addOrUpdateTeam(_team);
+                }
+            });
+        }
+        return id;
     }
 
     @Override
-    public void deleteTeam(Team team) {
-
+    public void removeTeam(Team team) {
+        teamRepository.removeTeam(team);
+        teamHttpClient.deleteTeam(team);
     }
 
     @Override
     public void addTeamMember(Team team, User user) {
-
+        teamRepository.addTeamMember(team, user);
+        teamHttpClient.addTeamMember(team, user);
     }
 
     @Override
     public void removeTeamMember(Team team, User user) {
+        teamRepository.removeTeamMember(team, user);
+        teamHttpClient.removeTeamMember(team, user);
+    }
 
+    @Override
+    public void syncTeams(List<Team> teams) {
+        teamRepository.syncTeams(teams);
     }
 }

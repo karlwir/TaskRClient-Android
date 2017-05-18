@@ -27,6 +27,7 @@ abstract class BaseHttpClient<T extends BaseEntity> {
 
     protected static final String WORKITEM_BASE_URL = "http://kw-taskmanager-api.herokuapp.com/workitems";
     protected static final String USER_BASE_URL = "http://kw-taskmanager-api.herokuapp.com/users";
+    protected static final String TEAM_BASE_URL = "http://kw-taskmanager-api.herokuapp.com/teams";
 
     protected MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
 
@@ -135,7 +136,9 @@ abstract class BaseHttpClient<T extends BaseEntity> {
 
         @Override
         protected void onPostExecute(String generatedKey) {
-            listener.onResult(generatedKey);
+            if(generatedKey != null) {
+                listener.onResult(generatedKey);
+            }
         }
     }
 

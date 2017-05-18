@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -237,7 +236,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
         if(workItemCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
-                WorkItem workItem =workItemCursorWrapper.getWorkItem();
+                WorkItem workItem = workItemCursorWrapper.getWorkItem();
                 addWorkitemUser(workItem);
                 workItems.add(workItem);
             }
@@ -297,8 +296,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
                 + UserWorkItemEntry.COLUMN_NAME_USERID + "=" + String.valueOf(user.getId()) + ";";
 
         Cursor cursor = database.rawQuery(query, null);
-        UserWorkItemCursorWrapper cursorWrapper = new UserWorkItemCursorWrapper(cursor);
-
+        RelationCursorWrapper cursorWrapper = new RelationCursorWrapper(cursor, UserWorkItemEntry.COLUMN_NAME_WORKITEMID, UserWorkItemEntry.COLUMN_NAME_USERID);
 
         if (cursorWrapper.getCount() > 0) {
             cursorWrapper.close();
@@ -312,7 +310,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
         String query = "SELECT * FROM " + UserWorkItemEntry.TABLE_NAME;
 
         Cursor cursor = database.rawQuery(query, null);
-        UserWorkItemCursorWrapper cursorWrapper = new UserWorkItemCursorWrapper(cursor);
+        RelationCursorWrapper cursorWrapper = new RelationCursorWrapper(cursor, UserWorkItemEntry.COLUMN_NAME_WORKITEMID, UserWorkItemEntry.COLUMN_NAME_USERID);
         List<Map<Long, Long>> assignments = new ArrayList<>();
 
         if (cursorWrapper.getCount() > 0) {

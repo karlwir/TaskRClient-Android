@@ -10,10 +10,11 @@ import taskr.se.taskr.model.User;
  */
 
 public interface TeamRepository {
-    List<Team> getTeams();
+    List<Team> getTeams(boolean notifyObservers);
     Team getTeam(long id);
     long addOrUpdateTeam(Team team);
-    void deleteTeam(Team team);
+    void removeTeam(Team team);
     void addTeamMember(Team team, User user);
     void removeTeamMember(Team team, User user);
+    void syncTeams(List<Team> teams);
 }

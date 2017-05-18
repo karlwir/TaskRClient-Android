@@ -26,10 +26,23 @@ public class TaskRDbContract {
         public static final String COLUMN_NAME_USERNAME = "username";
     }
 
+    public static class TeamsEntry implements BaseColumns {
+        public static final String TABLE_NAME = "teams";
+        public static final String COLUMN_NAME_ITEMKEY = "itemkey";
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_DESCRIPTION = "description";
+    }
+
     public static class UserWorkItemEntry implements BaseColumns {
         public static final String TABLE_NAME = "user_workitem";
         public static final String COLUMN_NAME_USERID = "user_id";
         public static final String COLUMN_NAME_WORKITEMID = "workitem_id";
+    }
+
+    public static class UserTeamEntry implements BaseColumns {
+        public static final String TABLE_NAME = "user_team";
+        public static final String COLUMN_NAME_USERID = "user_id";
+        public static final String COLUMN_NAME_TEAMID = "team_id";
     }
 
 }
