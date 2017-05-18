@@ -9,29 +9,27 @@ import android.os.Bundle;
 
 import taskr.se.taskr.R;
 
-public class TeamDetailActivity extends AppCompatActivity {
-
+public class AddUserActivity extends AppCompatActivity {
     private Bundle bundle;
 
-    public static Intent createIntent(Context context){
-        return new Intent(context, TeamDetailActivity.class);
+    public static Intent createIntent (Context context) {
+        return new Intent(context, AddUserActivity.class);
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_team_detail);
-
-        bundle = this.getIntent().getExtras();
+        setContentView(R.layout.activity_add_user);
 
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.team_fragment_container);
-        if(fragment==null){
-            fragment = new TeamDetailFragment();
+        bundle = this.getIntent().getExtras();
+        Fragment fragment = fm.findFragmentById(R.id.add_user_fragment_container);
+
+        if(fragment == null){
+            fragment = new AddUserFragment();
             fragment.setArguments(bundle);
-            fm.beginTransaction().add(R.id.team_fragment_container, fragment).commit();
+            fm.beginTransaction().add(R.id.add_user_fragment_container , fragment).commit();
         }
-
-
     }
 }
