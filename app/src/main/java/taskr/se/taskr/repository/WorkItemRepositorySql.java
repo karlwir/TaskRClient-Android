@@ -237,7 +237,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
         if(workItemCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
                 WorkItem workItem = workItemCursorWrapper.getWorkItem();
-                addWorkitemUser(workItem);
+                addWorkitemUsers(workItem);
                 workItems.add(workItem);
             }
         }
@@ -263,14 +263,14 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
         if(workItemCursorWrapper.getCount() > 0) {
             workItem = workItemCursorWrapper.getFirstWorkItem();
-            addWorkitemUser(workItem);
+            addWorkitemUsers(workItem);
         }
         workItemCursorWrapper.close();
 
         return workItem;
     }
 
-    private WorkItem addWorkitemUser(WorkItem workItem) {
+    private WorkItem addWorkitemUsers(WorkItem workItem) {
         String query =
                 "SELECT * FROM " + UsersEntry.TABLE_NAME + " INNER JOIN " +
                         UserWorkItemEntry.TABLE_NAME + " ON " +
@@ -282,8 +282,10 @@ class WorkItemRepositorySql implements WorkItemRepository {
         List<User> users = new ArrayList<>();
 
         if(userCursorWrapper.getCount() > 0) {
-            User user = userCursorWrapper.getFirstUser();
-            workItem.addUser(user);
+            while(userCursorWrapper.moveToNext()) {
+                User user = userCursorWrapper.getUser();
+                workItem.addUser(user);
+            }
         }
 
         userCursorWrapper.close();

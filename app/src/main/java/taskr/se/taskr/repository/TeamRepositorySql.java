@@ -115,7 +115,7 @@ class TeamRepositorySql implements TeamRepository {
         if(teamCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
                 Team team = teamCursorWrapper.getTeam();
-                //  addTeamMemers(team);
+                addTeamMembers(team);
                 teams.add(team);
             }
         }
@@ -140,7 +140,7 @@ class TeamRepositorySql implements TeamRepository {
 
         if(teamCursorWrapper.getCount() > 0) {
             team = teamCursorWrapper.getFirstTeam();
-            //  addTeamMemers(team);
+            addTeamMembers(team);
         }
         teamCursorWrapper.close();
 
@@ -158,6 +158,28 @@ class TeamRepositorySql implements TeamRepository {
         cv.put(TeamsEntry.COLUMN_NAME_DESCRIPTION, team.getDescription());
 
         return cv;
+    }
+
+    private Team addTeamMembers(Team team) {
+        String query =
+                "SELECT * FROM " + TaskRDbContract.UsersEntry.TABLE_NAME + " INNER JOIN " +
+                        TaskRDbContract.UserTeamEntry.TABLE_NAME + " ON " +
+                        TaskRDbContract.UsersEntry.TABLE_NAME + "." + TaskRDbContract.UsersEntry._ID + "="  + TaskRDbContract.UserTeamEntry.TABLE_NAME + "." + TaskRDbContract.UserTeamEntry.COLUMN_NAME_USERID +
+                        " WHERE " + TaskRDbContract.UserTeamEntry.TABLE_NAME + "." + TaskRDbContract.UserTeamEntry.COLUMN_NAME_TEAMID + "=" + String.valueOf(team.getId()) + ";";
+
+        Cursor cursor = database.rawQuery(query, null);
+        UserCursorWrapper userCursorWrapper = new UserCursorWrapper(cursor);
+        List<User> users = new ArrayList<>();
+
+        if(userCursorWrapper.getCount() > 0) {
+            while(userCursorWrapper.moveToNext()) {
+                User user = userCursorWrapper.getUser();
+                team.addMember(user);
+            }
+        }
+        userCursorWrapper.close();
+
+        return team;
     }
 
     private boolean membershipPersisted(Team team, User user) {
