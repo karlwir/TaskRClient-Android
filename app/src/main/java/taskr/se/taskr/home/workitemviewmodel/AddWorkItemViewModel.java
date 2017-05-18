@@ -20,7 +20,6 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
     public ObservableField<String> titleError = new ObservableField<>();
     public ObservableField<String> descriptionError = new ObservableField<>();
 
-
     private final Context context;
     private final AddWorkItemInteractor interactor;
 
