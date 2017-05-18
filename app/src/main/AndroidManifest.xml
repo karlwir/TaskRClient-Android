@@ -11,6 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity
             android:name=".home.HomeActivity"
@@ -19,14 +24,8 @@
             </activity>
         <activity android:name=".itemdetail.ItemDetailActivity"></activity>
         <activity android:name=".home.workitemviewmodel.AddWorkItemActivity"></activity>
+        <activity android:name=".teamdetail.TeamDetailActivity"></activity>
         <activity android:name=".teamdetail.AddUserActivity"></activity>
-        <activity android:name=".teamdetail.TeamDetailActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

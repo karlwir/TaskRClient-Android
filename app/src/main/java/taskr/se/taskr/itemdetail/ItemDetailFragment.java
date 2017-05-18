@@ -34,7 +34,6 @@ public class ItemDetailFragment extends Fragment{
         View view = binding.getRoot();
         Bundle bundle = getArguments();
         Long id = bundle.getLong("id");
-        Log.d(id.toString(), "onCreateView: ");
         WorkItem item = TaskRContentProviderImpl.getInstance(getContext()).getWorkItem(id);
         binding.setWorkitem(item);
         return view;
