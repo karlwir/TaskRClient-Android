@@ -66,16 +66,18 @@ class UserRepositorySql implements UserRepository {
     }
 
     @Override
-    public void syncUsers(List<User> usersServer, boolean removeUnsyncedLocals) {
+    public List<User> syncUsers(List<User> usersServer, boolean removeUnsyncedLocals) {
         List<User> usersLocal = getUsers(false);
+        List<User> syncedToReturn = new ArrayList<>();
         for(User user : usersServer) {
             User persistedVersion = getByItemKey(user.getItemKey());
             if (persistedVersion == null) {
-
                 Long id = addOrUpdateUser(user);
+                syncedToReturn.add(getUser(id));
             } else {
                 ContentValues cv = getContentValues(user);
                 database.update(UsersEntry.TABLE_NAME, cv, UsersEntry._ID + " = ?", new String[] { String.valueOf(persistedVersion.getId()) });
+                syncedToReturn.add(getUser(persistedVersion.getId()));
             }
         }
         if (removeUnsyncedLocals) {
@@ -96,6 +98,8 @@ class UserRepositorySql implements UserRepository {
                 }
             }
         }
+
+        return syncedToReturn;
     }
 
     private User getByItemKey(String itemKey) {

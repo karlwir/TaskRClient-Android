@@ -13,5 +13,5 @@ public interface UserRepository {
     User getUser(long id);
     long addOrUpdateUser(User user);
     void removeUser(User user);
-    void syncUsers(List<User> users, boolean removeUnsyncedLocals);
+    List<User> syncUsers(List<User> users, boolean removeUnsyncedLocals);
 }

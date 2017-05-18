@@ -1,13 +1,16 @@
 package taskr.se.taskr.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 
@@ -23,6 +26,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private final WorkItemRepository workItemRepository;
     private static TaskRContentProviderImpl instance;
     private List<Presenter> observers;
+    private Long lastWorkitemSyncTimeStamp = null;
 
     public static synchronized TaskRContentProviderImpl getInstance(Context context) {
         if(instance == null) {
@@ -90,8 +94,8 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         userHttpClient.deleteUser(user);
     }
 
-    public void syncUsers(List<User> users, boolean removeUnsyncedLocals) {
-        userRepository.syncUsers(users, removeUnsyncedLocals);
+    public List<User> syncUsers(List<User> users, boolean removeUnsyncedLocals) {
+        return userRepository.syncUsers(users, removeUnsyncedLocals);
     }
 
     @Override
@@ -157,7 +161,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getWorkItemsByUser(User user) {
-        return null;
+        return workItemRepository.getWorkItemsByUser(user);
     }
 
     @Override
@@ -195,22 +199,43 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public void assignWorkItem(WorkItem workItem, User user) {
-
+        workItemRepository.assignWorkItem(workItem, user);
+        workItemHttpClient.assignWorkItem(workItem, user);
     }
 
     @Override
     public void unAssignWorkItem(WorkItem workItem, User user) {
-
+        workItemRepository.unAssignWorkItem(workItem, user);
+        workItemHttpClient.unAssignWorkItem(workItem, user);
     }
 
     @Override
-    public void syncWorkItems(List<WorkItem> workItems) {
-        for (WorkItem workItem : workItems) {
-            if (workItem.getUsers().size() > 0) {
-                syncUsers(workItem.getUsers(), false);
+    public List<WorkItem> syncWorkItems(List<WorkItem> workItems) {
+        Long timeStamp = System.currentTimeMillis();
+
+        if ( lastWorkitemSyncTimeStamp == null || timeStamp - lastWorkitemSyncTimeStamp - 5000 > 0) {
+            List<Map<String, User>> assignmentsOnServer = new ArrayList<>();
+            for (WorkItem workItem : workItems) {
+                if (workItem.getUsers().size() > 0) {
+                    List<User> syncedUsersWithAssignments = syncUsers(workItem.getUsers(), false);
+
+                    for(int i= 0; i < syncedUsersWithAssignments.size(); i++ ) {
+                        Map<String, User> assignment = new HashMap<>();
+                        assignment.put(workItem.getItemKey(), syncedUsersWithAssignments.get(i));
+                        assignmentsOnServer.add(assignment);
+                    }
+                }
             }
+            workItemRepository.syncWorkItems(workItems);
+            syncWorkItemAssignments(assignmentsOnServer);
+            lastWorkitemSyncTimeStamp = timeStamp;
         }
-        workItemRepository.syncWorkItems(workItems);
+        return null;
+    }
+
+    @Override
+    public void syncWorkItemAssignments(List<Map<String, User>> assignments) {
+        workItemRepository.syncWorkItemAssignments(assignments);
     }
 
     @Override
