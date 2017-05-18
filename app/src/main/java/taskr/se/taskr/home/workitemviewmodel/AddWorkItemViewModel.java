@@ -32,7 +32,6 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
     }
 
     public void save() {
-
         String titleString = title.get();
         String descriptionString = description.get();
         if(titleString != null && descriptionString != null) {
