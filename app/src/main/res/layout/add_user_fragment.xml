@@ -5,60 +5,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
+
     android:orientation="vertical"
     tools:context="taskr.se.taskr.teamdetail.AddUserFragment">
 
 
     <TextView
-        android:text="ADD USER"
-        android:textSize="22dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="21dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="#D3D3D3" />
-
-    <TextView
-        android:text="Firstname"
-        android:textSize="18dp"
+        android:text="@string/firstname"
         android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
+        android:textStyle="bold"
+         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          />
 
     <EditText
         android:id="@+id/et_firstname"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
+        android:inputType="text"
+        android:maxLines="1"
+
         android:layout_height="wrap_content" />
 
     <TextView
-        android:text="Lastname"
-        android:textSize="18dp"
+        android:text="@string/lastname"
         android:layout_marginTop="10dp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+
     <EditText
         android:id="@+id/et_lastname"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:inputType="text"
+        android:maxLines="1"
+         android:layout_height="wrap_content" />
 
     <TextView
-        android:text="Username"
-        android:textSize="18dp"
+        android:text="@string/username"
         android:layout_marginTop="10dp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/et_username"
-        android:layout_width="300dp"
+        android:inputType="text"
+        android:maxLines="1"
+        android:layout_width="match_parent"
+
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/savebtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

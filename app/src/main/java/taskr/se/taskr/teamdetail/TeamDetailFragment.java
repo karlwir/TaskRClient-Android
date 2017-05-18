@@ -29,7 +29,7 @@ public class TeamDetailFragment extends Fragment {
         TeamDetailFragmentBinding binding = DataBindingUtil.inflate(inflater , R.layout.team_detail_fragment, container , false);
         final View view = binding.getRoot();
 
-        Team team = new Team("Johns awesome team", "Teamet är AWESOME");
+       final Team team = new Team("Johns awesome team", "Teamet är AWESOME");
         binding.setTeam(team);
 
         Button btn = (Button) view.findViewById(R.id.add_btn);
@@ -39,6 +39,7 @@ public class TeamDetailFragment extends Fragment {
                 Toast.makeText(getActivity() , "HELLO", Toast.LENGTH_SHORT).show();
 
                  Intent intent = AddUserActivity.createIntent(getContext());
+                intent.putExtra("id", team.getId());
                  startActivity(intent);
             }
         });
