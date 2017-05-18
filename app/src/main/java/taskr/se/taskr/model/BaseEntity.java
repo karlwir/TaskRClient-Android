@@ -31,4 +31,10 @@ public abstract class BaseEntity {
     public boolean hasBeenSavedToServer() {
         return DEFAULT_ITEMKEY != null;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        BaseEntity entity = (BaseEntity) obj;
+        return entity.getId() == id && entity.getItemKey().equals(itemKey);
+    }
 }

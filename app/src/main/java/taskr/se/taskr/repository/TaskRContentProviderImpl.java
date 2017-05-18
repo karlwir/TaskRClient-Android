@@ -221,14 +221,13 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         Long timeStamp = System.currentTimeMillis();
 
         if ( lastWorkitemSyncTimeStamp == null || timeStamp - lastWorkitemSyncTimeStamp - SYNC_TIMEOUT > 0) {
-            List<Map<String, User>> assignmentsOnServer = new ArrayList<>();
+            List<Map.Entry<String, User>> assignmentsOnServer = new ArrayList<>();
             for (WorkItem workItem : workItems) {
                 if (workItem.getUsers().size() > 0) {
                     List<User> syncedUsersWithAssignments = syncUsers(workItem.getUsers(), false);
 
                     for(User user : syncedUsersWithAssignments) {
-                        Map<String, User> assignment = new HashMap<>();
-                        assignment.put(workItem.getItemKey(), user);
+                        Map.Entry<String, User> assignment = new AbstractMap.SimpleEntry<>(workItem.getItemKey(), user);
                         assignmentsOnServer.add(assignment);
                     }
                 }
@@ -241,7 +240,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
-    public void syncWorkItemAssignments(List<Map<String, User>> assignments) {
+    public void syncWorkItemAssignments(List<Map.Entry<String, User>> assignments) {
         workItemRepository.syncWorkItemAssignments(assignments);
     }
 

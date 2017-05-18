@@ -146,8 +146,8 @@ class TeamRepositorySql implements TeamRepository {
 
         if (cursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
-                Map.Entry<Long, Long> entry = cursorWrapper.getEntry();
-                memberships.add(entry);
+                Map.Entry<Long, Long> membership = cursorWrapper.getEntry();
+                memberships.add(membership);
             }
         }
         cursorWrapper.close();

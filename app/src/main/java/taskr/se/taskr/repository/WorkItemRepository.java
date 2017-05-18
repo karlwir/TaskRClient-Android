@@ -24,5 +24,5 @@ public interface WorkItemRepository {
     void assignWorkItem(WorkItem workItem, User user);
     void unAssignWorkItem(WorkItem workItem, User user);
     List<WorkItem> syncWorkItems(List<WorkItem> workItems);
-    void syncWorkItemAssignments(List<Map<String, User>> assignments);
+    void syncWorkItemAssignments(List<Map.Entry<String, User>> assignments);
 }

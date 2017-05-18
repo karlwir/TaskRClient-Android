@@ -66,40 +66,29 @@ class UserRepositorySql implements UserRepository {
     }
 
     @Override
-    public List<User> syncUsers(List<User> usersServer, boolean removeUnsyncedLocals) {
-        List<User> usersLocal = getUsers(false);
-        List<User> syncedToReturn = new ArrayList<>();
-        for(User user : usersServer) {
+    public List<User> syncUsers(List<User> usersFromServer, boolean removeUnsyncedLocals) {
+        List<User> localUnsyncedUsers = getUsers(false);
+        List<User> syncedPersistedUsers = new ArrayList<>();
+        for(User user : usersFromServer) {
+            Long id;
             User persistedVersion = getByItemKey(user.getItemKey());
             if (persistedVersion == null) {
-                Long id = addOrUpdateUser(user);
-                syncedToReturn.add(getUser(id));
+                id = addOrUpdateUser(user);
             } else {
+                id = persistedVersion.getId();
                 ContentValues cv = getContentValues(user);
-                database.update(UsersEntry.TABLE_NAME, cv, UsersEntry._ID + " = ?", new String[] { String.valueOf(persistedVersion.getId()) });
-                syncedToReturn.add(getUser(persistedVersion.getId()));
+                database.update(UsersEntry.TABLE_NAME, cv, UsersEntry._ID + " = ?", new String[] { String.valueOf(id) });
             }
+            syncedPersistedUsers.add(getUser(id));
         }
-        if (removeUnsyncedLocals) {
-            List<User> dontRemove = new ArrayList<>();
-            if (usersLocal.size() > usersServer.size()) {
-                for (User userLocal : usersLocal) {
-                    for (User userServer : usersServer) {
-                        if (userLocal.getItemKey() != null){
-                            if (userLocal.getItemKey().equals(userServer.getItemKey())) {
-                                dontRemove.add(userLocal);
-                            }
-                        }
-                    }
-                }
-                usersLocal.removeAll(dontRemove);
-                for (User user : usersLocal) {
-                    removeUser(user);
-                }
+        if (removeUnsyncedLocals && localUnsyncedUsers.size() > syncedPersistedUsers.size()) {
+            localUnsyncedUsers.removeAll(syncedPersistedUsers);
+            for (User user : localUnsyncedUsers) {
+                removeUser(user);
             }
         }
 
-        return syncedToReturn;
+        return syncedPersistedUsers;
     }
 
     private User getByItemKey(String itemKey) {

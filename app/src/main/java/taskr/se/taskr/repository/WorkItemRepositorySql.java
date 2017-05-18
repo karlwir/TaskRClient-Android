@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,61 +149,47 @@ class WorkItemRepositorySql implements WorkItemRepository {
     }
 
     @Override
-    public List<WorkItem> syncWorkItems(List<WorkItem> workItemsServer) {
-        List<WorkItem> workItemsLocal = getWorkItems(false);
-        List<WorkItem> syncedToReturn = new ArrayList<>();
-        for(WorkItem workItem : workItemsServer) {
+    public List<WorkItem> syncWorkItems(List<WorkItem> workItemsFromServer) {
+        List<WorkItem> localUnsyncedWorkItems = getWorkItems(false);
+        List<WorkItem> syncedPersistedWorkItems = new ArrayList<>();
+        for(WorkItem workItem : workItemsFromServer) {
+            Long id;
             WorkItem persistedVersion = getByItemKey(workItem.getItemKey());
             if(persistedVersion == null) {
-                long id = addOrUpdateWorkItem(workItem);
-                syncedToReturn.add(getWorkItem(id));
+                id = addOrUpdateWorkItem(workItem);
             } else {
+                id = persistedVersion.getId();
                 ContentValues cv = getContentValues(workItem);
-                database.update(WorkItemsEntry.TABLE_NAME, cv, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(persistedVersion.getId()) });
-                syncedToReturn.add(getWorkItem(persistedVersion.getId()));
+                database.update(WorkItemsEntry.TABLE_NAME, cv, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(id) });
             }
+            syncedPersistedWorkItems.add(getWorkItem(id));
         }
-        if(workItemsLocal.size() > workItemsServer.size()) {
-            List<WorkItem> dontRemove = new ArrayList<>();
-            for (WorkItem workItemLocal : workItemsLocal) {
-                for(WorkItem workItemServer: workItemsServer) {
-                    if (workItemLocal.getItemKey() != null) {
-                        if (workItemLocal.getItemKey().equals(workItemServer.getItemKey())) {
-                            dontRemove.add(workItemLocal);
-                        }
-                    }
-                }
-            }
-            workItemsLocal.removeAll(dontRemove);
-            for (WorkItem workItemLocal : workItemsLocal) {
-                removeWorkItem(workItemLocal);
+        if(localUnsyncedWorkItems.size() > syncedPersistedWorkItems.size()) {
+            localUnsyncedWorkItems.removeAll(syncedPersistedWorkItems);
+            for (WorkItem workItem : localUnsyncedWorkItems) {
+                removeWorkItem(workItem);
             }
         }
 
-        return syncedToReturn;
+        return syncedPersistedWorkItems;
     }
 
     @Override
-    public void syncWorkItemAssignments(List<Map<String, User>> assignments) {
-        List<Map<Long, Long>> syncedPersistedAssignments = new ArrayList<>();
-        List<Map<Long, Long>> localUnsyncedAssignments = getAllAssignments();
+    public void syncWorkItemAssignments(List<Map.Entry<String, User>> assignments) {
+        List<Map.Entry<Long, Long>> syncedPersistedAssignments = new ArrayList<>();
+        List<Map.Entry<Long, Long>> localUnsyncedAssignments = getAllAssignments();
 
-        for (Map<String, User> map : assignments) {
-            for (Map.Entry<String, User> entry : map.entrySet()) {
-                WorkItem workItem = getByItemKey(entry.getKey());
-                User user = entry.getValue();
+        for (Map.Entry<String, User> assignment : assignments) {
+                WorkItem workItem = getByItemKey(assignment.getKey());
+                User user = assignment.getValue();
                 assignWorkItem(workItem, user);
-                Map<Long, Long> assignment = new HashMap<>();
-                assignment.put(workItem.getId(), user.getId());
-                syncedPersistedAssignments.add(assignment);
-            }
+                Map.Entry<Long, Long> syncedPersistedAssignment = new AbstractMap.SimpleEntry<>(workItem.getId(), user.getId());
+                syncedPersistedAssignments.add(syncedPersistedAssignment);
         }
         if (localUnsyncedAssignments.size() > syncedPersistedAssignments.size()) {
             localUnsyncedAssignments.removeAll(syncedPersistedAssignments);
-            for (Map<Long, Long> map : localUnsyncedAssignments) {
-                for (Map.Entry<Long, Long> entry : map.entrySet()) {
-                    unAssignWorkItem(entry.getKey(), entry.getValue());
-                }
+            for (Map.Entry<Long, Long> oldAssignment : localUnsyncedAssignments) {
+                unAssignWorkItem(oldAssignment.getKey(), oldAssignment.getValue());
             }
         }
     }
@@ -237,7 +225,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
         if(workItemCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
                 WorkItem workItem = workItemCursorWrapper.getWorkItem();
-                addWorkitemUsers(workItem);
+                joinWorkitemAssignees(workItem);
                 workItems.add(workItem);
             }
         }
@@ -263,14 +251,14 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
         if(workItemCursorWrapper.getCount() > 0) {
             workItem = workItemCursorWrapper.getFirstWorkItem();
-            addWorkitemUsers(workItem);
+            joinWorkitemAssignees(workItem);
         }
         workItemCursorWrapper.close();
 
         return workItem;
     }
 
-    private WorkItem addWorkitemUsers(WorkItem workItem) {
+    private WorkItem joinWorkitemAssignees(WorkItem workItem) {
         String query =
                 "SELECT * FROM " + UsersEntry.TABLE_NAME + " INNER JOIN " +
                         UserWorkItemEntry.TABLE_NAME + " ON " +
@@ -308,18 +296,16 @@ class WorkItemRepositorySql implements WorkItemRepository {
         return false;
     }
 
-    private List<Map<Long, Long>> getAllAssignments() {
+    private List<Map.Entry<Long, Long>> getAllAssignments() {
         String query = "SELECT * FROM " + UserWorkItemEntry.TABLE_NAME;
 
         Cursor cursor = database.rawQuery(query, null);
         RelationCursorWrapper cursorWrapper = new RelationCursorWrapper(cursor, UserWorkItemEntry.COLUMN_NAME_WORKITEMID, UserWorkItemEntry.COLUMN_NAME_USERID);
-        List<Map<Long, Long>> assignments = new ArrayList<>();
+        List<Map.Entry<Long, Long>> assignments = new ArrayList<>();
 
         if (cursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
-                Map.Entry<Long, Long> entry = cursorWrapper.getEntry();
-                Map<Long, Long> assignment = new HashMap<>();
-                assignment.put(entry.getKey(), entry.getValue());
+                Map.Entry<Long, Long> assignment = cursorWrapper.getEntry();
                 assignments.add(assignment);
             }
         }
