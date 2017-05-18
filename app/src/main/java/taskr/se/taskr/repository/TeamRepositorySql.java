@@ -102,7 +102,7 @@ class TeamRepositorySql implements TeamRepository {
             if(persistedVersion == null) {
                 id = addOrUpdateTeam(team);
             } else {
-                id = team.getId();
+                id = persistedVersion.getId();
                 ContentValues cv = getContentValues(team);
                 database.update(TeamsEntry.TABLE_NAME, cv, TeamsEntry._ID + " = ?", new String[] { String.valueOf(id) });
             }
@@ -172,7 +172,7 @@ class TeamRepositorySql implements TeamRepository {
         if(teamCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
                 Team team = teamCursorWrapper.getTeam();
-                addTeamMembers(team);
+                joinTeamMembers(team);
                 teams.add(team);
             }
         }
@@ -197,7 +197,7 @@ class TeamRepositorySql implements TeamRepository {
 
         if(teamCursorWrapper.getCount() > 0) {
             team = teamCursorWrapper.getFirstTeam();
-            addTeamMembers(team);
+            joinTeamMembers(team);
         }
         teamCursorWrapper.close();
 
@@ -217,7 +217,7 @@ class TeamRepositorySql implements TeamRepository {
         return cv;
     }
 
-    private Team addTeamMembers(Team team) {
+    private Team joinTeamMembers(Team team) {
         String query =
                 "SELECT * FROM " + TaskRDbContract.UsersEntry.TABLE_NAME + " INNER JOIN " +
                         TaskRDbContract.UserTeamEntry.TABLE_NAME + " ON " +
