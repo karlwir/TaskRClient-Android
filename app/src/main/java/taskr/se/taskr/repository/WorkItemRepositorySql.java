@@ -4,9 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
@@ -120,32 +123,43 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
     @Override
     public void assignWorkItem(WorkItem workItem, User user) {
-        if (workItem.hasBeenPersisted() && user.hasBeenPersisted()) {
-            ContentValues cv = new ContentValues();
-            cv.put(UserWorkItemEntry.COLUMN_NAME_WORKITEMID, workItem.getId());
-            cv.put(UserWorkItemEntry.COLUMN_NAME_USERID, user.getId());
-            database.insert(UserWorkItemEntry.TABLE_NAME, null, cv);
+        if (workItem.hasBeenPersisted() && user.hasBeenPersisted() && !assignmentPersisted(workItem, user)) {
+            assignWorkItem(workItem.getId(), user.getId());
         }
+    }
+
+    private void assignWorkItem(Long workItemId, Long userId) {
+        ContentValues cv = new ContentValues();
+        cv.put(UserWorkItemEntry.COLUMN_NAME_WORKITEMID, workItemId);
+        cv.put(UserWorkItemEntry.COLUMN_NAME_USERID, userId);
+        database.insert(UserWorkItemEntry.TABLE_NAME, null, cv);
     }
 
     @Override
     public void unAssignWorkItem(WorkItem workItem, User user) {
         if (workItem.hasBeenPersisted() && user.hasBeenPersisted()) {
-            database.delete(UserWorkItemEntry.TABLE_NAME, UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
-                    " = ? AND " + UserWorkItemEntry.COLUMN_NAME_USERID + "= ?", new String[] { String.valueOf(workItem.getId()), String.valueOf(user.getId()) });
+            unAssignWorkItem(workItem.getId(), user.getId());
         }
     }
 
+    private void unAssignWorkItem(Long workItemId, Long userId) {
+        database.delete(UserWorkItemEntry.TABLE_NAME, UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
+                " = ? AND " + UserWorkItemEntry.COLUMN_NAME_USERID + "= ?", new String[] { String.valueOf(workItemId), String.valueOf(userId) });
+    }
+
     @Override
-    public void syncWorkItems(List<WorkItem> workItemsServer) {
+    public List<WorkItem> syncWorkItems(List<WorkItem> workItemsServer) {
         List<WorkItem> workItemsLocal = getWorkItems(false);
+        List<WorkItem> syncedToReturn = new ArrayList<>();
         for(WorkItem workItem : workItemsServer) {
             WorkItem persistedVersion = getByItemKey(workItem.getItemKey());
             if(persistedVersion == null) {
                 long id = addOrUpdateWorkItem(workItem);
+                syncedToReturn.add(getWorkItem(id));
             } else {
                 ContentValues cv = getContentValues(workItem);
                 database.update(WorkItemsEntry.TABLE_NAME, cv, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(persistedVersion.getId()) });
+                syncedToReturn.add(getWorkItem(persistedVersion.getId()));
             }
         }
         if(workItemsLocal.size() > workItemsServer.size()) {
@@ -164,6 +178,35 @@ class WorkItemRepositorySql implements WorkItemRepository {
                 removeWorkItem(workItemLocal);
             }
         }
+
+        return syncedToReturn;
+    }
+
+    @Override
+    public void syncWorkItemAssignments(List<Map<String, User>> assignments) {
+        List<Map<Long, Long>> syncedPersistedAssignments = new ArrayList<>();
+        List<Map<Long, Long>> localUnsyncedAssignments = getAllAssignments();
+
+        for (Map<String, User> map : assignments) {
+            for (Map.Entry<String, User> entry : map.entrySet()) {
+                WorkItem workItem = getByItemKey(entry.getKey());
+                User user = entry.getValue();
+                assignWorkItem(workItem, user);
+                Map<Long, Long> assignment = new HashMap<>();
+                assignment.put(workItem.getId(), user.getId());
+                syncedPersistedAssignments.add(assignment);
+            }
+        }
+        if (localUnsyncedAssignments.size() > syncedPersistedAssignments.size()) {
+            localUnsyncedAssignments.removeAll(syncedPersistedAssignments);
+            for (Map<Long, Long> map : localUnsyncedAssignments) {
+                for (Map.Entry<Long, Long> entry : map.entrySet()) {
+                    unAssignWorkItem(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        Log.d("Local size:", String.valueOf(localUnsyncedAssignments.size()));
+        Log.d("Synced size:", String.valueOf(syncedPersistedAssignments.size()));
     }
 
     private WorkItem getByItemKey(String itemKey) {
@@ -249,6 +292,43 @@ class WorkItemRepositorySql implements WorkItemRepository {
         userCursorWrapper.close();
 
         return workItem;
+    }
+    private boolean assignmentPersisted(WorkItem workItem, User user) {
+        String query = "SELECT * FROM " + UserWorkItemEntry.TABLE_NAME + " WHERE "
+                + UserWorkItemEntry.COLUMN_NAME_WORKITEMID + "=" + String.valueOf(workItem.getId()) + " AND "
+                + UserWorkItemEntry.COLUMN_NAME_USERID + "=" + String.valueOf(user.getId()) + ";";
+
+        Cursor cursor = database.rawQuery(query, null);
+        UserWorkItemCursorWrapper cursorWrapper = new UserWorkItemCursorWrapper(cursor);
+
+
+        if (cursorWrapper.getCount() > 0) {
+            cursorWrapper.close();
+            return true;
+        }
+        cursorWrapper.close();
+        return false;
+    }
+
+    private List<Map<Long, Long>> getAllAssignments() {
+        String query = "SELECT * FROM " + UserWorkItemEntry.TABLE_NAME;
+
+        Cursor cursor = database.rawQuery(query, null);
+        UserWorkItemCursorWrapper cursorWrapper = new UserWorkItemCursorWrapper(cursor);
+        List<Map<Long, Long>> assignments = new ArrayList<>();
+
+        if (cursorWrapper.getCount() > 0) {
+            while(cursor.moveToNext()) {
+                Map.Entry<Long, Long> entry = cursorWrapper.getEntry();
+                Map<Long, Long> assignment = new HashMap<>();
+                assignment.put(entry.getKey(), entry.getValue());
+                assignments.add(assignment);
+            }
+        }
+
+        cursorWrapper.close();
+
+        return assignments;
     }
 
 }
