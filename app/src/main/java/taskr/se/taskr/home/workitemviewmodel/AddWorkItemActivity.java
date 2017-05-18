@@ -2,6 +2,8 @@ package taskr.se.taskr.home.workitemviewmodel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,14 +20,15 @@ public class AddWorkItemActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
+        if(AddWorkItemViewModel.isFinished()){
+            finish();
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_work_item);
-
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.add_workitem_fragment_container);
         if(fragment == null){
@@ -33,7 +36,5 @@ public class AddWorkItemActivity extends AppCompatActivity {
             fm.beginTransaction().add(R.id.add_workitem_fragment_container, fragment)
                     .commit();
         }
-
-
     }
 }
