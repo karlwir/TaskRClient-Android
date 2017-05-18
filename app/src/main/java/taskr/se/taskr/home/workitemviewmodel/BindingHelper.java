@@ -1,6 +1,8 @@
 package taskr.se.taskr.home.workitemviewmodel;
 
 import android.databinding.BindingAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 
 /**
@@ -13,4 +15,5 @@ public class BindingHelper {
     public static void setError(EditText editText, String errorMessage){
         editText.setError(errorMessage);
     }
+
 }

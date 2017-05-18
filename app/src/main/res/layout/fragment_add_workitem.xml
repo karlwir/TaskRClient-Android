@@ -26,8 +26,10 @@
         android:text="@={viewModel.title}"
         android:hint="@string/title"
         android:scrollHorizontally="false"
-        android:inputType="text"
-        android:maxLines="1"
+        android:inputType="text|textMultiLine"
+        android:minLines="1"
+        android:maxLines="2"
+        android:scrollbars="none"
         app:error="@{viewModel.titleError}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -35,15 +37,16 @@
     <TextView
         android:text="@string/description"
         android:textStyle="bold"
+        android:scrollbars="none"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <EditText
         android:text="@={viewModel.description}"
         android:hint="@string/description"
-        android:inputType="text"
+        android:inputType="text|textMultiLine"
+        android:minLines="1"
         android:maxLines="2"
-        android:scrollHorizontally="false"
         app:error="@{viewModel.descriptionError}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
