@@ -283,6 +283,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
         return workItem;
     }
+
     private boolean assignmentPersisted(WorkItem workItem, User user) {
         String query = "SELECT * FROM " + UserWorkItemEntry.TABLE_NAME + " WHERE "
                 + UserWorkItemEntry.COLUMN_NAME_WORKITEMID + "=" + String.valueOf(workItem.getId()) + " AND "

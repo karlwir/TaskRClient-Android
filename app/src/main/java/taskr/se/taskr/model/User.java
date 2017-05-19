@@ -1,5 +1,7 @@
 package taskr.se.taskr.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -11,6 +13,8 @@ public class User extends  BaseEntity {
     private final String firstname;
     private final String lastname;
     private final String username;
+    private List<WorkItem> workItems;
+    private List<Team> teams;
     private final boolean active = true;
 
     public User(long id, String itemKey, String firstname, String lastname, String username) {
@@ -18,6 +22,8 @@ public class User extends  BaseEntity {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
+        this.workItems = new ArrayList<>();
+        this.teams = new ArrayList<>();
     }
 
     public User(String firstname, String lastname, String username) {
@@ -36,8 +42,16 @@ public class User extends  BaseEntity {
         return lastname;
     }
 
+    public void addWorkItem(WorkItem workItem) {
+        workItems.add(workItem);
+    }
+
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
+
     @Override
     public String toString() {
-        return String.format("User: %s, %s, %s, %s, %s", id, firstname, lastname, username, itemKey);
+        return String.format("User: %s, %s, %s, %s, %s, teams:%s, workItems:%s", id, firstname, lastname, username, itemKey, teams.size(), workItems.size());
     }
 }
