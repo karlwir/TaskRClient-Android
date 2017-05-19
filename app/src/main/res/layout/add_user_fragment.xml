@@ -7,10 +7,7 @@
     android:layout_height="match_parent"
     android:padding="5dp"
     android:orientation="vertical"
-    tools:context="taskr.se.taskr.teamdetail.AddUserFragment">
-
-    <include layout="@layout/recycled_recycler_view"/>
-
+    tools:context="taskr.se.taskr.teamdetailviews.AddUserFragment">
 
     <Button
         android:id="@+id/savebtn"
@@ -20,5 +17,12 @@
         android:textColor="@android:color/holo_orange_light"
         android:background="@android:color/transparent"
         android:text="+ ADD MEMBER" />
+
+    <include layout="@layout/recycled_recycler_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
+
+
+
 
 </LinearLayout>

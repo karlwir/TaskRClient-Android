@@ -14,10 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
-import taskr.se.taskr.teamdetail.TeamDetailActivity;
+import taskr.se.taskr.teamdetailviews.TeamDetailActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -46,9 +47,9 @@ public class HomeActivity extends AppCompatActivity {
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_list_container);
-        if(fragment == null){
+        if (fragment == null) {
             fragment = new ItemListFragmentContainer();
-            fm.beginTransaction().add(R.id.fragment_list_container,fragment)
+            fm.beginTransaction().add(R.id.fragment_list_container, fragment)
                     .commit();
         }
     }
@@ -61,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-               Intent intent =  TeamDetailActivity.createIntent(getApplicationContext());
+                Intent intent = TeamDetailActivity.createIntent(getApplicationContext());
                 startActivity(intent);
                 return false;
             }
@@ -107,7 +108,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.d("OnQueryTextChange", "onQueryTextChange: ");
-                if(newText != null && searchResultFragment != null) searchResultFragment.onEditSearchInput(newText);
+                if (newText != null && searchResultFragment != null)
+                    searchResultFragment.onEditSearchInput(newText);
                 return true;
             }
         });

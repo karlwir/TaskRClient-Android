@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     android:id="@+id/add_user_fragment_container"
 
-    tools:context="taskr.se.taskr.teamdetail.AddUserActivity">
+    tools:context="taskr.se.taskr.teamdetailviews.AddUserActivity">
 
 </FrameLayout>

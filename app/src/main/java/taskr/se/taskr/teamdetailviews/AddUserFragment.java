@@ -1,15 +1,14 @@
-package taskr.se.taskr.teamdetail;
+package taskr.se.taskr.teamdetailviews;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import taskr.se.taskr.R;
 import taskr.se.taskr.repository.TaskRContentProvider;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
@@ -33,12 +32,14 @@ public class AddUserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         this.recyclerView = (RecyclerView) view.findViewById(R.id.user_list_recycler_view);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         updateAdapter();
     }
 
     private void updateAdapter(){
-        recyclerView.setAdapter(new TeamDetailFragment.UserListAdapter(contentProvider.getUsers(true)));
+        recyclerView.setAdapter(new TeamDetailFragment.UserListAdapter(contentProvider.getUsers(false)));
     }
 }

@@ -1,67 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-         xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-    <variable
-        name="viewModel"
-        type="taskr.se.taskr.home.workitemviewmodel.AddWorkItemViewModel"/>
+
+        <variable
+            name="viewModel"
+            type="taskr.se.taskr.home.workitemviewmodel.AddWorkItemViewModel" />
     </data>
 
-<LinearLayout
-    android:padding="5dp"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:text="@string/title"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:text="@={viewModel.title}"
-        android:hint="@string/title"
-        android:scrollHorizontally="false"
-        android:inputType="text|textMultiLine"
-        android:minLines="1"
-        android:maxLines="2"
-        android:scrollbars="none"
-        app:error="@{viewModel.titleError}"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-    <TextView
-        android:text="@string/description"
-        android:textStyle="bold"
-        android:scrollbars="none"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/title"
+            android:textStyle="bold" />
 
-    <EditText
-        android:text="@={viewModel.description}"
-        android:hint="@string/description"
-        android:inputType="text|textMultiLine"
-        android:minLines="1"
-        android:maxLines="2"
-        app:error="@{viewModel.descriptionError}"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:text="@={viewModel.title}"
+            app:error="@{viewModel.titleError}" />
 
-    <Button
-        android:id="@+id/save_btn"
-        android:text="@string/add_workitem"
-        android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:textColor="#FFF"
-        android:textStyle="bold"
-        android:layout_height="wrap_content"
-        android:onClick="@{() -> viewModel.save()}"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:text="@string/description"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            android:text="@={viewModel.description}"
+            app:error="@{viewModel.descriptionError}"
+            app:limiter="@{viewModel.description}" />
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:onClick="@{() -> viewModel.save()}"
+            android:text="@string/add_workitem"
+            android:textColor="#FFF"
+            android:textStyle="bold" />
 
 
-</LinearLayout>
+    </LinearLayout>
 
 </layout>

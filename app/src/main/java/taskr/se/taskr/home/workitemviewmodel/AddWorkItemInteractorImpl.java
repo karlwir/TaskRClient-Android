@@ -8,7 +8,6 @@ import android.os.Handler;
 
 public class AddWorkItemInteractorImpl implements AddWorkItemInteractor {
 
-
     @Override
     public void saveWorkItem(String title, String description, OnWorkItemAddedListener listener) {
         boolean error = false;

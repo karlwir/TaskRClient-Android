@@ -1,4 +1,4 @@
-package taskr.se.taskr.teamdetail;
+package taskr.se.taskr.teamdetailviews;
 
 import android.content.Context;
 import android.content.Intent;

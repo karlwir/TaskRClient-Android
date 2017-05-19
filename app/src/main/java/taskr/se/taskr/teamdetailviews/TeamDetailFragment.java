@@ -1,7 +1,6 @@
-package taskr.se.taskr.teamdetail;
+package taskr.se.taskr.teamdetailviews;
 
 import android.content.Intent;
-import android.database.DatabaseUtils;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,14 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.TeamDetailFragmentBinding;
-import taskr.se.taskr.home.HomeActivity;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.TaskRContentProvider;
@@ -65,7 +61,7 @@ public class TeamDetailFragment extends Fragment {
 
     }
 
-    private void updateAdapter(){
+    public void updateAdapter(){
         recyclerView.setAdapter(new UserListAdapter(team.getMembers()));
 
     }
@@ -109,7 +105,7 @@ public class TeamDetailFragment extends Fragment {
         }
     }
 
-    protected static class UserListViewHolder extends RecyclerView.ViewHolder{
+    private static class UserListViewHolder extends RecyclerView.ViewHolder{
 
         private TextView userContent;
         private StringBuilder builder;
