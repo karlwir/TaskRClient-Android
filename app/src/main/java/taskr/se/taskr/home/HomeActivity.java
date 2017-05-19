@@ -40,7 +40,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
                 startActivity(intent);
-                finish();
 
             }
         });
