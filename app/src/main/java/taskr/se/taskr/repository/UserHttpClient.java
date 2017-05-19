@@ -22,7 +22,7 @@ class UserHttpClient extends BaseHttpClient<User> {
         new GetTask(listener, USER_BASE_URL).execute();
     }
 
-    void postUser(User user, OnResultEventListener listener) {
+    void postUser(User user, OnResultEventListener<String> listener) {
         new PostTask(user, listener, USER_BASE_URL).execute();
     }
 

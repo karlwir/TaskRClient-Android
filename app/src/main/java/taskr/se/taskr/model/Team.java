@@ -12,6 +12,7 @@ public class Team extends BaseEntity{
     private final String name;
     private final String description;
     private List<User> members;
+    private final boolean active = true;
 
     public Team(long id, String itemKey, String name, String description) {
         super(id, itemKey);

@@ -7,6 +7,7 @@ import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +25,13 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private final UserHttpClient userHttpClient;
     private final WorkItemHttpClient workItemHttpClient;
     private final WorkItemRepository workItemRepository;
+    private final TeamRepository teamRepository;
+    private final TeamHttpClient teamHttpClient;
     private static TaskRContentProviderImpl instance;
     private List<Presenter> observers;
-    private Long lastWorkitemSyncTimeStamp = null;
+    private static final long SYNC_TIMEOUT = 5000;
+    private Long lastWorkitemSyncTimeStamp;
+    private Long lastTeamSyncTimeStamp;
 
     public static synchronized TaskRContentProviderImpl getInstance(Context context) {
         if(instance == null) {
@@ -40,6 +45,8 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         userHttpClient = UserHttpClient.getInstance();
         workItemRepository = WorkItemRepositorySql.getInstance(context);
         workItemHttpClient = WorkItemHttpClient.getInstance();
+        teamRepository = TeamRepositorySql.getInstance(context);
+        teamHttpClient = TeamHttpClient.getInstance();
         observers = new ArrayList<>();
     }
 
@@ -180,10 +187,10 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         if (workItem.hasBeenSavedToServer()) {
             workItemHttpClient.putWorkItem(workItem);
         } else {
-            workItemHttpClient.postWorkItem(workItem, new OnResultEventListener() {
+            workItemHttpClient.postWorkItem(workItem, new OnResultEventListener<String>() {
                 @Override
-                public void onResult(Object generatedKey) {
-                    WorkItem _workItem = new WorkItem(id, (String) generatedKey, workItem.getTitle(), workItem.getDescription(), workItem.getStatus());
+                public void onResult(String generatedKey) {
+                    WorkItem _workItem = new WorkItem(id, generatedKey, workItem.getTitle(), workItem.getDescription(), workItem.getStatus());
                     workItemRepository.addOrUpdateWorkItem(_workItem);
                 }
             });
@@ -213,15 +220,14 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     public List<WorkItem> syncWorkItems(List<WorkItem> workItems) {
         Long timeStamp = System.currentTimeMillis();
 
-        if ( lastWorkitemSyncTimeStamp == null || timeStamp - lastWorkitemSyncTimeStamp - 5000 > 0) {
-            List<Map<String, User>> assignmentsOnServer = new ArrayList<>();
+        if ( lastWorkitemSyncTimeStamp == null || timeStamp - lastWorkitemSyncTimeStamp - SYNC_TIMEOUT > 0) {
+            List<Map.Entry<String, User>> assignmentsOnServer = new ArrayList<>();
             for (WorkItem workItem : workItems) {
                 if (workItem.getUsers().size() > 0) {
                     List<User> syncedUsersWithAssignments = syncUsers(workItem.getUsers(), false);
 
-                    for(int i= 0; i < syncedUsersWithAssignments.size(); i++ ) {
-                        Map<String, User> assignment = new HashMap<>();
-                        assignment.put(workItem.getItemKey(), syncedUsersWithAssignments.get(i));
+                    for(User user : syncedUsersWithAssignments) {
+                        Map.Entry<String, User> assignment = new AbstractMap.SimpleEntry<>(workItem.getItemKey(), user);
                         assignmentsOnServer.add(assignment);
                     }
                 }
@@ -234,37 +240,85 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
-    public void syncWorkItemAssignments(List<Map<String, User>> assignments) {
+    public void syncWorkItemAssignments(List<Map.Entry<String, User>> assignments) {
         workItemRepository.syncWorkItemAssignments(assignments);
     }
 
     @Override
-    public List<Team> getTeams() {
-        return null;
+    public List<Team> getTeams(final boolean notifyObservers) {
+        teamHttpClient.getTeams(new OnResultEventListener<List<Team>>() {
+            @Override
+            public void onResult(List<Team> result) {
+                if (result != null) {
+                    syncTeams(result);
+                }
+                if(notifyObservers) notifyObservers();
+            }
+        });
+        return teamRepository.getTeams(false);
     }
 
     @Override
     public Team getTeam(long id) {
-        return null;
+        return teamRepository.getTeam(id);
     }
 
     @Override
-    public long addOrUpdateTeam(Team team) {
-        return 0;
+    public long addOrUpdateTeam(final Team team) {
+        final long id = teamRepository.addOrUpdateTeam(team);
+        if(team.hasBeenSavedToServer()) {
+            teamHttpClient.putTeam(team);
+        } else {
+            teamHttpClient.postTeam(team, new OnResultEventListener<String>() {
+                @Override
+                public void onResult(String generatedKey) {
+                    Team _team = new Team(id, generatedKey, team.getName(), team.getDescription());
+                    teamRepository.addOrUpdateTeam(_team);
+                }
+            });
+        }
+        return id;
     }
 
     @Override
-    public void deleteTeam(Team team) {
-
+    public void removeTeam(Team team) {
+        teamRepository.removeTeam(team);
+        teamHttpClient.deleteTeam(team);
     }
 
     @Override
     public void addTeamMember(Team team, User user) {
-
+        teamRepository.addTeamMember(team, user);
+        teamHttpClient.addTeamMember(team, user);
     }
 
     @Override
     public void removeTeamMember(Team team, User user) {
+        teamRepository.removeTeamMember(team, user);
+        teamHttpClient.removeTeamMember(team, user);
+    }
 
+    @Override
+    public void syncTeams(List<Team> teams) {
+        Long timeStamp = System.currentTimeMillis();
+        if ( lastTeamSyncTimeStamp == null || timeStamp - lastTeamSyncTimeStamp - SYNC_TIMEOUT > 0) {
+            List<Map.Entry<String, User>> mebershipsOnServer = new ArrayList<>();
+            for (Team team : teams) {
+                if(team.getMembers().size() > 0) {
+                    List<User> syncedMembers = syncUsers(team.getMembers(), false);
+                    for (User user : syncedMembers) {
+                        Map.Entry<String, User> membership = new AbstractMap.SimpleEntry<>(team.getItemKey(), user);
+                        mebershipsOnServer.add(membership);
+                    }
+                }
+            }
+            teamRepository.syncTeams(teams);
+            syncTeamMemberships(mebershipsOnServer);
+            lastTeamSyncTimeStamp = timeStamp;
+        }
+    }
+
+    public void syncTeamMemberships(List<Map.Entry<String, User>> mebershipsOnServer) {
+        teamRepository.syncTeamMemberships(mebershipsOnServer);
     }
 }
