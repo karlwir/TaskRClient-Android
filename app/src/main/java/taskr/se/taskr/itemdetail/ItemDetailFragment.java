@@ -31,36 +31,39 @@ public class ItemDetailFragment extends Fragment{
 
     private RecyclerView recyclerView;
     private TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(getContext());
-    private List<User> myUsers;
+    private WorkItem item;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentItemDetailBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_item_detail,container, false);
         View view = binding.getRoot();
-        Bundle bundle = getArguments();
-        Long id = bundle.getLong("id");
-        WorkItem item = TaskRContentProviderImpl.getInstance(getContext()).getWorkItem(id);
-        binding.setWorkitem(item);
-        myUsers = new ArrayList<>();
+        item = contentProvider.getWorkItem(getExtrasId());
         for(int i = 0; i < 5; i++){
-            myUsers.add(new User("Kevin"+i, "Briffa"+i, "KeBr"+i));
+            item.addUser(new User("Kevin"+i,"Briffa"+i, "Kebr"+i));
         }
+        binding.setWorkitem(item);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = (RecyclerView) view.findViewById(R.id.item_detail_recyclerview);
+        recyclerView = (RecyclerView) view.findViewById(R.id.user_list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateAdapter();
     }
 
     private void updateAdapter(){
-        recyclerView.setAdapter(new ItemDetailAdapter(myUsers));
+        recyclerView.setAdapter(new ItemDetailAdapter(item.getUsers()));
 
+    }
+
+    private Long getExtrasId(){
+        Bundle bundle = getArguments();
+        Long id = bundle.getLong("id");
+        return id;
     }
 
     private static class ItemDetailAdapter extends RecyclerView.Adapter<ItemDetailViewHolder>{
@@ -70,7 +73,6 @@ public class ItemDetailFragment extends Fragment{
         public ItemDetailAdapter(List<User> users){
             this.users = users;
         }
-
 
         @Override
         public ItemDetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -94,18 +96,16 @@ public class ItemDetailFragment extends Fragment{
 
     private static class ItemDetailViewHolder extends RecyclerView.ViewHolder{
 
-       // private final TextView tvFirstname;
-       // private final TextView tvLastname;
-        private final TextView tvUsername;
+        private final TextView userContent;
 
         public ItemDetailViewHolder(View itemView) {
             super(itemView);
 
-            this.tvUsername = (TextView) itemView.findViewById(R.id.item_detail_username);
+            this.userContent = (TextView) itemView.findViewById(R.id.user_content);
         }
 
         void bindView(User user){
-            tvUsername.setText(user.getUsername().toString());
+            userContent.setText("@"+user.getUsername().toString());
         }
 
     }

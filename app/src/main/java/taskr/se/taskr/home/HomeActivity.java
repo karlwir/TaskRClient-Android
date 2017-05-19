@@ -63,7 +63,6 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                Intent intent =  TeamDetailActivity.createIntent(getApplicationContext());
                 startActivity(intent);
-                finish();
                 return false;
             }
         });

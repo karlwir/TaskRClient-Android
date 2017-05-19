@@ -8,17 +8,18 @@
     </data>
 
 
+
     <LinearLayout
         android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
+            android:textStyle="bold"
             android:layout_marginBottom="5dp"
             android:text="@string/name" />
 
@@ -26,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dp"
+            android:textSize="22sp"
             android:layout_marginLeft="5dp"
             android:text="@{team.name}" />
 
@@ -40,6 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:layout_marginBottom="7dp"
             android:text="@string/description" />
 
@@ -48,23 +51,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dp"
+            android:textSize="22sp"
             android:layout_marginLeft="5dp"
             android:text="@{team.description}" />
+
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="21dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="#D3D3D3" />
-
-        <TextView
-            android:id="@+id/member"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            android:text="@string/members" />
 
         <Button
             android:id="@+id/add_btn"
@@ -72,9 +69,18 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_orange_light"
             android:background="@android:color/transparent"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="-18dp"
+            android:layout_gravity="right|top"
             android:text="@string/add_member" />
+
+        <TextView
+            android:id="@+id/member"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:text="@string/members" />
+
+        <include layout="@layout/recycled_recycler_view"/>
 
 
     </LinearLayout>
