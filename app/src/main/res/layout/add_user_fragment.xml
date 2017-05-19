@@ -9,12 +9,14 @@
     android:orientation="vertical"
     tools:context="taskr.se.taskr.teamdetail.AddUserFragment">
 
+    <include layout="@layout/recycled_recycler_view"/>
+
+
     <Button
         android:id="@+id/savebtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="150dp"
+        android:layout_gravity="right"
         android:textColor="@android:color/holo_orange_light"
         android:background="@android:color/transparent"
         android:text="+ ADD MEMBER" />

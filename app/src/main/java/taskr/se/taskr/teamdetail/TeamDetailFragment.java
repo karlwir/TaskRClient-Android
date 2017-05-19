@@ -20,6 +20,7 @@ import java.util.List;
 
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.TeamDetailFragmentBinding;
+import taskr.se.taskr.home.HomeActivity;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.TaskRContentProvider;
@@ -35,6 +36,7 @@ public class TeamDetailFragment extends Fragment {
     private RecyclerView recyclerView;
     private Team team;
     private TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(getContext());
+    private Button button;
 
     @Nullable
     @Override
@@ -46,8 +48,9 @@ public class TeamDetailFragment extends Fragment {
         for(int i = 0; i < 5; i++){
             team.addMember(new User("John"+i,"Lindström"+i,"JoLind"+i));
         }
-        binding.setTeam(team);
 
+        binding.setTeam(team);
+        navigateToAddUserActivity(view);
         return view;
     }
 
@@ -67,7 +70,19 @@ public class TeamDetailFragment extends Fragment {
 
     }
 
-    private static class UserListAdapter extends RecyclerView.Adapter<UserListViewHolder>{
+    private void navigateToAddUserActivity(View view){
+        button = (Button) view.findViewById(R.id.add_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = AddUserActivity.createIntent(getActivity());
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+    }
+
+    protected static class UserListAdapter extends RecyclerView.Adapter<UserListViewHolder>{
 
         private final List<User> users;
 
@@ -94,7 +109,7 @@ public class TeamDetailFragment extends Fragment {
         }
     }
 
-    private static class UserListViewHolder extends RecyclerView.ViewHolder{
+    protected static class UserListViewHolder extends RecyclerView.ViewHolder{
 
         private TextView userContent;
         private StringBuilder builder;
