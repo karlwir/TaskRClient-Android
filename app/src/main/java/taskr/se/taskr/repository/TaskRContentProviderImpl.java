@@ -305,9 +305,10 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         Long timeStamp = System.currentTimeMillis();
         if ( lastTeamSyncTimeStamp == null || timeStamp - lastTeamSyncTimeStamp - SYNC_TIMEOUT > 0) {
             List<Map.Entry<String, User>> mebershipsOnServer = new ArrayList<>();
+
             for (Team team : teams) {
-                if(team.getMembers().size() > 0) {
-                    List<User> syncedMembers = syncUsers(team.getMembers(), false);
+                if(team.getUsers().size() > 0) {
+                    List<User> syncedMembers = syncUsers(team.getUsers(), false);
                     for (User user : syncedMembers) {
                         Map.Entry<String, User> membership = new AbstractMap.SimpleEntry<>(team.getItemKey(), user);
                         mebershipsOnServer.add(membership);

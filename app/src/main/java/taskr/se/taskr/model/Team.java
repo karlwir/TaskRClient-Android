@@ -11,14 +11,14 @@ public class Team extends BaseEntity{
 
     private final String name;
     private final String description;
-    private List<User> members;
+    private List<User> users;
     private final boolean active = true;
 
     public Team(long id, String itemKey, String name, String description) {
         super(id, itemKey);
         this.name = name;
         this.description = description;
-        this.members = new ArrayList<>();
+        this.users = new ArrayList<>();
     }
 
     public Team(String name, String description) {
@@ -26,11 +26,11 @@ public class Team extends BaseEntity{
     }
 
     public void addMember(User user){
-        members.add(user);
+        users.add(user);
     }
 
-    public List<User> getMembers() {
-        return members;
+    public List<User> getUsers() {
+        return users;
     }
 
     public String getDescription() {

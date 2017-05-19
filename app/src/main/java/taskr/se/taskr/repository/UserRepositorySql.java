@@ -10,11 +10,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 import taskr.se.taskr.sql.TaskRDbContract;
 import taskr.se.taskr.sql.TaskRDbHelper;
-import taskr.se.taskr.sql.TaskRDbContract.UsersEntry;
+import taskr.se.taskr.sql.TaskRDbContract.*;
 
 /**
  * Created by kawi01 on 2017-05-15.
@@ -123,7 +124,10 @@ class UserRepositorySql implements UserRepository {
 
         if(userCursorWrapper.getCount() > 0) {
             while(cursor.moveToNext()) {
-                users.add(userCursorWrapper.getUser());
+                User user = userCursorWrapper.getUser();
+                joinTeams(user);
+                joinWorkItems(user);
+                users.add(user);
             }
         }
 
@@ -148,10 +152,52 @@ class UserRepositorySql implements UserRepository {
 
         if(userCursorWrapper.getCount() > 0) {
             user = userCursorWrapper.getFirstUser();
+            joinTeams(user);
+            joinWorkItems(user);
         }
 
         userCursorWrapper.close();
 
         return user;
+    }
+
+    private void joinTeams(User user) {
+        String query =
+                "SELECT * FROM " + TeamsEntry.TABLE_NAME + " INNER JOIN " +
+                        UserTeamEntry.TABLE_NAME + " ON " +
+                        TeamsEntry.TABLE_NAME + "." + TeamsEntry._ID + "="  + UserTeamEntry.TABLE_NAME + "." + UserTeamEntry.COLUMN_NAME_TEAMID +
+                        " WHERE " + UserTeamEntry.TABLE_NAME + "." + UserTeamEntry.COLUMN_NAME_USERID + "=" + String.valueOf(user.getId()) + ";";
+
+        Cursor cursor = database.rawQuery(query, null);
+        TeamCursorWrapper cursorWrapper = new TeamCursorWrapper(cursor);
+        List<Team> teams = new ArrayList<>();
+
+        if (cursorWrapper.getCount() > 0) {
+            while(cursorWrapper.moveToNext()) {
+                Team team = cursorWrapper.getTeam();
+                user.addTeam(team);
+            }
+        }
+        cursorWrapper.close();
+    }
+
+    private void joinWorkItems(User user) {
+        String query =
+                "SELECT * FROM " + WorkItemsEntry.TABLE_NAME + " INNER JOIN " +
+                        UserWorkItemEntry.TABLE_NAME + " ON " +
+                        WorkItemsEntry.TABLE_NAME + "." + WorkItemsEntry._ID + "="  + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_WORKITEMID +
+                        " WHERE " + UserWorkItemEntry.TABLE_NAME + "." + UserWorkItemEntry.COLUMN_NAME_USERID + "=" + String.valueOf(user.getId()) + ";";
+
+        Cursor cursor = database.rawQuery(query, null);
+        WorkItemCursorWrapper cursorWrapper = new WorkItemCursorWrapper(cursor);
+        List<WorkItem> workItems = new ArrayList<>();
+
+        if (cursorWrapper.getCount() > 0) {
+            while(cursorWrapper.moveToNext()) {
+                WorkItem workItem = cursorWrapper.getWorkItem();
+                user.addWorkItem(workItem);
+            }
+        }
+        cursorWrapper.close();
     }
 }
