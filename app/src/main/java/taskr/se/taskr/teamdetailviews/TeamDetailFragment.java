@@ -7,19 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.TeamDetailFragmentBinding;
-import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.TaskRContentProvider;
@@ -27,7 +22,7 @@ import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 
 /**
- * Created by John on 2017-05-16.
+ * Created by Kevin on 2017-05-16.
  */
 
 public class TeamDetailFragment extends Fragment {

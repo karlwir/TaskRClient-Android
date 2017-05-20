@@ -1,7 +1,5 @@
 package taskr.se.taskr.home.workitemviewmodel;
 
-import android.os.Handler;
-
 /**
  * Created by Kevin on 2017-05-16.
  */

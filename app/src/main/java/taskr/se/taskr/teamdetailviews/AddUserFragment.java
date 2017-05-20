@@ -26,7 +26,7 @@ import taskr.se.taskr.repository.TaskRContentProvider;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 /**
- * Created by John on 2017-05-16.
+ * Created by Kevin on 2017-05-16.
  */
 
 public class AddUserFragment extends Fragment {
@@ -83,6 +83,45 @@ public class AddUserFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
     }
+
+    private void updateAdapter(List<User> users) {
+        UserListAdapter adapter = new UserListAdapter(users);
+        adapter.setOnItemMarkedListener(new OnItemMarkedListener() {
+            @Override
+            public void onItemMarked(View v, Long id) {
+                if (userIds.contains(id)) {
+                    userIds.remove(id);
+                    v.setBackgroundColor(Color.parseColor("#FAFAFA"));
+                    v.setSelected(false);
+                } else {
+                    userIds.add(id);
+                    v.setBackgroundColor(Color.parseColor("#E3E3E3"));
+                    v.setSelected(true);
+                }
+            }
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void onEditSearchInput(String query) {
+        List<User> users = contentProvider.getUsers(false);
+        List<User> filteredItems = filteredItems(users, query);
+        updateAdapter(filteredItems);
+    }
+
+    private List<User> filteredItems(List<User> users, String query) {
+        List<User> result = new ArrayList<>();
+        for (User user : users) {
+            String firstname = user.getFirstname().toLowerCase();
+            String lastname = user.getLastname().toLowerCase();
+            query = query.toLowerCase();
+            if (firstname.contains(query) || lastname.contains(query)) {
+                result.add(user);
+            }
+        }
+        return result;
+    }
+
 
     private void navigateToTeamDetailView(View view) {
         Button button = (Button) view.findViewById(R.id.savebtn);
@@ -148,7 +187,7 @@ public class AddUserFragment extends Fragment {
 
         }
 
-        public void setOnItemMarkedListener(OnItemMarkedListener onItemMarkedListener) {
+        void setOnItemMarkedListener(OnItemMarkedListener onItemMarkedListener) {
             this.onItemMarkedListener = onItemMarkedListener;
         }
     }
@@ -159,7 +198,7 @@ public class AddUserFragment extends Fragment {
         private StringBuilder builder;
         private OnItemPositionListener onItemPositionListener;
 
-        public UserListViewHolder(final View itemView) {
+        UserListViewHolder(final View itemView) {
             super(itemView);
             this.builder = new StringBuilder();
             this.userContent = (TextView) itemView.findViewById(R.id.user_content);
@@ -177,7 +216,8 @@ public class AddUserFragment extends Fragment {
 
         }
 
-        public void setOnItemPositionListener(OnItemPositionListener onItemPositionListener) {
+        void setOnItemPositionListener(OnItemPositionListener
+                                                         onItemPositionListener) {
             this.onItemPositionListener = onItemPositionListener;
         }
     }

@@ -9,19 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-
 import taskr.se.taskr.R;
-import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
-import taskr.se.taskr.model.Team;
-import taskr.se.taskr.repository.TaskRContentProvider;
-import taskr.se.taskr.repository.TaskRContentProviderImpl;
 import taskr.se.taskr.teamdetailviews.TeamDetailActivity;
 
 public class HomeActivity extends AppCompatActivity {
@@ -78,13 +72,11 @@ public class HomeActivity extends AppCompatActivity {
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d("Förstorad", "onMenuItemActionExpand: ");
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                Log.d("Kollapsad", "onMenuItemActionCollapse: ");
                 FragmentManager fm = getSupportFragmentManager();
                 Fragment fragment = new ItemListFragmentContainer();
                 fm.beginTransaction().replace(R.id.fragment_list_container, fragment).commit();
@@ -111,7 +103,6 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d("OnQueryTextChange", "onQueryTextChange: ");
                 if (newText != null && searchResultFragment != null)
                     searchResultFragment.onEditSearchInput(newText);
                 return true;
