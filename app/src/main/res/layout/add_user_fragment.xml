@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
     android:orientation="vertical"
+    android:padding="5dp"
     tools:context="taskr.se.taskr.teamdetailviews.AddUserFragment">
 
     <Button
@@ -14,15 +14,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:textColor="@android:color/holo_orange_light"
         android:background="@android:color/transparent"
-        android:text="+ ADD MEMBER" />
+        android:text="+ ADD MEMBER"
+        android:textColor="@android:color/holo_orange_light" />
 
-    <include layout="@layout/recycled_recycler_view"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
-
-
+    <include
+        layout="@layout/recycled_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

@@ -16,8 +16,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import taskr.se.taskr.R;
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
+import taskr.se.taskr.model.Team;
+import taskr.se.taskr.repository.TaskRContentProvider;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 import taskr.se.taskr.teamdetailviews.TeamDetailActivity;
 
 public class HomeActivity extends AppCompatActivity {

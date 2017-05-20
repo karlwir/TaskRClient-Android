@@ -10,6 +10,7 @@ import android.os.Bundle;
 import taskr.se.taskr.R;
 
 public class AddUserActivity extends AppCompatActivity {
+
     private Bundle bundle;
 
     public static Intent createIntent (Context context) {
@@ -22,13 +23,15 @@ public class AddUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
 
+
+        bundle = getIntent().getExtras();
+
         FragmentManager fm = getSupportFragmentManager();
-        bundle = this.getIntent().getExtras();
         Fragment fragment = fm.findFragmentById(R.id.add_user_fragment_container);
 
         if(fragment == null){
             fragment = new AddUserFragment();
-            fragment.setArguments(bundle);
+            if(bundle != null){fragment.setArguments(bundle);}
             fm.beginTransaction().add(R.id.add_user_fragment_container , fragment).commit();
         }
     }
