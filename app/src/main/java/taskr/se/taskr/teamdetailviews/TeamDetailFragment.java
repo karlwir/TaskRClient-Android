@@ -62,7 +62,7 @@ public class TeamDetailFragment extends Fragment {
     }
 
     public void updateAdapter(){
-        recyclerView.setAdapter(new UserListAdapter(team.getMembers()));
+        recyclerView.setAdapter(new UserListAdapter(team.getUsers()));
 
     }
 
