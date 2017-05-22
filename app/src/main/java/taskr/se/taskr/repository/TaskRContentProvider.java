@@ -5,4 +5,6 @@ package taskr.se.taskr.repository;
  */
 
 public interface TaskRContentProvider extends UserRepository, WorkItemRepository, TeamRepository {
+
+    void initData(OnResultEventListener<Boolean> listener);
 }

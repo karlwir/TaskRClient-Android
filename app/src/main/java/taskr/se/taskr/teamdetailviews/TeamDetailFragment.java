@@ -7,14 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 import java.util.List;
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.TeamDetailFragmentBinding;
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.TaskRContentProvider;
@@ -36,6 +40,11 @@ public class TeamDetailFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         TeamDetailFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.team_detail_fragment, container, false);
         View view = binding.getRoot();
+        Team loggedInUserTeam = GlobalVariables.loggedInUser.getTeams().get(0);
+        if (loggedInUserTeam != null) {
+            Team teamWithUsers = contentProvider.getTeam(loggedInUserTeam.getId());
+            team = teamWithUsers;
+        }
         binding.setTeam(team);
         navigateToAddUserActivity(view);
 
