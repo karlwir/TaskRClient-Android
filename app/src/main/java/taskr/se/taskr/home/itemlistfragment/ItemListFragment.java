@@ -1,7 +1,9 @@
 package taskr.se.taskr.home.itemlistfragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 import taskr.se.taskr.itemdetail.ItemDetailActivity;
+import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 
 import java.util.ArrayList;
@@ -149,12 +152,16 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
 
         private final TextView title;
         private final TextView description;
+        private final TextView assignedUser;
+        private final TextView statusOnWorkItem;
         private Presenter.OnItemClickedListener onItemClickedListener;
 
         public ItemListViewHolder(final View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.workitem_title);
             description = (TextView) itemView.findViewById(R.id.workitem_description);
+            assignedUser = (TextView) itemView.findViewById(R.id.assigned_user);
+            statusOnWorkItem = (TextView) itemView.findViewById(R.id.workitem_statusbar);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -165,8 +172,38 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         }
 
         void bindView(WorkItem item) {
+            List<User> assignedUsers = item.getUsers();
             title.setText(item.getTitle());
             description.setText(item.getDescription());
+            statusOnWorkItem.setText(item.getStatus());
+
+
+             switch (item.getStatus().toUpperCase()) {
+                 case "UNSTARTED":
+                     statusOnWorkItem.setBackgroundColor(Color.parseColor("#a6a6a6"));
+                    break;
+                 case  "STARTED":
+                     statusOnWorkItem.setBackgroundColor(Color.parseColor("#f5a623"));
+                    break;
+                 case  "DONE":
+                     statusOnWorkItem.setBackgroundColor(Color.parseColor("#7ed321"));
+                    break;
+                 case  "ARCHIVED":
+                     statusOnWorkItem.setBackgroundColor(Color.parseColor("#9a844f"));
+                    break;
+
+
+            }
+
+
+            if (assignedUsers.size() > 0) {
+                String usernames = "";
+                for (User user : assignedUsers) {
+                    usernames = usernames + " @" + user.getUsername() + ",";
+                }
+                usernames = usernames.substring(0, usernames.length()-1);
+                assignedUser.setText(usernames);
+            }
         }
 
         public void setOnItemClickedListener(Presenter.OnItemClickedListener onItemClickedListener) {

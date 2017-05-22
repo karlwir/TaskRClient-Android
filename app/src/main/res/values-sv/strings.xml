@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TaskR</string>
+    <string name="ADD_MEMBER">+ LÄGG TILL MEDLEM</string>
+    <string name="add_member">+ LÄGG TILL MEDLEM</string>
+    <string name="add_workitem">Spara</string>
+    <string name="assignee">Användare</string>
+    <string name="description">Beskrivning</string>
+    <string name="members">Medlemmar</string>
+    <string name="name">Namn</string>
+    <string name="search">Sök</string>
+    <string name="status"></string>
+    <string name="team_detail">Grupp</string>
+    <string name="title">Titel</string>
+    <string name="unstarted">OSTARTADE</string>
+    <string name="started">STARTADE</string>
+    <string name="my_tasks">UPPGIFTER</string>
+    <string name="done">KLARA</string>
+</resources>
