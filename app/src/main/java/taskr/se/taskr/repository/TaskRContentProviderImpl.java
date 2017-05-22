@@ -61,6 +61,35 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
+    public void initData(final OnResultEventListener<Boolean> listener) {
+        userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
+            @Override
+            public void onResult(List<User> result) {
+                if (result != null) {
+                    syncUsers(result, true);
+                }
+                workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+                    @Override
+                    public void onResult(List<WorkItem> result) {
+                        if (result != null) {
+                            syncWorkItems(result);
+                        }
+                        teamHttpClient.getTeams(new OnResultEventListener<List<Team>>() {
+                            @Override
+                            public void onResult(List<Team> result) {
+                                if (result != null) {
+                                    syncTeams(result);
+                                }
+                                listener.onResult(true);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
     public List<User> getUsers(final boolean notifyObservers) {
         userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
             @Override
@@ -68,6 +97,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
                 if (result != null) {
                     syncUsers(result, true);
                 }
+
             }
         });
         return userRepository.getUsers(notifyObservers);

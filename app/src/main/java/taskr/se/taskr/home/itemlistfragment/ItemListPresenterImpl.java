@@ -1,5 +1,6 @@
 package taskr.se.taskr.home.itemlistfragment;
 
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.model.WorkItem;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
                 items = taskRContentProvider.getDoneWorkItems(notifyObservers);
                 break;
             case 3:
-                items = taskRContentProvider.getMyWorkItems(notifyObservers);
+                items = taskRContentProvider.getWorkItemsByUser(GlobalVariables.loggedInUser);
                 break;
             default:
                 items = taskRContentProvider.getWorkItems(notifyObservers);

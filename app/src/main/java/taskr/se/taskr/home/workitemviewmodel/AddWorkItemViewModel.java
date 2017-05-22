@@ -48,7 +48,7 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
     public void onSuccess() {
         finish = true;
         TaskRContentProviderImpl.getInstance(context).addOrUpdateWorkItem(new WorkItem(title.get(), description.get(), "UNSTARTED"));
-        context.startActivity(HomeActivity.createIntent(context));
+        context.startActivity(HomeActivity.createIntent(context, null));
 
     }
 
