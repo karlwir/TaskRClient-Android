@@ -2,12 +2,10 @@ package taskr.se.taskr.home.workitemviewmodel;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import taskr.se.taskr.R;
 

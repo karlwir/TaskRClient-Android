@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.FragmentAddWorkitemBinding;
 
