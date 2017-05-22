@@ -1,12 +1,7 @@
 package taskr.se.taskr.home.workitemviewmodel;
 
 import android.content.Context;
-import android.databinding.Observable;
-import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
-import android.util.Log;
-import android.widget.Button;
-
 import taskr.se.taskr.home.HomeActivity;
 import taskr.se.taskr.model.WorkItem;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;

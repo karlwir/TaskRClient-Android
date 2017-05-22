@@ -4,8 +4,6 @@ import android.databinding.BindingAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.support.v7.widget.AppCompatEditText;
-
 
 /**
  * Created by Kevin on 2017-05-16.
