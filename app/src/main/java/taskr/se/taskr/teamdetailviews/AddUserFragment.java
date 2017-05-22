@@ -41,7 +41,6 @@ public class AddUserFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(getContext());
-    private SparseBooleanArray selectedItems = new SparseBooleanArray();
     private List<Long> userIds;
 
     @Nullable

@@ -45,7 +45,9 @@ public class AddUserActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.menu_options);
+        MenuItem menuItem = menu.findItem(R.id.open_team_detail);
+        menuItem.setVisible(false);
+        menuItem = menu.findItem(R.id.sign_out);
         menuItem.setVisible(false);
 
         final MenuItem searchMenuItem = menu.findItem(R.id.menu_search);

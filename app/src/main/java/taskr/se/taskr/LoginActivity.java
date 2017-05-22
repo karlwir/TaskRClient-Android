@@ -1,5 +1,6 @@
 package taskr.se.taskr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,10 @@ import taskr.se.taskr.home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static Intent createIntent(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        return intent;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

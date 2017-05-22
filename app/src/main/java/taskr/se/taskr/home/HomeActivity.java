@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import taskr.se.taskr.LoginActivity;
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
@@ -53,18 +55,30 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+
+        Intent intent;
+        switch (menuItem.getItemId()) {
+            case R.id.open_team_detail:
+                intent = TeamDetailActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                break;
+            case R.id.sign_out:
+                intent = LoginActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                finish();
+                break;
+            default:
+                break;
+        }
+
+
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.menu_options);
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = TeamDetailActivity.createIntent(getApplicationContext());
-                startActivity(intent);
-                return false;
-            }
-        });
 
         final MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();

@@ -11,4 +11,7 @@
     <string name="add_workitem">Save</string>
     <string name="team_detail">Teams</string>
     <string name="assignee">Assignee</string>
+    <string name="log_out">Sign out</string>
+    <string name="menu_options">Options</string>
+    <string name="sign_out">Sign out</string>
 </resources>
