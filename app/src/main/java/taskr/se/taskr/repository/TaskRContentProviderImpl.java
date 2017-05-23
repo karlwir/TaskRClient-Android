@@ -191,21 +191,9 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         return workItemRepository.getDoneWorkItems(false);
     }
 
-    @Deprecated
-    @Override
-    public List<WorkItem> getMyWorkItems(final boolean notifyObservers) {
-        // Use getWorkItemsByUser(loginUser) instead
-        return null;
-    }
-
     @Override
     public List<WorkItem> getWorkItemsByUser(User user) {
         return workItemRepository.getWorkItemsByUser(user);
-    }
-
-    @Override
-    public List<WorkItem> searchWorkItem(String query) {
-        return workItemRepository.searchWorkItem(query);
     }
 
     @Override
