@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import taskr.se.taskr.R;
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 /**
@@ -78,27 +79,22 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
     private int calculateAngle(int position) {
         TaskRContentProviderImpl contentProvider = TaskRContentProviderImpl.getInstance(context);
         float maxAngle = 360;
-        float maxItems = contentProvider.getUnstartedWorkItems(false).size()
-                         + contentProvider.getStartedWorkItems(false).size()
-                         + contentProvider.getDoneWorkItems(false).size();
+        float maxItems = contentProvider.getWorkItems(false).size();
 
         float currentItems = 0;
         switch (position) {
             case 0:
-
                 currentItems = contentProvider.getUnstartedWorkItems(false).size();
                 break;
             case 1:
                 currentItems = contentProvider.getStartedWorkItems(false).size();
-
                 break;
             case 2:
                 currentItems = contentProvider.getDoneWorkItems(false).size();
-
                 break;
             case 3:
+                currentItems = contentProvider.getWorkItemsByUser(GlobalVariables.loggedInUser).size();
                 break;
-
         }
 
         float result = (((currentItems / maxAngle) / (maxItems / maxAngle)) * maxAngle);
@@ -118,7 +114,11 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
             case 2:
                 itemCount = contentProvider.getDoneWorkItems(false).size();
                 break;
+            case 3:
+                itemCount = contentProvider.getWorkItemsByUser(GlobalVariables.loggedInUser).size();
+                break;
         }
+
         return String.valueOf(itemCount);
     }
 }

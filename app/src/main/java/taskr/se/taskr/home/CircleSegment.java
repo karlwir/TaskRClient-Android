@@ -11,7 +11,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.view.View;
-import taskr.se.taskr.R;
 
 /**
  * Created by jacoblodenius on 22/05/17.
