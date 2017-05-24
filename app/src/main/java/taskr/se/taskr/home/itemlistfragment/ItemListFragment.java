@@ -30,6 +30,7 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
 
     private RecyclerView recyclerView;
     private Presenter presenter;
+    private int position;
 
     public static ItemListFragment newInstance() {
         Bundle args = new Bundle();
@@ -50,12 +51,20 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
-        int position = FragmentPagerItem.getPosition(getArguments());
+        position = FragmentPagerItem.getPosition(getArguments());
         if(getArguments().getInt("position") == -1) position = -1;
         presenter = new ItemListPresenterImpl(this, position);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateAdapter();
+    }
+
+    public int getItemCount() {
+        return presenter.getItems().size();
+    }
+
+    public int getPosition() {
+        return position;
     }
 
     public void onEditSearchInput(String searchQuery) {
