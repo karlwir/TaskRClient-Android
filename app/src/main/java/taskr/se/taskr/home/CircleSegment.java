@@ -76,7 +76,7 @@ public class CircleSegment extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = 270;
+        int desiredWidth = 0;
         int desiredHeight = back.getHeight() - (int)textPaint.ascent() * 2;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
