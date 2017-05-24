@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.TeamDetailFragmentBinding;
 import taskr.se.taskr.global.GlobalVariables;
@@ -42,8 +43,7 @@ public class TeamDetailFragment extends Fragment {
         View view = binding.getRoot();
         Team loggedInUserTeam = GlobalVariables.loggedInUser.getTeams().get(0);
         if (loggedInUserTeam != null) {
-            Team teamWithUsers = contentProvider.getTeam(loggedInUserTeam.getId());
-            team = teamWithUsers;
+            team = contentProvider.getTeam(loggedInUserTeam.getId());
         }
         binding.setTeam(team);
         navigateToAddUserActivity(view);
@@ -62,7 +62,9 @@ public class TeamDetailFragment extends Fragment {
 
     }
 
-    public void updateAdapter() {recyclerView.setAdapter(new UserListAdapter(team.getUsers())); }
+    public void updateAdapter() {
+        recyclerView.setAdapter(new UserListAdapter(team.getUsers()));
+    }
 
     private void navigateToAddUserActivity(View view) {
         Button button = (Button) view.findViewById(R.id.add_btn);
@@ -77,11 +79,12 @@ public class TeamDetailFragment extends Fragment {
     }
 
     private void getSentExtras() {
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             long[] userIds = getArguments().getLongArray("members");
-            for (int i = 0; i < userIds.length; i++) {
-                User user = contentProvider.getUser(userIds[i]);
-                team.addMember(user);
+            for (Long id : userIds) {
+                User user = contentProvider.getUser(id);
+                contentProvider.addTeamMember(team, user);
+                updateAdapter();
             }
         }
 
@@ -91,7 +94,7 @@ public class TeamDetailFragment extends Fragment {
 
         private final List<User> users;
 
-        public UserListAdapter(List<User> users) {
+        UserListAdapter(List<User> users) {
             this.users = users;
         }
 
@@ -118,7 +121,7 @@ public class TeamDetailFragment extends Fragment {
         private TextView userContent;
         private StringBuilder builder;
 
-        public UserListViewHolder(View itemView) {
+        UserListViewHolder(View itemView) {
             super(itemView);
             this.builder = new StringBuilder();
             this.userContent = (TextView) itemView.findViewById(R.id.user_content);

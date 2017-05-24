@@ -15,9 +15,9 @@ import taskr.se.taskr.repository.OnResultEventListener;
 public class LoginActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context) {
-        Intent intent = new Intent(context, LoginActivity.class);
-        return intent;
+        return new Intent(context, LoginActivity.class);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
