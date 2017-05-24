@@ -43,14 +43,14 @@ public class TeamDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.edit_menu, menu);
+      //  getMenuInflater().inflate(R.menu.edit_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.menu_edit:
+     //       case R.id.menu_edit:
 
         }
         return true;
