@@ -10,11 +10,11 @@ public class AddWorkItemInteractorImpl implements AddWorkItemInteractor {
     public void saveWorkItem(String title, String description, OnWorkItemAddedListener listener) {
         boolean error = false;
 
-            if (title.length() < 3) {
+            if (title.length() < 4 || title.length() >= 15) {
                 listener.onTitleError();
                 error = true;
             }
-            if (description.length() < 5) {
+            if (description.length() < 10) {
                 listener.onDescriptionError();
                 error = true;
             }

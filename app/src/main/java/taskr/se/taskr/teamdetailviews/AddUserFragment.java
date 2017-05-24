@@ -47,7 +47,6 @@ public class AddUserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_user_fragment, container, false);
-
         userIds = new ArrayList<>();
         navigateToTeamDetailView(view);
         return view;
@@ -150,7 +149,6 @@ public class AddUserFragment extends Fragment {
 
         private final List<User> users;
         private OnItemMarkedListener onItemMarkedListener;
-        private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
         UserListAdapter(List<User> users) {
             this.users = users;

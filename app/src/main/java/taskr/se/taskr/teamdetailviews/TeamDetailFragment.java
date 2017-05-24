@@ -46,8 +46,6 @@ public class TeamDetailFragment extends Fragment {
             team = contentProvider.getTeam(loggedInUserTeam.getId());
         }
         binding.setTeam(team);
-        navigateToAddUserActivity(view);
-
         return view;
     }
 
@@ -58,16 +56,17 @@ public class TeamDetailFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         getSentExtras();
+        navigateToAddUserActivity();
         updateAdapter();
 
     }
 
-    public void updateAdapter() {
+    private void updateAdapter() {
         recyclerView.setAdapter(new UserListAdapter(team.getUsers()));
     }
 
-    private void navigateToAddUserActivity(View view) {
-        Button button = (Button) view.findViewById(R.id.add_btn);
+    private void navigateToAddUserActivity() {
+        Button button = (Button) getView().findViewById(R.id.add_btn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,11 +82,10 @@ public class TeamDetailFragment extends Fragment {
             long[] userIds = getArguments().getLongArray("members");
             for (Long id : userIds) {
                 User user = contentProvider.getUser(id);
-                contentProvider.addTeamMember(team, user);
-                updateAdapter();
+                team.addMember(user);
             }
         }
-
+        contentProvider.addOrUpdateTeam(team);
     }
 
     private static class UserListAdapter extends RecyclerView.Adapter<UserListViewHolder> {
