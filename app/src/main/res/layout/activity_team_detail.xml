@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/team_fragment_container"
     android:layout_height="match_parent"
+    android:id="@+id/team_fragment_container"
     tools:context="taskr.se.taskr.teamdetailviews.TeamDetailActivity">
 </FrameLayout>
