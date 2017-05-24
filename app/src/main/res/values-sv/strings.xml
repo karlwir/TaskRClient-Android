@@ -20,4 +20,5 @@
     <string name="log_out">Logga ut</string>
     <string name="sign_out">Logga ut</string>
     <string name="menu_options">Meny val</string>
+    <string name="save_changes">Spara</string>
 </resources>

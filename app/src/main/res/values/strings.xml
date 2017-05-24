@@ -23,4 +23,5 @@
     <string name="done">DONE</string>
     <string name="my_tasks">MY TASKS</string>
     <string name="edit_mode">Edit</string>
+    <string name="save_changes">Save</string>
 </resources>
