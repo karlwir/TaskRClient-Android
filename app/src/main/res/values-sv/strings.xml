@@ -16,4 +16,8 @@
     <string name="started">STARTADE</string>
     <string name="my_tasks">UPPGIFTER</string>
     <string name="done">KLARA</string>
+    <string name="edit_mode">Ändra</string>
+    <string name="log_out">Logga ut</string>
+    <string name="sign_out">Logga ut</string>
+    <string name="menu_options">Meny val</string>
 </resources>
