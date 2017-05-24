@@ -8,9 +8,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+
 import taskr.se.taskr.R;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 
@@ -22,6 +24,7 @@ public class ItemListFragmentContainer extends Fragment {
 
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
+    private SmartTabLayout viewPagerTab;
 
     @Nullable
     @Override
@@ -40,9 +43,28 @@ public class ItemListFragmentContainer extends Fragment {
                 .add("DONE", ItemListFragment.class)
                 .add("MY TASKS", ItemListFragment.class).create());
 
+
+        final ItemListTabProvider tabProvider = new ItemListTabProvider(getContext());
         pager.setAdapter(pagerAdapter);
 
-        SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.view_pager_tab);
+        viewPagerTab = (SmartTabLayout) view.findViewById(R.id.view_pager_tab);
+        viewPagerTab.setCustomTabView(tabProvider);
+        viewPagerTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tabProvider.redraw();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         viewPagerTab.setViewPager(pager);
     }
 }
