@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.LinearLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.HashMap;
@@ -80,7 +81,11 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
         int angle = calculateAngle(position);
         String itemCountString = getItemCountString(position);
 
-        return new CircleSegment(context, itemCountString, title, angle, resIdBack, resIdFill);
+        CircleSegment circleSegment = new CircleSegment(context, itemCountString, title, angle, resIdBack, resIdFill);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.25f);
+        circleSegment.setLayoutParams(param);
+
+        return circleSegment;
     }
 
     private int calculateAngle(int position) {
