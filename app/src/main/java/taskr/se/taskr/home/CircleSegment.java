@@ -45,7 +45,6 @@ public class CircleSegment extends View {
         titlePaint.setTextSize(40);
         titlePaint.setFakeBoldText(true);
         titlePaint.setTextAlign(Paint.Align.CENTER);
-        titlePaint.setColor(Color.parseColor("#F4A536"));
     }
 
     public void setAngle(float angle) {
@@ -54,6 +53,10 @@ public class CircleSegment extends View {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
@@ -66,6 +69,8 @@ public class CircleSegment extends View {
                 (back.getHeight() - textPaint.ascent()) / 2,
                 textPaint);
 
+        if(active) titlePaint.setColor(Color.parseColor("#F4A536"));
+        else titlePaint.setColor(Color.parseColor("#000000"));
         canvas.drawText(title, back.getWidth() / 2, back.getHeight() - (textPaint.ascent() * 2) / 2, titlePaint);
     }
 
