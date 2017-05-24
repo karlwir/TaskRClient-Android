@@ -13,18 +13,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import taskr.se.taskr.LoginActivity;
 import taskr.se.taskr.R;
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
+import taskr.se.taskr.repository.OnResultEventListener;
+import taskr.se.taskr.repository.TaskRContentProvider;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 import taskr.se.taskr.teamdetailviews.TeamDetailActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ItemListFragment searchResultFragment;
 
-    public static Intent createIntent(Context context) {
+    public static Intent createIntent(Context context, final OnResultEventListener<Boolean> listener) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (listener != null) {
+            final TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(context);
+            provider.initData(new OnResultEventListener<Boolean>() {
+                @Override
+                public void onResult(Boolean result) {
+                    GlobalVariables.loggedInUser = provider.getUsers(false).get(1);
+                    listener.onResult(result);
+                }
+            });
+        }
         return intent;
     }
 
@@ -53,18 +68,30 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+
+        Intent intent;
+        switch (menuItem.getItemId()) {
+            case R.id.open_team_detail:
+                intent = TeamDetailActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                break;
+            case R.id.sign_out:
+                intent = LoginActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                finish();
+                break;
+            default:
+                break;
+        }
+
+
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.menu_options);
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = TeamDetailActivity.createIntent(getApplicationContext());
-                startActivity(intent);
-                return false;
-            }
-        });
 
         final MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();

@@ -60,11 +60,7 @@ class WorkItemRepositorySql implements WorkItemRepository {
         return queryWorkItems(WorkItemsEntry.COLUMN_NAME_STATUS + " = ?" , new String[]{"DONE"});
     }
 
-    @Override
-    public List<WorkItem> getMyWorkItems(boolean notifyObserver) {
-        // TODO
-        return null;
-    }
+
 
     @Override
     public List<WorkItem> getWorkItemsByUser(User user) {
@@ -88,14 +84,6 @@ class WorkItemRepositorySql implements WorkItemRepository {
         workItemCursorWrapper.close();
 
         return workItems;
-    }
-
-    @Override
-    public List<WorkItem> searchWorkItem(String query) {
-        List<WorkItem> byTitle = queryWorkItems(WorkItemsEntry.COLUMN_NAME_TITLE + " LIKE ?", new String[]{"%" + query + "%"});
-        List<WorkItem> byDesc = queryWorkItems(WorkItemsEntry.COLUMN_NAME_DESCRIPTION + " LIKE ?", new String[]{"%" + query + "%"});
-        byTitle.addAll(byDesc);
-        return byTitle;
     }
 
     @Override

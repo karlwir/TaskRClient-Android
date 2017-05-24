@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="viewModel"
-            type="taskr.se.taskr.home.workitemviewmodel.AddWorkItemViewModel" />
+            name="editViewModel"
+            type="taskr.se.taskr.teamdetailviews.detailviewmodel.TeamDetailEditViewModel"/>
     </data>
 
     <LinearLayout
@@ -20,41 +18,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/title"
-            android:textStyle="bold" />
+            android:text="@string/name"
+            android:textStyle="bold"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title"
+            android:hint="@string/name"
             android:maxLength="10"
-            android:text="@={viewModel.title}"
-            app:error="@{viewModel.titleError}" />
+            android:text="@={editViewModel.name}"
+            app:error="@{editViewModel.nameError}"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none"
             android:text="@string/description"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/description"
-            android:text="@={viewModel.description}"
-            app:error="@{viewModel.descriptionError}"
-            app:limiter="@{viewModel.description}" />
+            android:text="@={editViewModel.description}"
+            app:error="@{editViewModel.descriptionError}"
+            app:limiter="@{editViewModel.description}"/>
 
         <Button
             android:id="@+id/save_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:onClick="@{() -> viewModel.save()}"
-            android:text="@string/add_workitem"
+            android:onClick="@{() -> editViewModel.save()}"
+            android:text="@string/save_changes"
             android:textColor="#FFF"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
 
     </LinearLayout>

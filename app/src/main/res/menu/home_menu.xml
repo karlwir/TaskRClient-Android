@@ -2,20 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:title="@string/team_detail"
+        <item
+            android:id="@+id/open_team_detail"
+            android:title="@string/team_detail" />
+        <item
+            android:id="@+id/sign_out"
+            android:title="@string/sign_out" />
+
+  <!--  <item
         android:id="@+id/menu_options"
         android:icon="@android:drawable/ic_notification_overlay"
-        />
-
+        android:title="@string/menu_options">
+    </item> -->
 
     <item
         android:id="@+id/menu_search"
-        android:icon="@android:drawable/ic_menu_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:title="@string/search" />
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

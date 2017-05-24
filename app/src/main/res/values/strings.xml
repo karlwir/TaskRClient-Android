@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">TaskR</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home" translatable="false">HomeActivity</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
-    <string name="status">Status</string>
+    <string name="status" translatable="false">Status</string>
     <string name="name">Name</string>
     <string name="members">Members</string>
     <string name="add_member">+ ADD MEMBERS</string>
@@ -11,4 +11,17 @@
     <string name="add_workitem">Save</string>
     <string name="team_detail">Teams</string>
     <string name="assignee">Assignee</string>
+    <string name="log_out">Sign out</string>
+    <string name="menu_options">Options</string>
+    <string name="sign_out">Sign out</string>
+    <string name="R" translatable="false">R</string>
+    <string name="Task" translatable="false">Task</string>
+    <string name="Manage_your_work" translatable="false">Manage your work</string>
+    <string name="ADD_MEMBER">+ ADD MEMBER</string>
+    <string name="unstarted">UNSTARTED</string>
+    <string name="started">STARTED</string>
+    <string name="done">DONE</string>
+    <string name="my_tasks">MY TASKS</string>
+    <string name="edit_mode">Edit</string>
+    <string name="save_changes">Save</string>
 </resources>

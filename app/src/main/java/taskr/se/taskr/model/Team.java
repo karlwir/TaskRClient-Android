@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Team extends BaseEntity{
 
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
     private List<User> users;
     private final boolean active = true;
 
@@ -40,4 +40,10 @@ public class Team extends BaseEntity{
     public String getName() {
         return name;
     }
+
+
+    public void setName(String name) {this.name = name;}
+
+    public void setDescription(String description) {this.description = description;}
+    
 }

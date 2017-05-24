@@ -38,10 +38,10 @@ public class ItemListFragmentContainer extends Fragment {
 
         pager = (ViewPager) view.findViewById(R.id.view_pager);
         pagerAdapter = new FragmentPagerItemAdapter(getChildFragmentManager(), FragmentPagerItems.with(getContext())
-                .add("UNSTARTED", ItemListFragment.class)
-                .add("STARTED", ItemListFragment.class)
-                .add("DONE", ItemListFragment.class)
-                .add("MY TASKS", ItemListFragment.class).create());
+                .add(R.string.unstarted, ItemListFragment.class)
+                .add(R.string.started, ItemListFragment.class)
+                .add(R.string.done, ItemListFragment.class)
+                .add(R.string.my_tasks, ItemListFragment.class).create());
 
 
         final ItemListTabProvider tabProvider = new ItemListTabProvider(getContext());

@@ -7,14 +7,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.TeamDetailFragmentBinding;
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.TaskRContentProvider;
@@ -36,6 +41,10 @@ public class TeamDetailFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         TeamDetailFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.team_detail_fragment, container, false);
         View view = binding.getRoot();
+        Team loggedInUserTeam = GlobalVariables.loggedInUser.getTeams().get(0);
+        if (loggedInUserTeam != null) {
+            team = contentProvider.getTeam(loggedInUserTeam.getId());
+        }
         binding.setTeam(team);
         navigateToAddUserActivity(view);
 
@@ -53,7 +62,9 @@ public class TeamDetailFragment extends Fragment {
 
     }
 
-    public void updateAdapter() {recyclerView.setAdapter(new UserListAdapter(team.getUsers())); }
+    public void updateAdapter() {
+        recyclerView.setAdapter(new UserListAdapter(team.getUsers()));
+    }
 
     private void navigateToAddUserActivity(View view) {
         Button button = (Button) view.findViewById(R.id.add_btn);
@@ -68,11 +79,12 @@ public class TeamDetailFragment extends Fragment {
     }
 
     private void getSentExtras() {
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             long[] userIds = getArguments().getLongArray("members");
-            for (int i = 0; i < userIds.length; i++) {
-                User user = contentProvider.getUser(userIds[i]);
-                team.addMember(user);
+            for (Long id : userIds) {
+                User user = contentProvider.getUser(id);
+                contentProvider.addTeamMember(team, user);
+                updateAdapter();
             }
         }
 
@@ -82,7 +94,7 @@ public class TeamDetailFragment extends Fragment {
 
         private final List<User> users;
 
-        public UserListAdapter(List<User> users) {
+        UserListAdapter(List<User> users) {
             this.users = users;
         }
 
@@ -109,7 +121,7 @@ public class TeamDetailFragment extends Fragment {
         private TextView userContent;
         private StringBuilder builder;
 
-        public UserListViewHolder(View itemView) {
+        UserListViewHolder(View itemView) {
             super(itemView);
             this.builder = new StringBuilder();
             this.userContent = (TextView) itemView.findViewById(R.id.user_content);

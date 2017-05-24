@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:background="@android:color/transparent"
-        android:text="+ ADD MEMBER"
+        android:text="@string/ADD_MEMBER"
         android:textColor="@android:color/holo_orange_light" />
 
     <include
