@@ -57,6 +57,7 @@ public class ItemListFragmentContainer extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+                tabProvider.setActiveItem(position);
                 tabProvider.redraw();
             }
 
@@ -66,5 +67,6 @@ public class ItemListFragmentContainer extends Fragment {
             }
         });
         viewPagerTab.setViewPager(pager);
+        tabProvider.setActiveItem(0);
     }
 }

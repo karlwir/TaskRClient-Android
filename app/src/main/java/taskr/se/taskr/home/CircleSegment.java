@@ -45,7 +45,6 @@ public class CircleSegment extends View {
         titlePaint.setTextSize(40);
         titlePaint.setFakeBoldText(true);
         titlePaint.setTextAlign(Paint.Align.CENTER);
-        titlePaint.setColor(Color.parseColor("#F4A536"));
     }
 
     public void setAngle(float angle) {
@@ -54,6 +53,10 @@ public class CircleSegment extends View {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
@@ -66,12 +69,14 @@ public class CircleSegment extends View {
                 (back.getHeight() - textPaint.ascent()) / 2,
                 textPaint);
 
+        if(active) titlePaint.setColor(Color.parseColor("#F4A536"));
+        else titlePaint.setColor(Color.parseColor("#000000"));
         canvas.drawText(title, back.getWidth() / 2, back.getHeight() - (textPaint.ascent() * 2) / 2, titlePaint);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = 270;
+        int desiredWidth = 0;
         int desiredHeight = back.getHeight() - (int)textPaint.ascent() * 2;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -82,31 +87,22 @@ public class CircleSegment extends View {
         int width;
         int height;
 
-        //Measure Width
         if (widthMode == MeasureSpec.EXACTLY) {
-            //Must be this size
             width = widthSize;
         } else if (widthMode == MeasureSpec.AT_MOST) {
-            //Can't be bigger than...
             width = Math.min(desiredWidth, widthSize);
         } else {
-            //Be whatever you want
             width = desiredWidth;
         }
 
-        //Measure Height
         if (heightMode == MeasureSpec.EXACTLY) {
-            //Must be this size
             height = heightSize;
         } else if (heightMode == MeasureSpec.AT_MOST) {
-            //Can't be bigger than...
             height = Math.min(desiredHeight, heightSize);
         } else {
-            //Be whatever you want
             height = desiredHeight;
         }
 
-        //MUST CALL THIS
         setMeasuredDimension(width, height);
     }
 }

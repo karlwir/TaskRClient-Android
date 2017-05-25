@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.LinearLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.HashMap;
@@ -35,6 +36,13 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
         return circleSegment;
     }
 
+    public void setActiveItem(int position) {
+        for(int pos : tabs.keySet()) {
+            if(pos == position) tabs.get(pos).setActive(true);
+            else tabs.get(pos).setActive(false);
+        }
+    }
+
     public void redraw() {
         for(int i = 0; i < tabs.size(); i++) {
             tabs.get(i).setAngle(calculateAngle(i));
@@ -49,22 +57,22 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
         int resIdFill = 0;
         switch (position) {
             case 0:
-                title = "UNSTARTED";
+                title = context.getString(R.string.unstarted);
                 resIdBack = R.drawable.grey1;
                 resIdFill = R.drawable.grey2;
                 break;
             case 1:
-                title = "STARTED";
+                title = context.getString(R.string.started);
                 resIdBack = R.drawable.orange1;
                 resIdFill = R.drawable.orange2;
                 break;
             case 2:
-                title = "DONE";
+                title = context.getString(R.string.done);
                 resIdBack = R.drawable.green1;
                 resIdFill = R.drawable.green2;
                 break;
             case 3:
-                title = "MY ITEMS";
+                title = context.getString(R.string.my_tasks);
                 resIdBack = R.drawable.blue1;
                 resIdFill = R.drawable.blue2;
                 break;
@@ -73,7 +81,11 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
         int angle = calculateAngle(position);
         String itemCountString = getItemCountString(position);
 
-        return new CircleSegment(context, itemCountString, title, angle, resIdBack, resIdFill);
+        CircleSegment circleSegment = new CircleSegment(context, itemCountString, title, angle, resIdBack, resIdFill);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.25f);
+        circleSegment.setLayoutParams(param);
+
+        return circleSegment;
     }
 
     private int calculateAngle(int position) {
