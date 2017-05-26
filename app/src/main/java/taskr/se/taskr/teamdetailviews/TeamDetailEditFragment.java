@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import taskr.se.taskr.R;
 import taskr.se.taskr.databinding.EditTeamDetailFragmentBinding;
-import taskr.se.taskr.databinding.TeamDetailFragmentBinding;
 import taskr.se.taskr.teamdetailviews.detailviewmodel.TeamDetailEditViewModel;
 
 /**

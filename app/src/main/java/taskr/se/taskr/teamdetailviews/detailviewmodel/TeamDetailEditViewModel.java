@@ -2,9 +2,7 @@ package taskr.se.taskr.teamdetailviews.detailviewmodel;
 
 import android.content.Context;
 import android.databinding.ObservableField;
-
 import taskr.se.taskr.global.GlobalVariables;
-import taskr.se.taskr.home.HomeActivity;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.TaskRContentProvider;
