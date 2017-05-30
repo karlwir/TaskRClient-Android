@@ -2,9 +2,12 @@ package taskr.se.taskr.home.workitemviewmodel;
 
 import android.content.Context;
 import android.databinding.ObservableField;
+import android.support.v4.app.Fragment;
 
+import taskr.se.taskr.R;
 import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.HomeActivity;
+import taskr.se.taskr.itemdetail.ItemDetailEditFragment;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
 import taskr.se.taskr.repository.TaskRContentProvider;
@@ -22,15 +25,15 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
     public ObservableField<String> titleError = new ObservableField<>();
     public ObservableField<String> descriptionError = new ObservableField<>();
 
-    private final Context context;
+    private final Fragment fragment;
     private final AddWorkItemInteractor interactor;
     private final User user = GlobalVariables.loggedInUser;
     private final TaskRContentProvider contentProvider;
 
-    public AddWorkItemViewModel(Context context) {
-        this.context = context.getApplicationContext();
+    public AddWorkItemViewModel(Fragment fragment) {
+        this.fragment = fragment;
         this.interactor = new AddWorkItemInteractorImpl();
-        this.contentProvider = TaskRContentProviderImpl.getInstance(context);
+        this.contentProvider = TaskRContentProviderImpl.getInstance(fragment.getContext());
     }
 
 
@@ -55,8 +58,18 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
     @Override
     public void onSuccess() {
         finish = true;
-        TaskRContentProviderImpl.getInstance(context).addOrUpdateWorkItem(new WorkItem(title.get(), description.get(), "UNSTARTED"));
-        context.startActivity(HomeActivity.createIntent(context, null));
+        if (fragment instanceof ItemDetailEditFragment) {
+            WorkItem item = contentProvider.getWorkItem(fragment.getArguments().getLong("id"));
+            if (item != null) {
+                item.setTitle(title.get());
+                item.setDescription(description.get());
+                contentProvider.addOrUpdateWorkItem(item);
+            } else {
+                contentProvider.addOrUpdateWorkItem(new WorkItem(title.get(), description.get(),
+                        fragment.getString(R.string.unstarted)));
+            }
+        }
+        fragment.startActivity(HomeActivity.createIntent(fragment.getContext(), null));
 
     }
 

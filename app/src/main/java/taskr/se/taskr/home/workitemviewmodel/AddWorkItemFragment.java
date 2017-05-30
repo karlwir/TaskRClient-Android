@@ -21,7 +21,7 @@ public class AddWorkItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentAddWorkitemBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_workitem, container, false);
         View view = binding.getRoot();
-        binding.setViewModel(new AddWorkItemViewModel(getActivity()));
+        binding.setViewModel(new AddWorkItemViewModel(this));
 
         return view;
     }

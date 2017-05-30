@@ -9,8 +9,8 @@ import java.util.Set;
  */
 
 public class WorkItem extends BaseEntity {
-    private final String title;
-    private final String description;
+    private String title;
+    private String description;
     private String status;
     private long priority = 0;
     private List<User> users = new ArrayList<>();
@@ -40,6 +40,18 @@ public class WorkItem extends BaseEntity {
 
     public List<User> getUsers() {
         return users;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void addUser(User user) {

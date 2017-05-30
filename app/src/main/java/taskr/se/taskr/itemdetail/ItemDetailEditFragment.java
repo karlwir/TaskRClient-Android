@@ -25,7 +25,7 @@ public class ItemDetailEditFragment extends Fragment {
                 .fragment_add_workitem, container, false);
 
         View view = binding.getRoot();
-        binding.setViewModel(new AddWorkItemViewModel(getActivity()));
+        binding.setViewModel(new AddWorkItemViewModel(this));
 
         return view;
     }
