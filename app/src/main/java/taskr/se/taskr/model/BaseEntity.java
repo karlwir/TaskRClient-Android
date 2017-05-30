@@ -29,7 +29,7 @@ public abstract class BaseEntity {
     }
 
     public boolean hasBeenSavedToServer() {
-        return DEFAULT_ITEMKEY != null;
+        return itemKey != null;
     }
 
     @Override
