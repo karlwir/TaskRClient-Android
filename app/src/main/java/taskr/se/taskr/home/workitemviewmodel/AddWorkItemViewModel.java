@@ -2,15 +2,19 @@ package taskr.se.taskr.home.workitemviewmodel;
 
 import android.content.Context;
 import android.databinding.ObservableField;
+
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.HomeActivity;
+import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.repository.TaskRContentProvider;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 /**
  * Created by Kevin on 2017-05-16.
  */
 
-public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAddedListener{
+public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAddedListener {
 
     private static boolean finish;
     public ObservableField<String> title = new ObservableField<>();
@@ -20,28 +24,32 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
 
     private final Context context;
     private final AddWorkItemInteractor interactor;
+    private final User user = GlobalVariables.loggedInUser;
+    private final TaskRContentProvider contentProvider;
 
     public AddWorkItemViewModel(Context context) {
         this.context = context.getApplicationContext();
         this.interactor = new AddWorkItemInteractorImpl();
+        this.contentProvider = TaskRContentProviderImpl.getInstance(context);
     }
+
 
     public void save() {
         String titleString = title.get();
         String descriptionString = description.get();
-        if(titleString != null && descriptionString != null) {
-           interactor.saveWorkItem(titleString, descriptionString, this);
+        if (titleString != null && descriptionString != null) {
+            interactor.saveWorkItem(titleString, descriptionString, this);
         }
     }
 
     @Override
-    public void onTitleError() {titleError.set("Invalid name.");
-
+    public void onTitleError() {
+        titleError.set("Invalid name.");
     }
 
     @Override
-    public void onDescriptionError() {descriptionError.set("Invalid description.");
-
+    public void onDescriptionError() {
+        descriptionError.set("Invalid description.");
     }
 
     @Override
@@ -49,10 +57,10 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
         finish = true;
         TaskRContentProviderImpl.getInstance(context).addOrUpdateWorkItem(new WorkItem(title.get(), description.get(), "UNSTARTED"));
         context.startActivity(HomeActivity.createIntent(context, null));
-        
+
     }
 
-    public static boolean isFinished(){
+    public static boolean isFinished() {
         return finish;
     }
 

@@ -14,7 +14,7 @@ import taskr.se.taskr.databinding.EditTeamDetailFragmentBinding;
 import taskr.se.taskr.teamdetailviews.detailviewmodel.TeamDetailEditViewModel;
 
 /**
- * Created by John on 2017-05-24.
+ * Created by Kevin on 2017-05-24.
  */
 
 public class TeamDetailEditFragment extends Fragment {

@@ -82,6 +82,7 @@ public class TeamDetailFragment extends Fragment {
                 contentProvider.addTeamMember(team, user);
             }
         }
+        contentProvider.addOrUpdateTeam(team);
     }
 
     private static class UserListAdapter extends RecyclerView.Adapter<UserListViewHolder> {

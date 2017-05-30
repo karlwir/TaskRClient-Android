@@ -6,7 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import taskr.se.taskr.R;
+import taskr.se.taskr.teamdetailviews.TeamDetailEditFragment;
 
 public class ItemDetailActivity extends AppCompatActivity {
 
@@ -29,6 +33,30 @@ public class ItemDetailActivity extends AppCompatActivity {
                     .commit();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_edit:
+                FragmentManager fm = getSupportFragmentManager();
+                Fragment fragment = new ItemDetailEditFragment();
+                fragment.setArguments(bundle());
+                fm.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                break;
+            default:
+                break;
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     private Bundle bundle() {
