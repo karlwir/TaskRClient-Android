@@ -22,7 +22,6 @@ import taskr.se.taskr.repository.TaskRContentProviderImpl;
  * Created by Kevin on 2017-05-11.
  */
 
-
 public class ItemDetailFragment extends Fragment{
 
     private RecyclerView recyclerView;
@@ -35,9 +34,6 @@ public class ItemDetailFragment extends Fragment{
         FragmentItemDetailBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_item_detail,container, false);
         View view = binding.getRoot();
         item = contentProvider.getWorkItem(getExtrasId());
-        for(int i = 0; i < 5; i++){
-            item.addUser(new User("Kevin"+i,"Briffa"+i, "Kebr"+i));
-        }
         binding.setWorkitem(item);
         return view;
     }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
@@ -46,6 +47,17 @@
             app:error="@{viewModel.descriptionError}"
             app:limiter="@{viewModel.description}" />
 
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/item_status"
+            android:layout_width="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/item_status"
+            bind:selectedValue="@={viewModel.status}"
+            app:setVisible="@{viewModel.visible}"
+            />
+
         <Button
             android:id="@+id/save_btn"
             android:layout_width="match_parent"
@@ -55,7 +67,6 @@
             android:text="@string/add_workitem"
             android:textColor="#FFF"
             android:textStyle="bold" />
-
 
     </LinearLayout>
 
