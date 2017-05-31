@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
 
@@ -24,25 +27,43 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
-        final SignInButton button = (SignInButton) findViewById(R.id.sign_in_button);
+        Log.d("TAG", String.valueOf(GlobalVariables.isOnline(this)));
 
-        button.setEnabled(false);
+        if (GlobalVariables.isOnline(this)) {
 
-        final Intent intent = HomeActivity.createIntent(getApplicationContext(), new OnResultEventListener<Boolean>() {
-            @Override
-            public void onResult(Boolean result) {
-                if (result) {
-                    button.setEnabled(true);
+            final SignInButton button = (SignInButton) findViewById(R.id.sign_in_button);
+            button.setVisibility(View.VISIBLE);
+            button.setEnabled(false);
+            final Intent intent = HomeActivity.createIntent(getApplicationContext(), new OnResultEventListener<Boolean>() {
+                @Override
+                public void onResult(Boolean result) {
+                    if (result) {
+                        button.setEnabled(true);
+                    }
                 }
-            }
-        });
+            });
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        } else {
+            Toast.makeText(this, "No connection", Toast.LENGTH_SHORT).show();
+            final Button button = (Button) findViewById(R.id.offline_button);
+            button.setVisibility(View.VISIBLE);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(intent);
-                finish();
-            }
-        });
+            final Intent intent = HomeActivity.createOfflineIntent(getApplicationContext());
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+
+
     }
 }

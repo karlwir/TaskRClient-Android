@@ -1,7 +1,10 @@
 package taskr.se.taskr.home;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -18,6 +21,7 @@ import taskr.se.taskr.R;
 import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
+import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.OnResultEventListener;
 import taskr.se.taskr.repository.TaskRContentProvider;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
@@ -43,20 +47,35 @@ public class HomeActivity extends AppCompatActivity {
         return intent;
     }
 
+    public static Intent createOfflineIntent(Context context) {
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        GlobalVariables.loggedInUser = new User("Offline", "User", "offlineUser");
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
-                startActivity(intent);
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ab.setTitle("TaskR");
 
-            }
-        });
+        if (GlobalVariables.isOnline(this)) {
+            fab.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
+                    startActivity(intent);
+
+                }
+            });
+        } else {
+            fab.setVisibility(View.INVISIBLE);
+            ab.setSubtitle("(Offline mode)");
+        }
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_list_container);
@@ -65,12 +84,13 @@ public class HomeActivity extends AppCompatActivity {
             fm.beginTransaction().add(R.id.fragment_list_container, fragment)
                     .commit();
         }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-
         Intent intent;
+
         switch (menuItem.getItemId()) {
             case R.id.open_team_detail:
                 intent = TeamDetailActivity.createIntent(getApplicationContext());
@@ -84,7 +104,6 @@ public class HomeActivity extends AppCompatActivity {
             default:
                 break;
         }
-
 
         return super.onOptionsItemSelected(menuItem);
     }
@@ -111,7 +130,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
         searchView.setOnSearchClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +153,11 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        if (!GlobalVariables.isOnline(this)) {
+            MenuItem item = menu.findItem(R.id.open_team_detail);
+            item.setVisible(false);
+        }
 
         return true;
     }

@@ -44,11 +44,21 @@
             android:text="@string/Manage_your_work"
             android:layout_gravity="center_horizontal"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="175dp"
+            android:text="USE OFFLINE MODE"
+            android:visibility="invisible"
+            android:id="@+id/offline_button" />
+
     <com.google.android.gms.common.SignInButton
        android:id="@+id/sign_in_button"
         android:onClick="loginButton"
         android:layout_width="250dp"
         android:layout_marginTop="175dp"
+        android:visibility="invisible"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 

@@ -131,6 +131,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         userHttpClient.deleteUser(user);
     }
 
+    @Override
     public List<User> syncUsers(List<User> users, boolean removeUnsyncedLocals) {
         return userRepository.syncUsers(users, removeUnsyncedLocals);
     }
