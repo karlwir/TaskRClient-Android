@@ -25,4 +25,5 @@ public class AddWorkItemFragment extends Fragment {
 
         return view;
     }
+
 }

@@ -11,7 +11,7 @@ public class TeamDetailEditInteractorImpl implements TeamDetailEditInteractor {
     public void saveChanges(String name, String description, OnEditFinishListener listener) {
         boolean error = false;
 
-        if(name.length() < 4 || name.length() >= 15){
+        if(name.length() < 4){
             listener.onNameError();
             error = true;
         }

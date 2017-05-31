@@ -50,6 +50,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 Fragment fragment = new ItemDetailEditFragment();
                 fragment.setArguments(bundle());
                 fm.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                item.setVisible(false);
                 break;
             default:
                 break;

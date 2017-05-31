@@ -24,4 +24,10 @@
     <string name="my_tasks">MY TASKS</string>
     <string name="edit_mode">Edit</string>
     <string name="save_changes">Save</string>
+
+    <string-array name="item_status">
+        <item>UNSTARTED</item>
+        <item>STARTED</item>
+        <item>DONE</item>
+        </string-array>
 </resources>
