@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity {
             });
         } else {
             fab.setVisibility(View.INVISIBLE);
-            ab.setSubtitle("(Offline mode)");
+            ab.setSubtitle(R.string.offline_mode);
         }
 
         FragmentManager fm = getSupportFragmentManager();
@@ -154,7 +154,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        if (!GlobalVariables.isOnline(this)) {
+        if (GlobalVariables.isOnline(this)) {
+            String logOutTitle = getResources().getString(R.string.log_out) + " @" + GlobalVariables.loggedInUser.getUsername();
+            MenuItem item = menu.findItem(R.id.sign_out);
+            item.setTitle(logOutTitle);
+        } else {
             MenuItem item = menu.findItem(R.id.open_team_detail);
             item.setVisible(false);
         }

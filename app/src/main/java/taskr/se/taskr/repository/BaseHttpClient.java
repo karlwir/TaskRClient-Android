@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.model.BaseEntity;
 import taskr.se.taskr.model.WorkItem;
 
@@ -42,6 +43,7 @@ abstract class BaseHttpClient<T extends BaseEntity> {
 
         @Override
         protected List<T> doInBackground(Void... voids) {
+
             OkHttpClient client = new OkHttpClient();
             String responseString = null;
 

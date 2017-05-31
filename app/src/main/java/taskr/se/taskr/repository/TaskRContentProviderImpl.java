@@ -3,6 +3,7 @@ package taskr.se.taskr.repository;
 import android.content.Context;
 import android.util.Log;
 
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
@@ -27,6 +28,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private final WorkItemRepository workItemRepository;
     private final TeamRepository teamRepository;
     private final TeamHttpClient teamHttpClient;
+    private final Context context;
     private static TaskRContentProviderImpl instance;
     private List<Presenter> observers;
     private static final long SYNC_TIMEOUT = 5000;
@@ -47,6 +49,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         workItemHttpClient = WorkItemHttpClient.getInstance();
         teamRepository = TeamRepositorySql.getInstance(context);
         teamHttpClient = TeamHttpClient.getInstance();
+        this.context = context;
         observers = new ArrayList<>();
     }
 
@@ -62,44 +65,48 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public void initData(final OnResultEventListener<Boolean> listener) {
-        userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
-            @Override
-            public void onResult(List<User> result) {
-                if (result != null) {
-                    syncUsers(result, true);
-                }
-                workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
-                    @Override
-                    public void onResult(List<WorkItem> result) {
-                        if (result != null) {
-                            syncWorkItems(result);
-                        }
-                        teamHttpClient.getTeams(new OnResultEventListener<List<Team>>() {
-                            @Override
-                            public void onResult(List<Team> result) {
-                                if (result != null) {
-                                    syncTeams(result);
-                                }
-                                listener.onResult(true);
-                            }
-                        });
+        if (GlobalVariables.isOnline(context)) {
+            userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
+                @Override
+                public void onResult(List<User> result) {
+                    if (result != null) {
+                        syncUsers(result, true);
                     }
-                });
-            }
-        });
+                    workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+                        @Override
+                        public void onResult(List<WorkItem> result) {
+                            if (result != null) {
+                                syncWorkItems(result);
+                            }
+                            teamHttpClient.getTeams(new OnResultEventListener<List<Team>>() {
+                                @Override
+                                public void onResult(List<Team> result) {
+                                    if (result != null) {
+                                        syncTeams(result);
+                                    }
+                                    listener.onResult(true);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override
     public List<User> getUsers(final boolean notifyObservers) {
-        userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
-            @Override
-            public void onResult(List<User> result) {
-                if (result != null) {
-                    syncUsers(result, true);
-                }
+        if (GlobalVariables.isOnline(context)) {
+            userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
+                @Override
+                public void onResult(List<User> result) {
+                    if (result != null) {
+                        syncUsers(result, true);
+                    }
 
-            }
-        });
+                }
+            });
+        }
         return userRepository.getUsers(notifyObservers);
     }
 
@@ -138,57 +145,67 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<WorkItem> getWorkItems(final boolean notifyObservers) {
-        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
-            @Override
-            public void onResult(List<WorkItem> result) {
-                if (result != null) {
-                    syncWorkItems(result);
+        if (GlobalVariables.isOnline(context)) {
+            workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+                @Override
+                public void onResult(List<WorkItem> result) {
+                    if (result != null) {
+                        syncWorkItems(result);
+                    }
+                    if (notifyObservers) notifyObservers();
                 }
-                if(notifyObservers) notifyObservers();
-            }
-        });
+            });
+        }
         return workItemRepository.getWorkItems(false);
     }
 
     @Override
     public List<WorkItem> getUnstartedWorkItems(final boolean notifyObservers) {
-        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
-            @Override
-            public void onResult(List<WorkItem> result) {
-                if (result != null) {
-                    syncWorkItems(result);
+        if (GlobalVariables.isOnline(context)) {
+            workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+                @Override
+                public void onResult(List<WorkItem> result) {
+                    if (result != null) {
+                        syncWorkItems(result);
+                    }
+                    if (notifyObservers) notifyObservers();
                 }
-                if(notifyObservers) notifyObservers();
-            }
-        });
+            });
+        }
         return workItemRepository.getUnstartedWorkItems(false);
     }
 
     @Override
     public List<WorkItem> getStartedWorkItems(final boolean notifyObservers) {
-        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
-            @Override
-            public void onResult(List<WorkItem> result) {
-                if (result != null) {
-                    syncWorkItems(result);
+        if (GlobalVariables.isOnline(context)) {
+
+            workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+                @Override
+                public void onResult(List<WorkItem> result) {
+                    if (result != null) {
+                        syncWorkItems(result);
+                    }
+                    if (notifyObservers) notifyObservers();
                 }
-                if(notifyObservers) notifyObservers();
-            }
-        });
+            });
+        }
         return workItemRepository.getStartedWorkItems(false);
     }
 
     @Override
     public List<WorkItem> getDoneWorkItems(final boolean notifyObservers) {
-        workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
-            @Override
-            public void onResult(List<WorkItem> result) {
-                if (result != null) {
-                    syncWorkItems(result);
+        if (GlobalVariables.isOnline(context)) {
+
+            workItemHttpClient.getWorkItems(new OnResultEventListener<List<WorkItem>>() {
+                @Override
+                public void onResult(List<WorkItem> result) {
+                    if (result != null) {
+                        syncWorkItems(result);
+                    }
+                    if (notifyObservers) notifyObservers();
                 }
-                if(notifyObservers) notifyObservers();
-            }
-        });
+            });
+        }
         return workItemRepository.getDoneWorkItems(false);
     }
 
@@ -267,15 +284,18 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<Team> getTeams(final boolean notifyObservers) {
-        teamHttpClient.getTeams(new OnResultEventListener<List<Team>>() {
-            @Override
-            public void onResult(List<Team> result) {
-                if (result != null) {
-                    syncTeams(result);
+        if (GlobalVariables.isOnline(context)) {
+
+            teamHttpClient.getTeams(new OnResultEventListener<List<Team>>() {
+                @Override
+                public void onResult(List<Team> result) {
+                    if (result != null) {
+                        syncTeams(result);
+                    }
+                    if (notifyObservers) notifyObservers();
                 }
-                if(notifyObservers) notifyObservers();
-            }
-        });
+            });
+        }
         return teamRepository.getTeams(false);
     }
 

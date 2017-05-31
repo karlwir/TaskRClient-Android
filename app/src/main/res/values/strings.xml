@@ -29,5 +29,6 @@
         <item>UNSTARTED</item>
         <item>STARTED</item>
         <item>DONE</item>
-        </string-array>
+    </string-array>
+    <string name="offline_mode">Offline mode</string>
 </resources>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import taskr.se.taskr.R;
+import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.teamdetailviews.detailviewmodel.TeamDetailEditViewModel;
 
 public class TeamDetailActivity extends AppCompatActivity {
@@ -43,7 +44,10 @@ public class TeamDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.edit_menu, menu);
+        if (GlobalVariables.isOnline(this)) {
+            getMenuInflater().inflate(R.menu.edit_menu, menu);
+        }
+
         return true;
     }
 
