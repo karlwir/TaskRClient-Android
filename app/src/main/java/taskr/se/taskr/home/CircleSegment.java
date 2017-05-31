@@ -25,6 +25,12 @@ import java.util.Map;
 public class CircleSegment extends View {
     private Bitmap back;
     private Bitmap fill;
+    private Bitmap backTwo;
+    private Bitmap fillTwo;
+    private Bitmap backOne;
+    private Bitmap fillOne;
+    private BitmapShader shaderOne;
+    private BitmapShader shaderTwo;
     private Paint paint;
     private RectF oval;
     private Paint textPaint;
@@ -33,8 +39,6 @@ public class CircleSegment extends View {
     private String title;
     private float angle;
     private boolean active;
-    private int resIdBack;
-    private int resIdFill;
     private SparseIntArray imageMap;
 
     public CircleSegment(Context context, String text, String title, float angle, int resIdBack, int resIdFill) {
@@ -42,8 +46,6 @@ public class CircleSegment extends View {
         this.text = text;
         this.title = title;
         this.angle = angle;
-        this.resIdBack = resIdBack;
-        this.resIdFill = resIdFill;
 
         Resources res = getResources();
         back = BitmapFactory.decodeResource(res, resIdBack);
@@ -69,6 +71,13 @@ public class CircleSegment extends View {
         imageMap.put(R.drawable.orange_small2, R.drawable.orange2);
         imageMap.put(R.drawable.blue_small1, R.drawable.blue1);
         imageMap.put(R.drawable.blue_small2, R.drawable.blue2);
+
+        backOne = back;
+        fillOne = fill;
+        backTwo = BitmapFactory.decodeResource(res, imageMap.get(resIdBack));
+        fillTwo = BitmapFactory.decodeResource(res, imageMap.get(resIdFill));
+        shaderOne = new BitmapShader(fillOne, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        shaderTwo = new BitmapShader(fillTwo, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
     }
 
     public void setAngle(float angle) {
@@ -85,18 +94,17 @@ public class CircleSegment extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Resources res = getResources();
         if(active) {
             titlePaint.setColor(Color.parseColor("#F4A536"));
-            back = BitmapFactory.decodeResource(res, imageMap.get(resIdBack));
-            fill = BitmapFactory.decodeResource(res, imageMap.get(resIdFill));
-            paint.setShader(new BitmapShader(fill, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+            back = backTwo;
+            fill = fillTwo;
+            paint.setShader(shaderTwo);
         }
         else {
             titlePaint.setColor(Color.parseColor("#979797"));
-            back = BitmapFactory.decodeResource(res, resIdBack);
-            fill = BitmapFactory.decodeResource(res, resIdFill);
-            paint.setShader(new BitmapShader(fill, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+            back = backOne;
+            fill = fillOne;
+            paint.setShader(shaderOne);
         }
 
         canvas.translate((getWidth() - back.getWidth()) / 2, (getHeight() - back.getHeight() + textPaint.ascent()) / 2);
