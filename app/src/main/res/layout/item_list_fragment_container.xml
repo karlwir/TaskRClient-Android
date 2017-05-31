@@ -20,8 +20,8 @@
             app:stl_indicatorCornerRadius="2dp"
             app:stl_overlineColor="#4D000000"
             app:stl_overlineThickness="0dp"
-            app:stl_underlineColor="#4D000000"
-            app:stl_underlineThickness="1dp"
+            app:stl_underlineColor="#CBCBCB"
+            app:stl_underlineThickness="5dp"
             app:stl_dividerColor="#4D000000"
             app:stl_dividerThickness="0dp"
             app:stl_defaultTabBackground="?attr/selectableItemBackground"
@@ -39,7 +39,7 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/view_pager"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
 
 </LinearLayout>

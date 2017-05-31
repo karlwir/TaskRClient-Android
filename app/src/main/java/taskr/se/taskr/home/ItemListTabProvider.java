@@ -58,23 +58,23 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
         switch (position) {
             case 0:
                 title = context.getString(R.string.unstarted);
-                resIdBack = R.drawable.grey1;
-                resIdFill = R.drawable.grey2;
+                resIdBack = R.drawable.grey_small1;
+                resIdFill = R.drawable.grey_small2;
                 break;
             case 1:
                 title = context.getString(R.string.started);
-                resIdBack = R.drawable.orange1;
-                resIdFill = R.drawable.orange2;
+                resIdBack = R.drawable.orange_small1;
+                resIdFill = R.drawable.orange_small2;
                 break;
             case 2:
                 title = context.getString(R.string.done);
-                resIdBack = R.drawable.green1;
-                resIdFill = R.drawable.green2;
+                resIdBack = R.drawable.green_small1;
+                resIdFill = R.drawable.green_small2;
                 break;
             case 3:
                 title = context.getString(R.string.my_tasks);
-                resIdBack = R.drawable.blue1;
-                resIdFill = R.drawable.blue2;
+                resIdBack = R.drawable.blue_small1;
+                resIdFill = R.drawable.blue_small2;
                 break;
         }
 

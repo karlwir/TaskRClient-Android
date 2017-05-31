@@ -1,6 +1,7 @@
 package taskr.se.taskr.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +11,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.util.SparseIntArray;
 import android.view.View;
+import taskr.se.taskr.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jacoblodenius on 22/05/17.
@@ -18,6 +24,7 @@ import android.view.View;
 
 public class CircleSegment extends View {
     private Bitmap back;
+    private Bitmap fill;
     private Paint paint;
     private RectF oval;
     private Paint textPaint;
@@ -26,25 +33,42 @@ public class CircleSegment extends View {
     private String title;
     private float angle;
     private boolean active;
+    private int resIdBack;
+    private int resIdFill;
+    private SparseIntArray imageMap;
 
     public CircleSegment(Context context, String text, String title, float angle, int resIdBack, int resIdFill) {
         super(context);
         this.text = text;
         this.title = title;
         this.angle = angle;
+        this.resIdBack = resIdBack;
+        this.resIdFill = resIdFill;
+
         Resources res = getResources();
         back = BitmapFactory.decodeResource(res, resIdBack);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        Bitmap ring = BitmapFactory.decodeResource(res, resIdFill);
-        paint.setShader(new BitmapShader(ring, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        fill = BitmapFactory.decodeResource(res, resIdFill);
+        paint.setShader(new BitmapShader(fill, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
         oval = new RectF(0, 0, back.getWidth(), back.getHeight());
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextSize(70);
         textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setColor(Color.parseColor("#979797"));
         titlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         titlePaint.setTextSize(40);
         titlePaint.setFakeBoldText(true);
         titlePaint.setTextAlign(Paint.Align.CENTER);
+
+        imageMap = new SparseIntArray();
+        imageMap.put(R.drawable.grey_small1, R.drawable.grey1);
+        imageMap.put(R.drawable.grey_small2, R.drawable.grey2);
+        imageMap.put(R.drawable.green_small1, R.drawable.green1);
+        imageMap.put(R.drawable.green_small2, R.drawable.green2);
+        imageMap.put(R.drawable.orange_small1, R.drawable.orange1);
+        imageMap.put(R.drawable.orange_small2, R.drawable.orange2);
+        imageMap.put(R.drawable.blue_small1, R.drawable.blue1);
+        imageMap.put(R.drawable.blue_small2, R.drawable.blue2);
     }
 
     public void setAngle(float angle) {
@@ -61,6 +85,20 @@ public class CircleSegment extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Resources res = getResources();
+        if(active) {
+            titlePaint.setColor(Color.parseColor("#F4A536"));
+            back = BitmapFactory.decodeResource(res, imageMap.get(resIdBack));
+            fill = BitmapFactory.decodeResource(res, imageMap.get(resIdFill));
+            paint.setShader(new BitmapShader(fill, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        }
+        else {
+            titlePaint.setColor(Color.parseColor("#979797"));
+            back = BitmapFactory.decodeResource(res, resIdBack);
+            fill = BitmapFactory.decodeResource(res, resIdFill);
+            paint.setShader(new BitmapShader(fill, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        }
+
         canvas.translate((getWidth() - back.getWidth()) / 2, (getHeight() - back.getHeight() + textPaint.ascent()) / 2);
         canvas.drawBitmap(back, 0, 0, null);
         canvas.drawArc(oval, -90, angle, true, paint);
@@ -69,8 +107,6 @@ public class CircleSegment extends View {
                 (back.getHeight() - textPaint.ascent()) / 2,
                 textPaint);
 
-        if(active) titlePaint.setColor(Color.parseColor("#F4A536"));
-        else titlePaint.setColor(Color.parseColor("#000000"));
         canvas.drawText(title, back.getWidth() / 2, back.getHeight() - (textPaint.ascent() * 2) / 2, titlePaint);
     }
 
