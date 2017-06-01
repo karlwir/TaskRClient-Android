@@ -1,5 +1,7 @@
 package taskr.se.taskr.repository;
 
+import android.content.Context;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -15,8 +17,12 @@ import taskr.se.taskr.model.User;
 
 class TeamHttpClient extends BaseHttpClient<Team> {
 
-    static synchronized TeamHttpClient getInstance() {
-        return new TeamHttpClient();
+    static synchronized TeamHttpClient getInstance(Context context) {
+        return new TeamHttpClient(context);
+    }
+
+    private TeamHttpClient(Context context) {
+        super(context);
     }
 
     void getTeams(OnResultEventListener<List<Team>> listener) {

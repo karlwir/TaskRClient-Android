@@ -38,8 +38,24 @@ public class TeamDetailActivity extends AppCompatActivity {
             }
             fm.beginTransaction().replace(R.id.team_fragment_container, fragment).commit();
         }
+        handleOfflineMode();
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handleOfflineMode();
+    }
+
+    private void handleOfflineMode() {
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        if (GlobalVariables.isOnline(this)) {
+            ab.setSubtitle(null);
+        } else {
+            ab.setSubtitle(R.string.offline_mode);
+        }
+        invalidateOptionsMenu();
     }
 
     @Override

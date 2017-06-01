@@ -19,6 +19,9 @@ public class ItemDetailActivity extends AppCompatActivity {
         return new Intent(context, ItemDetailActivity.class);
     }
 
+
+    private Menu editMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +36,23 @@ public class ItemDetailActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+        handleOfflineMode();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handleOfflineMode();
+    }
+
+    private void handleOfflineMode() {
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        if (GlobalVariables.isOnline(this)) {
+            ab.setSubtitle(null);
+        } else {
+            ab.setSubtitle(R.string.offline_mode);
+        }
+        invalidateOptionsMenu();
     }
 
     @Override

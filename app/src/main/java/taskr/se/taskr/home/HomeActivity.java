@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -82,19 +84,14 @@ public class HomeActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar ab = getSupportActionBar();
         ab.setTitle(R.string.title_activity_home);
 
-        if (GlobalVariables.isOnline(this)) {
-            fab.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
-                    startActivity(intent);
+        fab.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
+                startActivity(intent);
 
-                }
-            });
-        } else {
-            fab.setVisibility(View.INVISIBLE);
-            ab.setSubtitle(R.string.offline_mode);
-        }
+            }
+        });
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_list_container);
@@ -104,6 +101,26 @@ public class HomeActivity extends AppCompatActivity {
                     .commit();
         }
 
+        handleOfflineMode();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handleOfflineMode();
+    }
+
+    private void handleOfflineMode() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        if (GlobalVariables.isOnline(this)) {
+            fab.setVisibility(View.VISIBLE);
+            ab.setSubtitle(null);
+        } else {
+            fab.setVisibility(View.INVISIBLE);
+            ab.setSubtitle(R.string.offline_mode);
+        }
     }
 
     @Override

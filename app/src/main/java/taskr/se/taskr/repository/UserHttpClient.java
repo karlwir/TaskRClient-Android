@@ -1,5 +1,7 @@
 package taskr.se.taskr.repository;
 
+import android.content.Context;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -14,8 +16,12 @@ import taskr.se.taskr.model.User;
 
 class UserHttpClient extends BaseHttpClient<User> {
 
-    static synchronized UserHttpClient getInstance() {
-        return new UserHttpClient();
+    static synchronized UserHttpClient getInstance(Context context) {
+        return new UserHttpClient(context);
+    }
+
+    private UserHttpClient(Context context) {
+        super(context);
     }
 
     void getUsers(OnResultEventListener<List<User>> listener) {

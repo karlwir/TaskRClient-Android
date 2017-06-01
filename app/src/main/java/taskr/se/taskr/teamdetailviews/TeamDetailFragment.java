@@ -56,7 +56,22 @@ public class TeamDetailFragment extends Fragment {
         getSentExtras();
         navigateToAddUserActivity();
         updateAdapter();
+        handleOfflineMode();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        handleOfflineMode();
+    }
+
+    private void handleOfflineMode() {
+        Button button = (Button) getView().findViewById(R.id.add_btn);
+        if (GlobalVariables.isOnline(getContext())) {
+            button.setVisibility(View.VISIBLE);
+        } else {
+            button.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void updateAdapter() {recyclerView.setAdapter(new UserListAdapter(team.getUsers()));}
@@ -70,9 +85,7 @@ public class TeamDetailFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        if (!GlobalVariables.isOnline(getContext())) {
-            button.setVisibility(View.INVISIBLE);
-        }
+
     }
 
     private void getSentExtras() {

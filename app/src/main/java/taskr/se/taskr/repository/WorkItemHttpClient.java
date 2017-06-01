@@ -1,5 +1,7 @@
 package taskr.se.taskr.repository;
 
+import android.content.Context;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -16,8 +18,12 @@ import taskr.se.taskr.model.WorkItem;
 
 class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
 
-    static synchronized WorkItemHttpClient getInstance() {
-        return new WorkItemHttpClient();
+    static synchronized WorkItemHttpClient getInstance(Context context) {
+        return new WorkItemHttpClient(context);
+    }
+
+    private WorkItemHttpClient(Context context) {
+        super(context);
     }
 
     void getWorkItems(OnResultEventListener<List<WorkItem>> listener) {

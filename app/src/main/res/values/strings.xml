@@ -46,4 +46,9 @@
     <string name="teams_synced">Teams synced</string>
     <string name="users_synced">Users synced</string>
     <string name="data_debug">Data debug</string>
+    <string name="connection_error_bad_request">Connection error: Your request is bad</string>
+    <string name="connection_error_unauthorized">Connection error: You shall not pass</string>
+    <string name="connection_error_not_found">Connection error: Cant find resource</string>
+    <string name="connection_error_server_error">Connection error: Something went wrong on the server</string>
+    <string name="connection_error_no_response">Connection error: Can\'t connect to server</string>
 </resources>

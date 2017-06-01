@@ -50,11 +50,11 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     private TaskRContentProviderImpl(Context context) {
         userRepository = UserRepositorySql.getInstance(context);
-        userHttpClient = UserHttpClient.getInstance();
+        userHttpClient = UserHttpClient.getInstance(context);
         workItemRepository = WorkItemRepositorySql.getInstance(context);
-        workItemHttpClient = WorkItemHttpClient.getInstance();
+        workItemHttpClient = WorkItemHttpClient.getInstance(context);
         teamRepository = TeamRepositorySql.getInstance(context);
-        teamHttpClient = TeamHttpClient.getInstance();
+        teamHttpClient = TeamHttpClient.getInstance(context);
         this.context = context;
         observers = new ArrayList<>();
         preferences = context.getSharedPreferences(context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
