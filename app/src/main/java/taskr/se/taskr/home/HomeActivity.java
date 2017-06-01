@@ -3,6 +3,7 @@ package taskr.se.taskr.home;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,10 +13,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import java.util.List;
+import java.util.Random;
+
 import taskr.se.taskr.LoginActivity;
 import taskr.se.taskr.R;
 import taskr.se.taskr.global.GlobalVariables;
@@ -31,7 +37,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private ItemListFragment searchResultFragment;
 
-    public static Intent createIntent(Context context, final OnResultEventListener<Boolean> listener) {
+
+    public static Intent createInitIntent(Context context, final OnResultEventListener<Boolean> listener) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (listener != null) {
@@ -39,7 +46,10 @@ public class HomeActivity extends AppCompatActivity {
             provider.initData(new OnResultEventListener<Boolean>() {
                 @Override
                 public void onResult(Boolean result) {
-                    GlobalVariables.loggedInUser = provider.getUsers(false).get(1);
+                    List<User> users = provider.getUsers(false);
+                    Random random = new Random();
+                    int randomIndex = random.nextInt(users.size() - 1 + 1);
+                    GlobalVariables.loggedInUser = users.get(randomIndex);
                     listener.onResult(result);
                 }
             });
@@ -47,10 +57,10 @@ public class HomeActivity extends AppCompatActivity {
         return intent;
     }
 
-    public static Intent createOfflineIntent(Context context) {
+    public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        GlobalVariables.loggedInUser = new User("Offline", "User", "offlineUser");
+
         return intent;
     }
 
@@ -59,9 +69,15 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        final SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
+        preferences
+                .edit()
+                .putLong(getResources().getString(R.string.prefs_last_user_id), GlobalVariables.loggedInUser.getId())
+                .apply();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         android.support.v7.app.ActionBar ab = getSupportActionBar();
-        ab.setTitle("TaskR");
+        ab.setTitle(R.string.title_activity_home);
 
         if (GlobalVariables.isOnline(this)) {
             fab.setOnClickListener(new OnClickListener() {
@@ -154,13 +170,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        if (GlobalVariables.isOnline(this)) {
-            String logOutTitle = getResources().getString(R.string.log_out) + " @" + GlobalVariables.loggedInUser.getUsername();
-            MenuItem item = menu.findItem(R.id.sign_out);
-            item.setTitle(logOutTitle);
-        } else {
-            MenuItem item = menu.findItem(R.id.open_team_detail);
-            item.setVisible(false);
+        String logOutTitle = getResources().getString(R.string.log_out) + " @" + GlobalVariables.loggedInUser.getUsername();
+        MenuItem item = menu.findItem(R.id.sign_out);
+        item.setTitle(logOutTitle);
+
+        if (!GlobalVariables.loggedInUser.hasTeam()) {
+            MenuItem openTeam = menu.findItem(R.id.open_team_detail);
+            openTeam.setTitle(R.string.has_no_team);
+            openTeam.setEnabled(false);
         }
 
         return true;

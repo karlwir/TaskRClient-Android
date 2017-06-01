@@ -9,7 +9,6 @@
     <string name="members">Medlemmar</string>
     <string name="name">Namn</string>
     <string name="search">Sök</string>
-    <string name="status"></string>
     <string name="team_detail">Grupp</string>
     <string name="title">Titel</string>
     <string name="unstarted">OSTARTADE</string>
@@ -22,4 +21,9 @@
     <string name="menu_options">Meny val</string>
     <string name="save_changes">Spara</string>
     <string name="offline_mode">Offline läge</string>
+    <string name="use_offline_mode">Fortsätt offline som</string>
+    <string name="phone_not_connected">Din telefon är inte ansluten till internet</string>
+    <string name="continue_as">Fortsätt som</string>
+    <string name="change_user">Byt användare</string>
+    <string name="has_no_team">Ingen grupp</string>
 </resources>

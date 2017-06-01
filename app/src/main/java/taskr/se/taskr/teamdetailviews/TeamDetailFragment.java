@@ -34,7 +34,7 @@ public class TeamDetailFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(getContext());
-    private Team team = new Team("Team", "team");
+    private Team team;
 
     @Nullable
     @Override
@@ -42,9 +42,7 @@ public class TeamDetailFragment extends Fragment {
         TeamDetailFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.team_detail_fragment, container, false);
         View view = binding.getRoot();
         Team loggedInUserTeam = GlobalVariables.loggedInUser.getTeams().get(0);
-        if (loggedInUserTeam != null) {
-            team = contentProvider.getTeam(loggedInUserTeam.getId());
-        }
+        team = contentProvider.getTeam(loggedInUserTeam.getId());
         binding.setTeam(team);
         return view;
     }
@@ -72,6 +70,9 @@ public class TeamDetailFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        if (!GlobalVariables.isOnline(getContext())) {
+            button.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void getSentExtras() {

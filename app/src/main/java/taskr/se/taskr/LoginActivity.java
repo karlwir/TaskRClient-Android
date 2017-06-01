@@ -2,18 +2,24 @@ package taskr.se.taskr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
 
 import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.HomeActivity;
+import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.OnResultEventListener;
+import taskr.se.taskr.repository.TaskRContentProvider;
+import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,48 +28,104 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
+        prepareLoginScreen();
+    }
 
-        Log.d("TAG", String.valueOf(GlobalVariables.isOnline(this)));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareLoginScreen();
+    }
 
-        if (GlobalVariables.isOnline(this)) {
+    private void prepareLoginScreen() {
+        final TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(this);
+        final SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
 
-            final SignInButton button = (SignInButton) findViewById(R.id.sign_in_button);
-            button.setVisibility(View.VISIBLE);
-            button.setEnabled(false);
-            final Intent intent = HomeActivity.createIntent(getApplicationContext(), new OnResultEventListener<Boolean>() {
-                @Override
-                public void onResult(Boolean result) {
-                    if (result) {
-                        button.setEnabled(true);
-                    }
-                }
-            });
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(intent);
-                    finish();
-                }
-            });
-        } else {
-            Toast.makeText(this, "No connection", Toast.LENGTH_SHORT).show();
-            final Button button = (Button) findViewById(R.id.offline_button);
-            button.setVisibility(View.VISIBLE);
+        final SignInButton googleButton = (SignInButton) findViewById(R.id.sign_in_button);
+        final Button continueButton = (Button) findViewById(R.id.continue_button);
+        final TextView offlineText = (TextView) findViewById(R.id.offline_text);
+        final TextView changeUser = (TextView) findViewById(R.id.change_user);
+        changeUser.setPaintFlags(changeUser.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        changeUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GlobalVariables.loggedInUser = null;
+                preferences
+                        .edit()
+                        .putLong(getResources().getString(R.string.prefs_last_user_id), -1L)
+                        .apply();
+                prepareLoginScreen();
+            }
+        });
 
-            final Intent intent = HomeActivity.createOfflineIntent(getApplicationContext());
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(intent);
-                    finish();
-                }
-            });
+        changeUser.setVisibility(View.INVISIBLE);
+        offlineText.setVisibility(View.INVISIBLE);
+        continueButton.setVisibility(View.INVISIBLE);
+        googleButton.setVisibility(View.INVISIBLE);
+
+
+        User lastLoggedInUser = provider.getUser(preferences.getLong(getResources().getString(R.string.prefs_last_user_id), -1));
+        if (lastLoggedInUser != null) {
+            GlobalVariables.loggedInUser = lastLoggedInUser;
         }
 
+        if (GlobalVariables.isOnline(this)) {
+            if (lastLoggedInUser != null) {
+                final Intent intent = HomeActivity.createIntent(getApplicationContext());
+                continueButton.setText(getResources().getString(R.string.continue_as) + " @" + GlobalVariables.loggedInUser.getUsername());
+                continueButton.setVisibility(View.VISIBLE);
 
+                continueButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+                changeUser.setVisibility(View.VISIBLE);
+
+            } else {
+                googleButton.setVisibility(View.VISIBLE);
+                changeUser.setVisibility(View.INVISIBLE);
+                googleButton.setEnabled(false);
+                final Intent intent = HomeActivity.createInitIntent(getApplicationContext(), new OnResultEventListener<Boolean>() {
+                    @Override
+                    public void onResult(Boolean result) {
+                        if (result) {
+                            googleButton.setEnabled(true);
+                        }
+                    }
+                });
+                googleButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+        } else if (lastLoggedInUser != null)  {
+            final Intent intent = HomeActivity.createIntent(getApplicationContext());
+
+            continueButton.setText(getResources().getString(R.string.use_offline_mode) + " @" + GlobalVariables.loggedInUser.getUsername());
+            continueButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(intent);
+                    finish();
+                }
+            });
+            continueButton.setVisibility(View.VISIBLE);
+            offlineText.setVisibility(View.VISIBLE);
+            changeUser.setVisibility(View.VISIBLE);
+
+        } else {
+            offlineText.setVisibility(View.VISIBLE);
+        }
     }
 }

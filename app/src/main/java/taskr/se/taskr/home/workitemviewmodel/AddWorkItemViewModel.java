@@ -89,7 +89,7 @@ public class AddWorkItemViewModel implements AddWorkItemInteractor.OnWorkItemAdd
                         fragment.getString(R.string.unstarted)));
             }
         }
-        fragment.startActivity(HomeActivity.createIntent(fragment.getContext(), null));
+        fragment.startActivity(HomeActivity.createIntent(fragment.getContext()));
 
     }
 

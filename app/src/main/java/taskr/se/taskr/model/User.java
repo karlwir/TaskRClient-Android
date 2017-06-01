@@ -54,6 +54,10 @@ public class User extends  BaseEntity {
         teams.add(team);
     }
 
+    public boolean hasTeam() {
+        return teams.size() > 0;
+    }
+
     @Override
     public String toString() {
         return String.format("User: %s, %s, %s, %s, %s, teams:%s, workItems:%s", id, firstname, lastname, username, itemKey, teams.size(), workItems.size());

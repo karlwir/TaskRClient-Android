@@ -44,22 +44,45 @@
             android:text="@string/Manage_your_work"
             android:layout_gravity="center_horizontal"/>
 
-        <Button
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/offline_text"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="400dp"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            android:text="@string/phone_not_connected"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/change_user"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="490dp"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            android:text="@string/change_user"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"/>
+
+    <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="175dp"
-            android:text="USE OFFLINE MODE"
+            android:text="@string/use_offline_mode"
             android:visibility="invisible"
-            android:id="@+id/offline_button" />
+            android:id="@+id/continue_button" />
 
-    <com.google.android.gms.common.SignInButton
-       android:id="@+id/sign_in_button"
-        android:onClick="loginButton"
-        android:layout_width="250dp"
-        android:layout_marginTop="175dp"
-        android:visibility="invisible"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        <com.google.android.gms.common.SignInButton
+           android:id="@+id/sign_in_button"
+            android:onClick="loginButton"
+            android:layout_width="250dp"
+            android:layout_marginTop="175dp"
+            android:visibility="invisible"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
     </FrameLayout>
