@@ -23,6 +23,7 @@ import taskr.se.taskr.repository.TaskRContentProviderImpl;
 
 public class LoginActivity extends AppCompatActivity {
 
+
     public static Intent createIntent(Context context) {
         return new Intent(context, LoginActivity.class);
     }
@@ -42,8 +43,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void prepareLoginScreen() {
+
         final TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(this);
         final SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
+
+        boolean autoLogin = preferences.getBoolean(getResources().getString(R.string.prefs_auto_login), false);
 
         final SignInButton googleButton = (SignInButton) findViewById(R.id.sign_in_button);
         final Button continueButton = (Button) findViewById(R.id.continue_button);
@@ -71,6 +75,12 @@ public class LoginActivity extends AppCompatActivity {
         User lastLoggedInUser = provider.getUser(preferences.getLong(getResources().getString(R.string.prefs_last_user_id), -1));
         if (lastLoggedInUser != null) {
             GlobalVariables.loggedInUser = lastLoggedInUser;
+
+            if (autoLogin) {
+                final Intent intent = HomeActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                finish();
+            }
         }
 
         if (GlobalVariables.isOnline(this)) {

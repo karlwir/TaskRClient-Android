@@ -75,6 +75,7 @@ public class HomeActivity extends AppCompatActivity {
         preferences
                 .edit()
                 .putLong(getResources().getString(R.string.prefs_last_user_id), GlobalVariables.loggedInUser.getId())
+                .putBoolean(getResources().getString(R.string.prefs_auto_login), true)
                 .apply();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -115,6 +116,12 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.sign_out:
+                final SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
+                preferences
+                        .edit()
+                        .putBoolean(getResources().getString(R.string.prefs_auto_login), false)
+                        .apply();
+
                 intent = LoginActivity.createIntent(getApplicationContext());
                 startActivity(intent);
                 finish();
