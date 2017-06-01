@@ -1,8 +1,10 @@
 package taskr.se.taskr.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import taskr.se.taskr.R;
 import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
 import static taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 
 /**
@@ -34,6 +37,9 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private static final long SYNC_TIMEOUT = 5000;
     private Long lastWorkitemSyncTimeStamp;
     private Long lastTeamSyncTimeStamp;
+    private Long lastUserSyncTimeStamp;
+    private SharedPreferences preferences;
+
 
     public static synchronized TaskRContentProviderImpl getInstance(Context context) {
         if(instance == null) {
@@ -51,6 +57,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
         teamHttpClient = TeamHttpClient.getInstance();
         this.context = context;
         observers = new ArrayList<>();
+        preferences = context.getSharedPreferences(context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
     }
 
     public void registerObserver(Presenter presenter) {
@@ -140,7 +147,16 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
 
     @Override
     public List<User> syncUsers(List<User> users, boolean removeUnsyncedLocals) {
-        return userRepository.syncUsers(users, removeUnsyncedLocals);
+        Long timeStamp = System.currentTimeMillis();
+        List<User> syncedUsers =  userRepository.syncUsers(users, removeUnsyncedLocals);
+
+        lastUserSyncTimeStamp = timeStamp;
+        preferences
+                .edit()
+                .putLong(context.getResources().getString(R.string.prefs_last_user_sync_timestamp), timeStamp)
+                .apply();
+
+        return syncedUsers;
     }
 
     @Override
@@ -273,6 +289,10 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
             workItemRepository.syncWorkItems(workItems);
             syncWorkItemAssignments(assignmentsOnServer);
             lastWorkitemSyncTimeStamp = timeStamp;
+            preferences
+                    .edit()
+                    .putLong(context.getResources().getString(R.string.prefs_last_workitem_sync_timestamp), timeStamp)
+                    .apply();
         }
         return null;
     }
@@ -357,6 +377,10 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
             teamRepository.syncTeams(teams);
             syncTeamMemberships(mebershipsOnServer);
             lastTeamSyncTimeStamp = timeStamp;
+            preferences
+                    .edit()
+                    .putLong(context.getResources().getString(R.string.prefs_last_team_sync_timestamp), timeStamp)
+                    .apply();
         }
     }
 

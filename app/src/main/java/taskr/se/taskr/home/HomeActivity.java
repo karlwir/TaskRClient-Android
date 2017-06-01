@@ -22,8 +22,10 @@ import android.view.View.OnClickListener;
 import java.util.List;
 import java.util.Random;
 
+import taskr.se.taskr.BuildConfig;
 import taskr.se.taskr.LoginActivity;
 import taskr.se.taskr.R;
+import taskr.se.taskr.datadebug.DataDebugActivity;
 import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
@@ -117,6 +119,10 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.data_debug:
+                intent = DataDebugActivity.createIntent(getApplicationContext());
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -178,6 +184,11 @@ public class HomeActivity extends AppCompatActivity {
             MenuItem openTeam = menu.findItem(R.id.open_team_detail);
             openTeam.setTitle(R.string.has_no_team);
             openTeam.setEnabled(false);
+        }
+
+        if (BuildConfig.DEBUG) {
+            MenuItem dataDebug = menu.findItem(R.id.data_debug);
+            dataDebug.setVisible(true);
         }
 
         return true;

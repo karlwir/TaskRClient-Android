@@ -26,4 +26,8 @@
     <string name="continue_as">Fortsätt som</string>
     <string name="change_user">Byt användare</string>
     <string name="has_no_team">Ingen grupp</string>
+    <string name="workitems_synced">Work items synced</string>
+    <string name="teams_synced">Teams synced</string>
+    <string name="users_synced">Users synced</string>
+    <string name="data_debug">Data debug</string>
 </resources>

@@ -38,4 +38,11 @@
     <string name="has_no_team">No team</string>
     <string name="shared_prefs" translatable="false">shared_prefs</string>
     <string name="prefs_last_user_id" translatable="false">prefs_last_user_id</string>
+    <string name="prefs_last_team_sync_timestamp" translatable="false">prefs_last_team_sync_timestamp</string>
+    <string name="prefs_last_user_sync_timestamp" translatable="false">prefs_last_user_sync_timestamp</string>
+    <string name="prefs_last_workitem_sync_timestamp" translatable="false">prefs_last_workitem_sync_timestamp</string>
+    <string name="workitems_synced">Work items synced</string>
+    <string name="teams_synced">Teams synced</string>
+    <string name="users_synced">Users synced</string>
+    <string name="data_debug">Data debug</string>
 </resources>

@@ -8,6 +8,10 @@
         <item
             android:id="@+id/sign_out"
             android:title="@string/sign_out" />
+        <item
+            android:id="@+id/data_debug"
+            android:title="@string/data_debug"
+            android:visible="false"/>
 
   <!--  <item
         android:id="@+id/menu_options"
