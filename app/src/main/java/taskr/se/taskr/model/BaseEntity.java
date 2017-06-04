@@ -37,4 +37,6 @@ public abstract class BaseEntity {
         BaseEntity entity = (BaseEntity) obj;
         return entity.getId() == id && entity.getItemKey().equals(itemKey);
     }
+
+
 }

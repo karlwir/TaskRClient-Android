@@ -27,6 +27,9 @@ android {
         enabled = true
     }
 }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -43,6 +46,7 @@ dependencies {
     compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     compile 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
     compile 'com.ogaclejapan.smarttablayout:utils-v13:1.6.1@aar'
+    compile 'com.github.paolorotolo:expandableheightlistview:1.0.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
     testCompile 'junit:junit:4.12'

@@ -1,13 +1,8 @@
 package taskr.se.taskr.home;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +25,12 @@ import taskr.se.taskr.datadebug.DataDebugActivity;
 import taskr.se.taskr.global.GlobalVariables;
 import taskr.se.taskr.home.itemlistfragment.ItemListFragment;
 import taskr.se.taskr.home.workitemviewmodel.AddWorkItemActivity;
+import taskr.se.taskr.model.Team;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.repository.OnResultEventListener;
 import taskr.se.taskr.repository.TaskRContentProvider;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
-import taskr.se.taskr.teamdetailviews.TeamDetailActivity;
+import taskr.se.taskr.teamdetail.TeamDetailActivity2;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -89,7 +84,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
                 startActivity(intent);
-
             }
         });
 
@@ -129,8 +123,11 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (menuItem.getItemId()) {
             case R.id.open_team_detail:
-                intent = TeamDetailActivity.createIntent(getApplicationContext());
-                startActivity(intent);
+                if (GlobalVariables.loggedInUser.hasTeam()) {
+                    Team team = GlobalVariables.loggedInUser.getTeams().get(0);
+                    intent = TeamDetailActivity2.createIntent(getApplicationContext(), team);
+                    startActivity(intent);
+                }
                 break;
             case R.id.sign_out:
                 final SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.shared_prefs), MODE_PRIVATE);

@@ -26,7 +26,6 @@ public class AddUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
 
-
         bundle = getIntent().getExtras();
 
         FragmentManager fm = getSupportFragmentManager();

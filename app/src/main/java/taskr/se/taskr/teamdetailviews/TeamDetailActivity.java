@@ -30,7 +30,7 @@ public class TeamDetailActivity extends AppCompatActivity {
         bundle = getIntent().getExtras();
 
         FragmentManager fm = getSupportFragmentManager();
-       Fragment fragment = fm.findFragmentById(R.id.team_fragment_container);
+        Fragment fragment = fm.findFragmentById(R.id.team_fragment_container);
         if (fragment == null) {
             fragment = new TeamDetailFragment();
             if (bundle != null) {
@@ -39,7 +39,6 @@ public class TeamDetailActivity extends AppCompatActivity {
             fm.beginTransaction().replace(R.id.team_fragment_container, fragment).commit();
         }
         handleOfflineMode();
-
     }
 
     @Override
@@ -63,7 +62,6 @@ public class TeamDetailActivity extends AppCompatActivity {
         if (GlobalVariables.isOnline(this)) {
             getMenuInflater().inflate(R.menu.edit_menu, menu);
         }
-
         return true;
     }
 

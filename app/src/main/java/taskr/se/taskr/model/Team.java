@@ -29,6 +29,10 @@ public class Team extends BaseEntity{
         users.add(user);
     }
 
+    public void removeMember(User user) {
+        users.remove(user);
+    }
+
     public List<User> getUsers() {
         return users;
     }
@@ -45,5 +49,9 @@ public class Team extends BaseEntity{
     public void setName(String name) {this.name = name;}
 
     public void setDescription(String description) {this.description = description;}
-    
+
+    @Override
+    public String toString() {
+        return String.format("Team: %s, %s, %s, %s, users:%s", id, name, description, itemKey, users.size());
+    }
 }

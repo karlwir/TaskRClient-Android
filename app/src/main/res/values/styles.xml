@@ -17,4 +17,25 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TaskR.EditableText" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:drawableRight">@drawable/ic_edit_pen_orange</item>
+        <item name="android:textAppearance">@style/TaskR.Text.Body</item>
+    </style>
+
+    <style name="TaskR.Text.Subheader" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TaskR.Text.Small" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TaskR.Text.Body" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

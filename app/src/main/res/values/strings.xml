@@ -51,4 +51,8 @@
     <string name="connection_error_not_found">Connection error: Cant find resource</string>
     <string name="connection_error_server_error">Connection error: Something went wrong on the server</string>
     <string name="connection_error_no_response">Connection error: Can\'t connect to server</string>
+    <string name="select_user">Select user</string>
+    <string name="remove_team_member_dialog_title">Remove member</string>
+    <string name="remove_team_member_dialog_message" formatted="false">Do you really want to remove %s from %s?</string>
+    <string name="team_updated">Team updated</string>
 </resources>

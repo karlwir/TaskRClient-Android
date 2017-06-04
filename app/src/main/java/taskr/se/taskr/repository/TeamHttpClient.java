@@ -44,12 +44,12 @@ class TeamHttpClient extends BaseHttpClient<Team> {
     }
 
     void addTeamMember(Team team, User user) {
-        String url = String.format("%s/%s/users", TEAM_BASE_URL, team.getItemKey());
+        String url = String.format("%s/%s/users/%s", TEAM_BASE_URL, team.getItemKey(), user.getItemKey());
         new PutTask(null, url).execute();
     }
 
     void removeTeamMember(Team team, User user) {
-        String url = String.format("%s/%s/users", TEAM_BASE_URL, team.getItemKey());
+        String url = String.format("%s/%s/users/%s", TEAM_BASE_URL, team.getItemKey(), user.getItemKey());
         new DeleteTask(url).execute();
     }
 

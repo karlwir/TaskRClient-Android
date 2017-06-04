@@ -26,22 +26,19 @@ public class TeamDetailEditViewModel implements TeamDetailEditInteractor.OnEditF
     private TaskRContentProvider contentProvider;
     private User user = GlobalVariables.loggedInUser;
 
-   public TeamDetailEditViewModel(Context context){
+   public TeamDetailEditViewModel(Context context) {
         this.context = context;
         this.interactor = new TeamDetailEditInteractorImpl();
         this.contentProvider = TaskRContentProviderImpl.getInstance(context);
-
     }
 
     public void save(){
-
         String nameString = name.get();
         String descriptionString = description.get();
 
         if(nameString != null && descriptionString != null){
             interactor.saveChanges(nameString, descriptionString, this);
         }
-
     }
 
     @Override
