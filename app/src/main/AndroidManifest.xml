@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="taskr.se.taskr">
+    package="se.taskr">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name="se.taskr.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,14 +23,10 @@
             android:name=".home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
-        <activity android:name=".itemdetail.ItemDetailActivity" />
-        <activity android:name=".home.workitemviewmodel.AddWorkItemActivity" />
-        <activity android:name=".teamdetailviews.TeamDetailActivity" />
-        <activity android:name=".teamdetailviews.AddUserActivity" />
         <activity android:name=".datadebug.DataDebugActivity" />
-        <activity android:name=".teamdetail.TeamDetailActivity2" />
-        <activity android:name=".selectuser.SelectUserActivity" />
-        <activity android:name=".workitemdetail.WorkItemDetailActivity"></activity>
+        <activity android:name="se.taskr.teamdetail.TeamDetailActivity" />
+        <activity android:name="se.taskr.selectuser.SelectUserActivity" />
+        <activity android:name="se.taskr.workitemdetail.WorkItemDetailActivity"></activity>
     </application>
 
 </manifest>

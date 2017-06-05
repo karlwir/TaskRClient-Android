@@ -6,7 +6,7 @@
     <data>
         <variable
             name="workItemDetailViewModel"
-            type="taskr.se.taskr.workitemdetail.WorkItemDetailViewModel"/>
+            type="se.taskr.workitemdetail.WorkItemDetailViewModel"/>
     </data>
 
     <ScrollView

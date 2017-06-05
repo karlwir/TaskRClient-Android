@@ -1,9 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/team_fragment_container"
-    tools:context="taskr.se.taskr.teamdetailviews.TeamDetailActivity">
-</FrameLayout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="teamDetailViewModel"
+            type="se.taskr.teamdetail.TeamDetailViewModel"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="@dimen/medium_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/name"
+                android:id="@+id/subheader_team_name"/>
+
+            <EditText
+                android:theme="@style/TaskR.EditableText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subheader_team_name"
+                android:hint="@string/name"
+                android:maxLength="25"
+                android:text="@={teamDetailViewModel.name}"
+                android:id="@+id/edittext_team_name"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edittext_team_name"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/description"
+                android:id="@+id/subheader_team_description" />
+
+            <EditText
+                android:theme="@style/TaskR.EditableText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subheader_team_description"
+                android:hint="@string/name"
+                android:maxLength="250"
+                android:text="@={teamDetailViewModel.description}"
+                android:id="@+id/edittext_team_description"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/edittext_team_description"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/members"
+                android:id="@+id/subheader_team_members"/>
+
+            <Button
+                android:id="@+id/add_member_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edittext_team_description"
+                android:layout_alignParentRight="true"
+                android:layout_alignBaseline="@id/subheader_team_members"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="right|top"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/add_member" />
+
+            <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
+                android:id="@+id/team_members_listview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_below="@id/subheader_team_members"
+                android:padding="0dp"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</layout>

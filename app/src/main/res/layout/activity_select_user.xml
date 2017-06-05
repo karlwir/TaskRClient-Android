@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="taskr.se.taskr.selectuser.SelectUserActivity">
+    tools:context="taskr.se.taskr.se.taskr.selectuser.selectuser.SelectUserActivity">
 
     <ScrollView
         android:layout_width="match_parent"
