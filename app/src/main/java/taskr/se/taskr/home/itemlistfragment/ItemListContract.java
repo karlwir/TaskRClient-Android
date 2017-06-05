@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ItemListContract {
     interface View {
-        void navigateToDetailView(long id);
+        void navigateToDetailView(WorkItem workItem);
         void updateAdapter();
     }
     interface Presenter {

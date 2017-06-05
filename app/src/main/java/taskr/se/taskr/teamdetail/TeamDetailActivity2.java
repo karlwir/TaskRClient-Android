@@ -34,7 +34,7 @@ public class TeamDetailActivity2 extends AppCompatActivity {
     private static final String EXTRA_TEAM_ID = "team_id";
     private static final int REQUEST_CODE_ADDMEMBER = 1;
     private TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(this);
-    Team team;
+    private Team team;
 
     public static Intent createIntent(Context context, Team team) {
         Intent intent = new Intent(context, TeamDetailActivity2.class);
@@ -87,7 +87,6 @@ public class TeamDetailActivity2 extends AppCompatActivity {
         final EditText teamNameEditText = (EditText) findViewById(R.id.edittext_team_name);
         final EditText teamDescriptionEditText = (EditText) findViewById(R.id.edittext_team_description);
         android.support.v7.app.ActionBar ab = getSupportActionBar();
-        final ExpandableHeightListView teamMembersListView = (ExpandableHeightListView) findViewById(R.id.team_members_listview);
 
         if (GlobalVariables.isOnline(this)) {
             ab.setSubtitle(null);

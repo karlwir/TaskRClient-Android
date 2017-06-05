@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="workItemDetailViewModel"
+            type="taskr.se.taskr.workitemdetail.WorkItemDetailViewModel"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="@dimen/medium_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/title"
+                android:id="@+id/subheader_work_item_title"/>
+
+            <EditText
+                android:theme="@style/TaskR.EditableText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subheader_work_item_title"
+                android:hint="@string/title"
+                android:maxLength="25"
+                android:text="@={workItemDetailViewModel.title}"
+                android:id="@+id/edittext_work_item_title"
+                app:error="@{workItemDetailViewModel.titleError}"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_below="@id/edittext_work_item_title"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/description"
+                android:id="@+id/subheader_work_item_description" />
+
+            <EditText
+                android:theme="@style/TaskR.EditableText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subheader_work_item_description"
+                android:hint="@string/description"
+                android:maxLength="250"
+                android:text="@={workItemDetailViewModel.description}"
+                android:id="@+id/edittext_work_item_description"
+                app:error="@{workItemDetailViewModel.descriptionError}"/>
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_below="@id/edittext_work_item_description"
+                android:background="@color/colorPrimary"
+                android:onClick="@{() -> workItemDetailViewModel.save()}"
+                android:text="@string/add_workitem"
+                android:textColor="#FFF"
+                app:setVisible="@{workItemDetailViewModel.newWorkItem}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_below="@id/edittext_work_item_description"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/status"
+                android:id="@+id/subheader_work_item_status"
+                app:setVisible="@{!workItemDetailViewModel.newWorkItem}" />
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/work_item_status_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_below="@id/subheader_work_item_status"
+                android:entries="@array/item_status"
+                bind:selectedValue="@={workItemDetailViewModel.status}"
+                app:setVisible="@{!workItemDetailViewModel.newWorkItem}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/work_item_status_select"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/assignee"
+                android:id="@+id/subheader_work_item_assignees"
+                app:setVisible="@{!workItemDetailViewModel.newWorkItem}"/>
+
+            <Button
+                android:id="@+id/add_assignee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/work_item_status_select"
+                android:layout_alignParentRight="true"
+                android:layout_alignBaseline="@id/subheader_work_item_assignees"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="right|top"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/add_assignee"
+                app:setVisible="@{!workItemDetailViewModel.newWorkItem}"  />
+
+            <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
+                android:id="@+id/work_item_assignees_listview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_below="@id/subheader_work_item_assignees"
+                android:padding="0dp"
+                app:setVisible="@{!workItemDetailViewModel.newWorkItem}"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</layout>

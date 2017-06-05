@@ -58,6 +58,10 @@ public class WorkItem extends BaseEntity {
         users.add(user);
     }
 
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
     @Override
     public String toString() {
         return String.format("Workitem: %s, %s, %s, %s, %s, %s", id, title, description, status, itemKey, users.size());

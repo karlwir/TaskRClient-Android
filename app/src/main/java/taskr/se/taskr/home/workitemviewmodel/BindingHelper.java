@@ -40,8 +40,7 @@ public class BindingHelper {
             pAppCompatSpinner.setSelection(pos, true);
         }
     }
-    @InverseBindingAdapter(attribute = "bind:selectedValue", event =
-            "bind:selectedValueAttrChanged")
+    @InverseBindingAdapter(attribute = "bind:selectedValue", event = "bind:selectedValueAttrChanged")
     public static String captureSelectedValue(AppCompatSpinner pAppCompatSpinner) {
         return (String) pAppCompatSpinner.getSelectedItem();
     }
@@ -83,7 +82,6 @@ public class BindingHelper {
                 }
             }
         });
-
 
     }
 }

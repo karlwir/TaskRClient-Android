@@ -45,8 +45,8 @@ class WorkItemHttpClient extends BaseHttpClient<WorkItem> {
     }
 
     void assignWorkItem(WorkItem workItem, User user) {
-        String url = String.format("%s/%s/workitems/", USER_BASE_URL, user.getItemKey());
-        new PutTask(workItem, url).execute();
+        String url = String.format("%s/%s/workitems/%s", USER_BASE_URL, user.getItemKey(), workItem.getItemKey());
+        new PutTask(null, url).execute();
     }
 
     void unAssignWorkItem(WorkItem workItem, User user) {

@@ -39,4 +39,13 @@
     <string name="remove_team_member_dialog_title">Ta bort medlem</string>
     <string name="remove_team_member_dialog_message" formatted="false">Vill du ta bort %s ur %s?</string>
     <string name="team_updated">Grupp uppdaterad</string>
+    <string name="add_assignee">Tilldela användare</string>
+    <string name="work_item_updated">Uppgift uppdaterad</string>
+    <string name="work_item">Uppgift</string>
+    <string name="remove_assignee_dialog_title">Ta bort användare</string>
+    <string name="remove_assignee_dialog_message" formatted="false">Vill du ta bort %s från %s?</string>
+    <string name="delete_item">Delete item</string>
+    <string name="remove_work_item_dialog_title">Ta bort upgift</string>
+    <string name="remove_work_item_dialog_message" formatted="false">vill du ta bort uppgiften \"%s\"?</string>
+    <string name="new_work_item">New work item</string>
 </resources>

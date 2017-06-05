@@ -18,6 +18,7 @@ import taskr.se.taskr.home.itemlistfragment.ItemListContract.Presenter;
 import taskr.se.taskr.itemdetail.ItemDetailActivity;
 import taskr.se.taskr.model.User;
 import taskr.se.taskr.model.WorkItem;
+import taskr.se.taskr.workitemdetail.WorkItemDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,8 +92,8 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         adapter.setOnItemClickedListener(new Presenter.OnItemClickedListener() {
             @Override
             public void onItemClicked(int id) {
-                long itemId = items.get(id).getId();
-                navigateToDetailView(itemId);
+                WorkItem clickedWorkItem = items.get(id);
+                navigateToDetailView(clickedWorkItem);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -104,17 +105,16 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
         adapter.setOnItemClickedListener(new Presenter.OnItemClickedListener() {
             @Override
             public void onItemClicked(int id) {
-                long itemId = presenter.getItems().get(id).getId();
-                navigateToDetailView(itemId);
+                WorkItem workItem = presenter.getItems().get(id);
+                navigateToDetailView(workItem);
             }
         });
         recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void navigateToDetailView(long id) {
-        Intent intent = ItemDetailActivity.createIntent(getContext());
-        intent.putExtra("id", id);
+    public void navigateToDetailView(WorkItem workItem) {
+        Intent intent = WorkItemDetailActivity.createIntent(getContext(), workItem);
         startActivity(intent);
     }
 
@@ -200,10 +200,7 @@ public class ItemListFragment extends Fragment implements ItemListContract.View 
                  case  "ARCHIVED":
                      statusOnWorkItem.setBackgroundColor(Color.parseColor("#9a844f"));
                     break;
-
-
             }
-
 
             if (assignedUsers.size() > 0) {
                 String usernames = "";

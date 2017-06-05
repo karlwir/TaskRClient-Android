@@ -29,7 +29,8 @@
         <activity android:name=".teamdetailviews.AddUserActivity" />
         <activity android:name=".datadebug.DataDebugActivity" />
         <activity android:name=".teamdetail.TeamDetailActivity2" />
-        <activity android:name=".selectuser.SelectUserActivity"></activity>
+        <activity android:name=".selectuser.SelectUserActivity" />
+        <activity android:name=".workitemdetail.WorkItemDetailActivity"></activity>
     </application>
 
 </manifest>

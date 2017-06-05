@@ -31,11 +31,11 @@ import taskr.se.taskr.repository.OnResultEventListener;
 import taskr.se.taskr.repository.TaskRContentProvider;
 import taskr.se.taskr.repository.TaskRContentProviderImpl;
 import taskr.se.taskr.teamdetail.TeamDetailActivity2;
+import taskr.se.taskr.workitemdetail.WorkItemDetailActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ItemListFragment searchResultFragment;
-
 
     public static Intent createInitIntent(Context context, final OnResultEventListener<Boolean> listener) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -82,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = AddWorkItemActivity.createIntent(getApplicationContext());
+                Intent intent = WorkItemDetailActivity.createNewWorkItemIntent(getApplicationContext());
                 startActivity(intent);
             }
         });

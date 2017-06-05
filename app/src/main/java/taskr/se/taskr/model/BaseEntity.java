@@ -5,7 +5,7 @@ package taskr.se.taskr.model;
  */
 
 public abstract class BaseEntity {
-    protected static final long DEFAULT_ID = 0;
+    public static final long DEFAULT_ID = 0;
     protected static final String DEFAULT_ITEMKEY = null;
 
     protected final long id;
