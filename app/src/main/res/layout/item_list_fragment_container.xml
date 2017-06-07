@@ -9,6 +9,7 @@
             android:id="@+id/view_pager_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             app:stl_indicatorAlwaysInCenter="false"
             app:stl_indicatorWithoutPadding="false"
             app:stl_indicatorInFront="false"
@@ -21,7 +22,7 @@
             app:stl_overlineColor="#4D000000"
             app:stl_overlineThickness="0dp"
             app:stl_underlineColor="#CBCBCB"
-            app:stl_underlineThickness="5dp"
+            app:stl_underlineThickness="3dp"
             app:stl_dividerColor="#4D000000"
             app:stl_dividerThickness="0dp"
             app:stl_defaultTabBackground="?attr/selectableItemBackground"

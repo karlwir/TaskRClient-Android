@@ -1,10 +1,14 @@
 package se.taskr.home;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.v4.view.PagerAdapter;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -13,7 +17,6 @@ import java.util.Map;
 
 import se.taskr.R;
 import se.taskr.global.GlobalVariables;
-import se.taskr.home.CircleSegment;
 import se.taskr.repository.TaskRContentProviderImpl;
 
 /**
@@ -23,7 +26,7 @@ import se.taskr.repository.TaskRContentProviderImpl;
 public class ItemListTabProvider implements SmartTabLayout.TabProvider {
 
     private Context context;
-    private Map<Integer, CircleSegment> tabs;
+    private Map<Integer, VectorCircleSegment> tabs;
 
     public ItemListTabProvider(Context context) {
         this.context = context;
@@ -32,7 +35,7 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
 
     @Override
     public View createTabView(ViewGroup container, int position, PagerAdapter adapter) {
-        CircleSegment circleSegment = generateSegmentFromPosition(position);
+        VectorCircleSegment circleSegment = generateVectorSegmentFromPosition(position);
         tabs.put(position, circleSegment);
         return circleSegment;
     }
@@ -52,41 +55,52 @@ public class ItemListTabProvider implements SmartTabLayout.TabProvider {
         }
     }
 
-    private CircleSegment generateSegmentFromPosition(int position) {
+    private VectorCircleSegment generateVectorSegmentFromPosition(int position) {
         String title = "N/A";
-        int resIdBack = 0;
-        int resIdFill = 0;
+        int backColor = 0;
+        int fillColor = 0;
         switch (position) {
             case 0:
                 title = context.getString(R.string.unstarted);
-                resIdBack = R.drawable.grey_small1;
-                resIdFill = R.drawable.grey_small2;
+                backColor = R.color.colorCircleGrayBack;
+                fillColor = R.color.colorCircleGrayFill;
                 break;
             case 1:
                 title = context.getString(R.string.started);
-                resIdBack = R.drawable.orange_small1;
-                resIdFill = R.drawable.orange_small2;
+                backColor = R.color.colorCircleOrangeBack;
+                fillColor = R.color.colorCircleOrangeFill;
                 break;
             case 2:
                 title = context.getString(R.string.done);
-                resIdBack = R.drawable.green_small1;
-                resIdFill = R.drawable.green_small2;
+                backColor = R.color.colorCircleGreenBack;
+                fillColor = R.color.colorCircleGreenFill;
                 break;
             case 3:
                 title = context.getString(R.string.my_tasks);
-                resIdBack = R.drawable.blue_small1;
-                resIdFill = R.drawable.blue_small2;
+                backColor = R.color.colorCircleBlueBack;
+                fillColor = R.color.colorCircleBlueFill;
                 break;
         }
 
-        int angle = calculateAngle(position);
+        float angle = calculateAngle(position);
         String itemCountString = getItemCountString(position);
 
-        CircleSegment circleSegment = new CircleSegment(context, itemCountString, title, angle, resIdBack, resIdFill);
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.25f);
+        float radius = getSrceenWidth() / 8;
+
+        VectorCircleSegment circleSegment = new VectorCircleSegment(context, null, itemCountString, title, radius, angle, backColor, fillColor);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.25f);
+        param.gravity = Gravity.END;
         circleSegment.setLayoutParams(param);
 
         return circleSegment;
+    }
+
+    private int getSrceenWidth() {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
     }
 
     private int calculateAngle(int position) {

@@ -7,4 +7,19 @@
     <color name="colorTextPrimary">#353535</color>
     <color name="colorTextSecondary">#7c7c7c</color>
     <color name="colorLightBorder">#E3E3E3</color>
+
+
+    <color name="colorCircleGrayBack">#cbcbcb</color>
+    <color name="colorCircleGrayFill">#979797</color>
+
+    <color name="colorCircleOrangeBack">#fce4bd</color>
+    <color name="colorCircleOrangeFill">#f6a623</color>
+
+    <color name="colorCircleGreenBack">#d8f1bc</color>
+    <color name="colorCircleGreenFill">#7ed321</color>
+
+    <color name="colorCircleBlueBack">#cfc7ff</color>
+    <color name="colorCircleBlueFill">#5f45ff</color>
+
+
 </resources>

@@ -62,7 +62,7 @@ public class WorkItemDetailViewModel {
             Long id = contentProvider.addOrUpdateWorkItem(workItem);
 
             if (id != DEFAULT_ID) {
-                Toast.makeText(context, R.string.team_updated, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.work_item_updated, Toast.LENGTH_LONG).show();
             }
             if (newWorkItem.get()) {
                 activity.finish();
