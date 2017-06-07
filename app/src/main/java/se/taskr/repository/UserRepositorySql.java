@@ -45,6 +45,11 @@ class UserRepositorySql implements UserRepository {
     }
 
     @Override
+    public User getUserByItemKey(String itemKey) {
+        return queryUser(UsersEntry.COLUMN_NAME_ITEMKEY + " = ?", new String[]{String.valueOf(itemKey)});
+    }
+
+    @Override
     public long addOrUpdateUser(User user) {
         ContentValues cv = getContentValues(user);
 

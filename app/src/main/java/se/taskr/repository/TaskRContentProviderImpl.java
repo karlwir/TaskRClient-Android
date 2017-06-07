@@ -1,6 +1,7 @@
 package se.taskr.repository;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -69,12 +70,11 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private void notifyObservers() {
         for(Presenter presenter : observers) {
             presenter.notifyChange();
-            Log.d("TAG","Notify observers");
         }
     }
 
     @Override
-    public void initData(final OnResultEventListener<Boolean> listener) {
+    public void initData(final OnResultEventListener listener) {
         if (GlobalVariables.isOnline(context)) {
             userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
                 @Override
@@ -94,7 +94,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
                                     if (result != null) {
                                         syncTeams(result);
                                     }
-                                    listener.onResult(true);
+                                    listener.onResult(null);
                                 }
                             });
                         }
@@ -123,6 +123,11 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     @Override
     public User getUser(long id) {
         return userRepository.getUser(id);
+    }
+
+    @Override
+    public User getUserByItemKey(String itemKey) {
+        return userRepository.getUserByItemKey(itemKey);
     }
 
     @Override

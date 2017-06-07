@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="taskr.se.taskr.LoginActivity">
+        tools:context="se.taskr.login.LoginActivity">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -65,23 +65,25 @@
             android:textSize="14dp"
             android:text="@string/change_user"
             android:layout_gravity="center_horizontal"
+            android:clickable="true"
             android:visibility="invisible"/>
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="175dp"
-            android:text="@string/use_offline_mode"
-            android:visibility="invisible"
-            android:id="@+id/continue_button" />
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="175dp"
+                android:text="@string/use_offline_mode"
+                android:visibility="invisible"
+                android:clickable="true"
+                android:id="@+id/continue_button" />
 
         <com.google.android.gms.common.SignInButton
            android:id="@+id/sign_in_button"
-            android:onClick="loginButton"
             android:layout_width="250dp"
             android:layout_marginTop="175dp"
             android:visibility="invisible"
+            android:clickable="true"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 

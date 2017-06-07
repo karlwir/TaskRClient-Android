@@ -11,6 +11,7 @@ import se.taskr.model.User;
 public interface UserRepository {
     List<User> getUsers(boolean notifyObservers);
     User getUser(long id);
+    User getUserByItemKey(String itemKey);
     long addOrUpdateUser(User user);
     void removeUser(User user);
     List<User> syncUsers(List<User> users, boolean removeUnsyncedLocals);

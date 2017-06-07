@@ -37,10 +37,9 @@ abstract class BaseHttpClient<T extends BaseEntity> {
         this.context = context;
     }
 
-        private static final String TAG = "BaseHttpClient";
+    private static final String TAG = "BaseHttpClient";
 
     protected class GetTask extends AsyncTask<Void, Void, List<T>> {
-
 
         private final OnResultEventListener<List<T>> listener;
         private final String url;

@@ -36,25 +36,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private ItemListFragment searchResultFragment;
 
-    public static Intent createInitIntent(Context context, final OnResultEventListener<Boolean> listener) {
-        Intent intent = new Intent(context, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (listener != null) {
-            final TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(context);
-            provider.initData(new OnResultEventListener<Boolean>() {
-                @Override
-                public void onResult(Boolean result) {
-                    List<User> users = provider.getUsers(false);
-                    Random random = new Random();
-                    int randomIndex = random.nextInt(users.size() - 1 + 1);
-                    GlobalVariables.loggedInUser = users.get(randomIndex);
-                    listener.onResult(result);
-                }
-            });
-        }
-        return intent;
-    }
-
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
