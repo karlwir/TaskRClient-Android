@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/fragment_list_container"
     android:layout_height="match_parent"
-    tools:context="se.taskr.home.HomeActivity">
+    tools:context="se.taskr.teamlist.TeamListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -14,13 +13,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <include layout="@layout/content_team_list" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_add_white"/>
+        app:srcCompat="@drawable/ic_add_white" />
 
 </android.support.design.widget.CoordinatorLayout>

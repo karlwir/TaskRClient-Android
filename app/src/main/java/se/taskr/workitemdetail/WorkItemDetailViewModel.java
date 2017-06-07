@@ -3,6 +3,7 @@ package se.taskr.workitemdetail;
 import android.content.Context;
 import android.databinding.Observable;
 import android.databinding.ObservableField;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 import se.taskr.R;
@@ -30,7 +31,6 @@ public class WorkItemDetailViewModel {
     private WorkItemDetailActivity activity;
 
     public WorkItemDetailViewModel(Context context, final WorkItem workItem, boolean newWorkItem, WorkItemDetailActivity activity) {
-        this.context = context;
         contentProvider = TaskRContentProviderImpl.getInstance(context);
         title.set(workItem.getTitle());
         description.set(workItem.getDescription());
@@ -38,6 +38,7 @@ public class WorkItemDetailViewModel {
         this.workItem = workItem;
         this.newWorkItem.set(newWorkItem);
         this.activity = activity;
+        this.context = context;
 
         status.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -61,7 +62,7 @@ public class WorkItemDetailViewModel {
             Long id = contentProvider.addOrUpdateWorkItem(workItem);
 
             if (id != DEFAULT_ID) {
-                Toast.makeText(context, R.string.work_item_updated, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.team_updated, Toast.LENGTH_LONG).show();
             }
             if (newWorkItem.get()) {
                 activity.finish();

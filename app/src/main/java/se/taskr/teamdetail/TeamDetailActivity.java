@@ -9,6 +9,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -26,19 +28,29 @@ import se.taskr.model.User;
 import se.taskr.repository.TaskRContentProvider;
 import se.taskr.repository.TaskRContentProviderImpl;
 import se.taskr.selectuser.SelectUserActivity;
+import se.taskr.workitemdetail.WorkItemDetailActivity;
 
 import static se.taskr.selectuser.SelectUserActivity.SELECTED_USER_ID;
 
 public class TeamDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_TEAM_ID = "team_id";
+    private static final String EXTRA_NEW_TEAM = "new_team";
     private static final int REQUEST_CODE_ADDMEMBER = 1;
     private TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(this);
     private Team team;
+    private boolean newTeam;
 
     public static Intent createIntent(Context context, Team team) {
         Intent intent = new Intent(context, TeamDetailActivity.class);
         intent.putExtra(EXTRA_TEAM_ID, team.getId());
+        intent.putExtra(EXTRA_NEW_TEAM, false);
+        return intent;
+    }
+
+    public static Intent createNewTeamIntent(Context context) {
+        Intent intent = new Intent(context, TeamDetailActivity.class);
+        intent.putExtra(EXTRA_NEW_TEAM, true);
         return intent;
     }
 
@@ -49,31 +61,44 @@ public class TeamDetailActivity extends AppCompatActivity {
         ActivityTeamDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_team_detail);
 
         Intent startingIntent = getIntent();
-        Long teamId = startingIntent.getLongExtra(EXTRA_TEAM_ID, 0);
-        team = contentProvider.getTeam(teamId);
-        final TeamDetailViewModel viewModel = new TeamDetailViewModel(this, team);
-        binding.setTeamDetailViewModel(viewModel);
-
-        final EditText teamNameEditText = (EditText) findViewById(R.id.edittext_team_name);
-        final EditText teamDescriptionEditText = (EditText) findViewById(R.id.edittext_team_description);
-
-        setEditTextListeners(teamNameEditText, viewModel, team);
-        setEditTextListeners(teamDescriptionEditText, viewModel, team);
+        newTeam = startingIntent.getBooleanExtra(EXTRA_NEW_TEAM, true);
 
         android.support.v7.app.ActionBar ab = getSupportActionBar();
-        ab.setTitle(R.string.team_detail);
+        if (newTeam) {
+            ab.setTitle(R.string.new_team);
+            team = new Team("", "");
+        } else {
+            ab.setTitle(R.string.team_detail);
+            Long teamId = startingIntent.getLongExtra(EXTRA_TEAM_ID, 0);
+            team = contentProvider.getTeam(teamId);
+        }
 
-        updateMemberList(GlobalVariables.isOnline(this));
+        if (team != null) {
+            final TeamDetailViewModel viewModel = new TeamDetailViewModel(this, team, newTeam, this);
+            binding.setTeamDetailViewModel(viewModel);
 
-        final Button addMemberButton = (Button) findViewById(R.id.add_member_btn);
-        addMemberButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = SelectUserActivity.createIntent(getApplicationContext(), team.getUsers());
-                startActivityForResult(intent, REQUEST_CODE_ADDMEMBER);
+            if (!newTeam) {
+                final EditText teamNameEditText = (EditText) findViewById(R.id.edittext_team_name);
+                final EditText teamDescriptionEditText = (EditText) findViewById(R.id.edittext_team_description);
+
+                setEditTextListeners(teamNameEditText, viewModel, team);
+                setEditTextListeners(teamDescriptionEditText, viewModel, team);
+
+                updateMemberList(GlobalVariables.isOnline(this));
+
+                final Button addMemberButton = (Button) findViewById(R.id.add_member_btn);
+                addMemberButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = SelectUserActivity.createIntent(getApplicationContext(), team.getUsers());
+                        startActivityForResult(intent, REQUEST_CODE_ADDMEMBER);
+                    }
+                });
             }
-        });
-        handleOfflineMode();
+            handleOfflineMode();
+        } else {
+            finish();
+        }
     }
 
     @Override
@@ -88,7 +113,7 @@ public class TeamDetailActivity extends AppCompatActivity {
         final EditText teamDescriptionEditText = (EditText) findViewById(R.id.edittext_team_description);
         android.support.v7.app.ActionBar ab = getSupportActionBar();
 
-        if (GlobalVariables.isOnline(this)) {
+        if (GlobalVariables.isOnline(this) && !newTeam) {
             ab.setSubtitle(null);
             addMemberButton.setVisibility(View.VISIBLE);
             teamNameEditText.setEnabled(true);
@@ -96,7 +121,7 @@ public class TeamDetailActivity extends AppCompatActivity {
             teamNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_edit_pen_orange, 0);
             teamDescriptionEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_edit_pen_orange, 0);
             updateMemberList(true);
-        } else {
+        } else if (!GlobalVariables.isOnline(this) && !newTeam){
             ab.setSubtitle(R.string.offline_mode);
             addMemberButton.setVisibility(View.INVISIBLE);
             teamNameEditText.setEnabled(false);
@@ -155,6 +180,43 @@ public class TeamDetailActivity extends AppCompatActivity {
                 updateMemberList(GlobalVariables.isOnline(this));
             }
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (GlobalVariables.isOnline(this) && !newTeam) {
+            getMenuInflater().inflate(R.menu.delete_menu, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_item_delete:
+                new AlertDialog.Builder(TeamDetailActivity.this)
+                        .setTitle(R.string.remove_team_dialog_title)
+                        .setMessage(String.format(getResources().getString(R.string.remove_team_dialog_message), team.getName()))
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                contentProvider.removeTeam(team);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .create()
+                        .show();
+                break;
+            default:
+                break;
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setEditTextListeners(EditText editText, final TeamDetailViewModel viewModel, final Team team) {

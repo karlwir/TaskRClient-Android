@@ -34,7 +34,7 @@ import static se.taskr.selectuser.SelectUserActivity.SELECTED_USER_ID;
 
 public class WorkItemDetailActivity extends AppCompatActivity {
 
-    private static final String EXTRA_WORK_ITEM_ID = "team_id";
+    private static final String EXTRA_WORK_ITEM_ID = "work_item_id";
     private static final String EXTRA_NEW_WORK_ITEM = "new_work_item";
     private static final int REQUEST_CODE_ASSIGNUSER = 1;
     private TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(this);
@@ -61,8 +61,9 @@ public class WorkItemDetailActivity extends AppCompatActivity {
         ActivityWorkItemDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_work_item_detail);
 
         Intent startingIntent = getIntent();
-        android.support.v7.app.ActionBar ab = getSupportActionBar();
         newWorkItem = startingIntent.getBooleanExtra(EXTRA_NEW_WORK_ITEM, true);
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+
         if (newWorkItem) {
             ab.setTitle(R.string.new_work_item);
             workItem = new WorkItem("", "", "UNSTARTED");
@@ -70,8 +71,8 @@ public class WorkItemDetailActivity extends AppCompatActivity {
             ab.setTitle(R.string.work_item);
             Long workItemId = startingIntent.getLongExtra(EXTRA_WORK_ITEM_ID, 0);
             workItem = contentProvider.getWorkItem(workItemId);
-
         }
+
         if (workItem != null) {
             final WorkItemDetailViewModel viewModel = new WorkItemDetailViewModel(this, workItem, newWorkItem, this);
             binding.setWorkItemDetailViewModel(viewModel);
@@ -189,7 +190,6 @@ public class WorkItemDetailActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (GlobalVariables.isOnline(this) && !newWorkItem) {
@@ -221,7 +221,6 @@ public class WorkItemDetailActivity extends AppCompatActivity {
             default:
                 break;
         }
-
 
         return super.onOptionsItemSelected(item);
     }

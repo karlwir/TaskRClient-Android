@@ -44,9 +44,15 @@
     <string name="work_item">Uppgift</string>
     <string name="remove_assignee_dialog_title">Ta bort användare</string>
     <string name="remove_assignee_dialog_message" formatted="false">Vill du ta bort %s från %s?</string>
-    <string name="delete_item">Ta bort object</string>
+    <string name="delete_item">Ta bort uppgift</string>
     <string name="remove_work_item_dialog_title">Ta bort upgift</string>
-    <string name="remove_work_item_dialog_message" formatted="false">vill du ta bort uppgiften \"%s\"?</string>
+    <string name="remove_work_item_dialog_message" formatted="false">Vill du ta bort uppgiften \"%s\"?</string>
     <string name="new_work_item">Ny uppgift</string>
-    <string name="singning_in">Signing in</string>
+    <string name="singning_in">Loggar in...</string>
+    <string name="choose_team">Välj grupp</string>
+    <string name="join_team_dialog_title">Gå med i grupp</string>
+    <string name="join_team_dialog_message" formatted="false">Vill du gå med i %s?</string>
+    <string name="new_team">Ny grupp</string>
+    <string name="remove_team_dialog_title">Ta bort grupp</string>
+    <string name="remove_team_dialog_message" formatted="false">Vill du ta bort gruppen %s?</string>
 </resources>

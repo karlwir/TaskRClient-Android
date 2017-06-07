@@ -52,10 +52,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/subheader_team_description"
-                android:hint="@string/name"
+                android:hint="@string/description"
                 android:maxLength="250"
                 android:text="@={teamDetailViewModel.description}"
                 android:id="@+id/edittext_team_description"/>
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_below="@id/edittext_team_description"
+                android:background="@color/colorPrimary"
+                android:onClick="@{() -> teamDetailViewModel.save()}"
+                android:text="@string/add_workitem"
+                android:textColor="#FFF"
+                app:setVisible="@{teamDetailViewModel.newTeam}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +78,8 @@
                 android:layout_marginBottom="@dimen/small_margin"
                 android:textAppearance="@style/TaskR.Text.Subheader"
                 android:text="@string/members"
-                android:id="@+id/subheader_team_members"/>
+                android:id="@+id/subheader_team_members"
+                app:setVisible="@{!teamDetailViewModel.newTeam}" />
 
             <Button
                 android:id="@+id/add_member_btn"
@@ -79,7 +92,8 @@
                 android:layout_gravity="right|top"
                 android:clickable="true"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="@string/add_member" />
+                android:text="@string/add_member"
+                app:setVisible="@{!teamDetailViewModel.newTeam}"  />
 
             <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
                 android:id="@+id/team_members_listview"
@@ -87,7 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
                 android:layout_below="@id/subheader_team_members"
-                android:padding="0dp"/>
+                android:padding="0dp"
+                app:setVisible="@{!teamDetailViewModel.newTeam}" />
 
         </RelativeLayout>
     </ScrollView>

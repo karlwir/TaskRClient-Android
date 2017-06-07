@@ -19,7 +19,8 @@
             android:orientation="vertical"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:padding="@dimen/medium_margin">
+            android:padding="@dimen/medium_margin"
+            android:id="@+id/work_item_detail_layout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -118,7 +119,7 @@
                 android:clickable="true"
                 android:background="?android:attr/selectableItemBackground"
                 android:text="@string/add_assignee"
-                app:setVisible="@{!workItemDetailViewModel.newWorkItem}"  />
+                app:setVisible="@{!workItemDetailViewModel.newWorkItem}" />
 
             <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
                 android:id="@+id/work_item_assignees_listview"

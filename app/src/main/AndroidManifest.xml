@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="se.taskr.login.LoginActivity">
+        <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,9 +26,13 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity android:name=".datadebug.DataDebugActivity" />
-        <activity android:name="se.taskr.teamdetail.TeamDetailActivity" />
-        <activity android:name="se.taskr.selectuser.SelectUserActivity" />
-        <activity android:name="se.taskr.workitemdetail.WorkItemDetailActivity"></activity>
+        <activity android:name=".teamdetail.TeamDetailActivity" />
+        <activity android:name=".selectuser.SelectUserActivity" />
+        <activity android:name=".workitemdetail.WorkItemDetailActivity" />
+        <activity
+            android:name=".teamlist.TeamListActivity"
+            android:label="@string/title_activity_team_list">
+        </activity>
     </application>
 
 </manifest>

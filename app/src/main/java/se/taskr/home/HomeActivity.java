@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,10 +31,12 @@ import se.taskr.repository.OnResultEventListener;
 import se.taskr.repository.TaskRContentProvider;
 import se.taskr.repository.TaskRContentProviderImpl;
 import se.taskr.teamdetail.TeamDetailActivity;
+import se.taskr.teamlist.TeamListActivity;
 import se.taskr.workitemdetail.WorkItemDetailActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private static final int RC_CHOOSE_TEAM = 1;
     private ItemListFragment searchResultFragment;
 
     public static Intent createIntent(Context context) {
@@ -76,12 +79,12 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         handleOfflineMode();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        refreshLoggedInUser();
         handleOfflineMode();
     }
 
@@ -95,6 +98,7 @@ public class HomeActivity extends AppCompatActivity {
             fab.setVisibility(View.INVISIBLE);
             ab.setSubtitle(R.string.offline_mode);
         }
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -107,6 +111,9 @@ public class HomeActivity extends AppCompatActivity {
                     Team team = GlobalVariables.loggedInUser.getTeams().get(0);
                     intent = TeamDetailActivity.createIntent(getApplicationContext(), team);
                     startActivity(intent);
+                } else {
+                    intent = TeamListActivity.createIntent(getApplicationContext());
+                    startActivityForResult(intent, RC_CHOOSE_TEAM);
                 }
                 break;
             case R.id.sign_out:
@@ -183,8 +190,7 @@ public class HomeActivity extends AppCompatActivity {
 
         if (!GlobalVariables.loggedInUser.hasTeam()) {
             MenuItem openTeam = menu.findItem(R.id.open_team_detail);
-            openTeam.setTitle(R.string.has_no_team);
-            openTeam.setEnabled(false);
+            openTeam.setTitle(R.string.choose_team);
         }
 
         if (BuildConfig.DEBUG) {
@@ -193,5 +199,22 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_CHOOSE_TEAM) {
+            if(resultCode == RESULT_OK) {
+                refreshLoggedInUser();
+                invalidateOptionsMenu();
+            }
+        }
+    }
+
+    private void refreshLoggedInUser() {
+        TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(this);
+        Long id = GlobalVariables.loggedInUser.getId();
+        GlobalVariables.loggedInUser = contentProvider.getUser(id);
     }
 }

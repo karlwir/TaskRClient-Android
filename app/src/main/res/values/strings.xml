@@ -65,4 +65,11 @@
     <string name="remove_work_item_dialog_message" formatted="false">Do you want to delete work item \"%s\"?</string>
     <string name="new_work_item">New work item</string>
     <string name="singning_in">Signing in</string>
+    <string name="choose_team">Choose team</string>
+    <string name="title_activity_team_list">TeamListActivity</string>
+    <string name="join_team_dialog_title">Join team</string>
+    <string name="join_team_dialog_message" formatted="false">Would you like to join %s?</string>
+    <string name="new_team">New team</string>
+    <string name="remove_team_dialog_title">Delete team</string>
+    <string name="remove_team_dialog_message" formatted="false">Do you want to delete team %s?</string>
 </resources>
