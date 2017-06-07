@@ -12,37 +12,31 @@
         android:id="@+id/workitem_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="title"
-         android:maxLines="1"
+        android:maxLines="1"
         android:layout_marginRight="85dp"
         android:ellipsize="end"
-        android:textColor="#353535"
-        android:textSize="20sp" />
+        android:textAppearance="@style/TaskR.Text.Body"
+        android:layout_marginBottom="@dimen/small_margin" />
 
     <TextView
         android:id="@+id/workitem_statusbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:width="80dp"
+        android:layout_marginTop="@dimen/small_margin"
         android:textAlignment="center"
         android:textColor="#fff"
         android:layout_alignBaseline="@+id/workitem_title"
         android:layout_alignParentRight="true"
-
         android:gravity="right"
-        android:background="@android:color/darker_gray"
-        android:text="Status" />
+        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/workitem_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/workitem_title"
-
-
-        android:textSize="16sp"
-
-        />
+        android:textAppearance="@style/TaskR.Text.Small" />
 
     <TextView
         android:id="@+id/assigned_user"
@@ -50,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/workitem_description"
-        />
+        android:textAppearance="@style/TaskR.Text.Small"/>
 
 
 </RelativeLayout>
