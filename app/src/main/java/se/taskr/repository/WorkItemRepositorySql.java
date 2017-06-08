@@ -106,7 +106,6 @@ class WorkItemRepositorySql implements WorkItemRepository {
 
     @Override
     public void removeWorkItem(WorkItem workItem) {
-        Log.d("To Delete: ", workItem.toString());
         database.delete(WorkItemsEntry.TABLE_NAME, WorkItemsEntry._ID + " = ?", new String[] { String.valueOf(workItem.getId()) });
     }
 

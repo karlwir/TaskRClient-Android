@@ -69,7 +69,6 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     private void notifyObservers() {
         for(Presenter presenter : observers) {
             presenter.notifyChange();
-            Log.d("TAG","Notify observers");
         }
     }
 
