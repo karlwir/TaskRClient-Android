@@ -44,7 +44,9 @@ public class ItemListPresenterImpl implements ItemListContract.Presenter {
                 items = taskRContentProvider.getDoneWorkItems(notifyObservers);
                 break;
             case 3:
-                items = taskRContentProvider.getWorkItemsByUser(GlobalVariables.loggedInUser);
+                if (GlobalVariables.loggedInUser != null) {
+                    items = taskRContentProvider.getWorkItemsByUser(GlobalVariables.loggedInUser);
+                }
                 break;
             default:
                 items = taskRContentProvider.getWorkItems(notifyObservers);

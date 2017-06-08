@@ -31,8 +31,8 @@
         <activity android:name=".workitemdetail.WorkItemDetailActivity" />
         <activity
             android:name=".teamlist.TeamListActivity"
-            android:label="@string/title_activity_team_list">
-        </activity>
+            android:label="@string/title_activity_team_list"></activity>
+        <activity android:name=".createaccount.CreateAccountActivity"></activity>
     </application>
 
 </manifest>

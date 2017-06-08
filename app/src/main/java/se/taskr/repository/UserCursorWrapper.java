@@ -22,8 +22,9 @@ class UserCursorWrapper extends CursorWrapper {
         String firstname = getString(getColumnIndexOrThrow(TaskRDbContract.UsersEntry.COLUMN_NAME_FIRSTNAME));
         String lastname = getString(getColumnIndexOrThrow(TaskRDbContract.UsersEntry.COLUMN_NAME_LASTNAME));
         String username = getString(getColumnIndexOrThrow(TaskRDbContract.UsersEntry.COLUMN_NAME_USERNAME));
+        String email = getString(getColumnIndexOrThrow(TaskRDbContract.UsersEntry.COLUMN_NAME_EMAIL));
 
-        return new User(id, itemKey, firstname, lastname, username);
+        return new User(id, itemKey, firstname, lastname, username, email);
     }
 
     User getFirstUser() {

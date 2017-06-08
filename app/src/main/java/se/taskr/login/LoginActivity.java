@@ -1,12 +1,15 @@
 package se.taskr.login;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,8 +20,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import se.taskr.R;
+import se.taskr.createaccount.CreateAccountActivity;
 import se.taskr.global.GlobalVariables;
 import se.taskr.home.HomeActivity;
 import se.taskr.model.User;
@@ -26,11 +32,14 @@ import se.taskr.repository.OnResultEventListener;
 import se.taskr.repository.TaskRContentProvider;
 import se.taskr.repository.TaskRContentProviderImpl;
 
+import static se.taskr.createaccount.CreateAccountActivity.CREATED_ACCOUNT_ITEMKEY;
+
 public class LoginActivity extends AppCompatActivity {
 
 
     private static final int RC_SIGN_IN = 1;
-    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_CREATE_ACCOUNT = 2;
+    private static GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
 
     public static Intent createIntent(Context context) {
@@ -50,9 +59,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onResume();
         killGoogleApiClient();
         prepareLoginScreen();
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        } else {
+            createGoogleApiClient();
+        }
     }
 
     private void prepareLoginScreen() {
+        hideProgressDialog();
 
         final TaskRContentProvider provider = TaskRContentProviderImpl.getInstance(this);
         final SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
@@ -72,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                         .edit()
                         .putLong(getResources().getString(R.string.prefs_last_user_id), -1L)
                         .apply();
-                prepareLoginScreen();
+                googleSignOut();
             }
         });
 
@@ -98,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                 final Intent intent = HomeActivity.createIntent(getApplicationContext());
                 continueButton.setText(getResources().getString(R.string.continue_as) + " @" + GlobalVariables.loggedInUser.getUsername());
                 continueButton.setVisibility(View.VISIBLE);
+                changeUser.setVisibility(View.VISIBLE);
 
                 continueButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -108,9 +124,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-                changeUser.setVisibility(View.VISIBLE);
-
             } else {
+                createGoogleApiClient();
                 googleButton.setVisibility(View.VISIBLE);
                 changeUser.setVisibility(View.INVISIBLE);
                 googleButton.setEnabled(true);
@@ -144,15 +159,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void googleSignIn() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, null)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void googleSignOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                prepareLoginScreen();
+                killGoogleApiClient();
+            }
+        });
     }
 
     @Override
@@ -160,9 +178,30 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            if (resultCode == Activity.RESULT_OK) {
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                handleSignInResult(result);
+            } else {
+                prepareLoginScreen();
+            }
+        } else if (requestCode == RC_CREATE_ACCOUNT) {
+            if (resultCode == Activity.RESULT_OK) {
+                final TaskRContentProvider contentProvider = TaskRContentProviderImpl.getInstance(this);
+                final String newAccountItemkey = data.getStringExtra(CREATED_ACCOUNT_ITEMKEY);
+                contentProvider.initData(new OnResultEventListener() {
+                    @Override
+                    public void onResult(Object result) {
+                        showProgressDialog();
+                        User user = contentProvider.getUserByItemKey(newAccountItemkey);
+                        GlobalVariables.loggedInUser = user;
+                        Intent homeIntent = HomeActivity.createIntent(getApplicationContext());
+                        startActivity(homeIntent);
+                        finish();
+                    }
+                });
+            }
         }
+
     }
 
     @Override
@@ -176,6 +215,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onStop();
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
+        }
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        } else {
+            createGoogleApiClient();
         }
     }
 
@@ -192,11 +244,23 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void createGoogleApiClient() {
+        if (mGoogleApiClient == null) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this, null)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+        }
+    }
+
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
-            GoogleSignInAccount acct = result.getSignInAccount();
+            final GoogleSignInAccount acct = result.getSignInAccount();
             String signInEmail = acct.getEmail();
-            final Intent intent = HomeActivity.createIntent(getApplicationContext());
+            final Intent homeIntent = HomeActivity.createIntent(getApplicationContext());
 
             TaskRSignInHttpClient signInClient = TaskRSignInHttpClient.getInstance(getApplicationContext());
             signInClient.signInByEmail(signInEmail, new OnResultEventListener<String>() {
@@ -210,13 +274,15 @@ public class LoginActivity extends AppCompatActivity {
                                 User user = contentProvider.getUserByItemKey(userItemKey);
                                 GlobalVariables.loggedInUser = user;
                                 killGoogleApiClient();
-                                startActivity(intent);
+                                startActivity(homeIntent);
                                 finish();
                             }
                         });
 
                     } else {
-                        // TODO: Create user for google account...
+                        killGoogleApiClient();
+                        final Intent createAccountIntent = CreateAccountActivity.createIntentWIthGoogleAccount(getApplicationContext(), acct);
+                        startActivityForResult(createAccountIntent, RC_CREATE_ACCOUNT);
                     }
 
                 }
@@ -243,4 +309,5 @@ public class LoginActivity extends AppCompatActivity {
             mProgressDialog.hide();
         }
     }
+
 }

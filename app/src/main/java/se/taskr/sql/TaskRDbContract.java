@@ -24,6 +24,7 @@ public class TaskRDbContract {
         public static final String COLUMN_NAME_FIRSTNAME = "firstname";
         public static final String COLUMN_NAME_LASTNAME = "lastname";
         public static final String COLUMN_NAME_USERNAME = "username";
+        public static final String COLUMN_NAME_EMAIL = "email";
     }
 
     public static class TeamsEntry implements BaseColumns {

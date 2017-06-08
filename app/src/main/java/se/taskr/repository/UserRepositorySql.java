@@ -106,6 +106,7 @@ class UserRepositorySql implements UserRepository {
         cv.put(UsersEntry.COLUMN_NAME_FIRSTNAME, user.getFirstname());
         cv.put(UsersEntry.COLUMN_NAME_LASTNAME, user.getLastname());
         cv.put(UsersEntry.COLUMN_NAME_USERNAME, user.getUsername());
+        cv.put(UsersEntry.COLUMN_NAME_EMAIL, user.getEmail());
 
         return cv;
     }

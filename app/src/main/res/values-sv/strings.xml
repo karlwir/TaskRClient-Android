@@ -55,4 +55,8 @@
     <string name="new_team">Ny grupp</string>
     <string name="remove_team_dialog_title">Ta bort grupp</string>
     <string name="remove_team_dialog_message" formatted="false">Vill du ta bort gruppen %s?</string>
+    <string name="firstname">Förnamn</string>
+    <string name="lastname">Efternamn</string>
+    <string name="create_account">Skapa konto</string>
+    <string name="username">Username</string>
 </resources>

@@ -105,6 +105,32 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
     }
 
     @Override
+    public long createUserAccount(User user, OnResultEventListener listener) {
+        final long id = userRepository.addOrUpdateUser(user);
+        if (user.hasBeenSavedToServer()) {
+            userHttpClient.putUser(user);
+        } else {
+            userHttpClient.postUser(user, listener);
+        }
+        return id;
+    }
+
+    @Override
+    public List<User> getUsers(final OnResultEventListener listener) {
+        userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
+            @Override
+            public void onResult(List<User> result) {
+                if (result != null) {
+                    syncUsers(result, true);
+                    listener.onResult(null);
+                }
+
+            }
+        });
+        return userRepository.getUsers(false);
+    }
+
+    @Override
     public List<User> getUsers(final boolean notifyObservers) {
         if (GlobalVariables.isOnline(context)) {
             userHttpClient.getUsers(new OnResultEventListener<List<User>>() {
@@ -139,7 +165,7 @@ public class TaskRContentProviderImpl implements TaskRContentProvider {
             userHttpClient.postUser(user, new OnResultEventListener<String>() {
                 @Override
                 public void onResult(String generatedKey) {
-                    User _user = new User(id, generatedKey, user.getFirstname(), user.getLastname(), user.getUsername() );
+                    User _user = new User(id, generatedKey, user.getFirstname(), user.getLastname(), user.getUsername(), user.getEmail());
                     userRepository.addOrUpdateUser(_user);
                 }
             });

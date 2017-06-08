@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TaskRDbHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "taskr.db";
-    private static final int DB_VERSION = 11;
+    private static final int DB_VERSION = 14;
     private static TaskRDbHelper instance;
 
     private static final String CREATE_TABLE_WORKITEMS =
@@ -27,7 +27,8 @@ public class TaskRDbHelper extends SQLiteOpenHelper {
                     TaskRDbContract.UsersEntry.COLUMN_NAME_ITEMKEY + " TEXT, " +
                     TaskRDbContract.UsersEntry.COLUMN_NAME_FIRSTNAME + " TEXT NOT NULL, " +
                     TaskRDbContract.UsersEntry.COLUMN_NAME_LASTNAME + " TEXT NOT NULL, " +
-                    TaskRDbContract.UsersEntry.COLUMN_NAME_USERNAME + " TEXT NOT NULL);";
+                    TaskRDbContract.UsersEntry.COLUMN_NAME_USERNAME + " TEXT NOT NULL, " +
+                    TaskRDbContract.UsersEntry.COLUMN_NAME_EMAIL + " TEXT NOT NULL);";
 
     private static final String CREATE_TABLE_TEAMS =
             "CREATE TABLE " + TaskRDbContract.TeamsEntry.TABLE_NAME + " (" +

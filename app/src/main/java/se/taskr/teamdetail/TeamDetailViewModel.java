@@ -16,9 +16,9 @@ import se.taskr.repository.TaskRContentProviderImpl;
 public class TeamDetailViewModel {
     public ObservableField<String> name = new ObservableField<>();
     public ObservableField<String> description = new ObservableField<>();
-    public ObservableField<Boolean> newTeam = new ObservableField<>();
     public ObservableField<String> nameError = new ObservableField<>();
     public ObservableField<String> descriptionError = new ObservableField<>();
+    public ObservableField<Boolean> newTeam = new ObservableField<>();
 
     private final TeamDetailActivity activity;
     private Context context;

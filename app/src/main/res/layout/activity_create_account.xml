@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:customviews="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="createAccountDetailViewModel"
+            type="se.taskr.createaccount.CreateAccountViewModel"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="@dimen/medium_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/firstname"
+                android:id="@+id/subheader_create_account_firstname" />
+
+            <EditText
+                android:theme="@style/TaskR.EditableText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subheader_create_account_firstname"
+                android:hint="@string/firstname"
+                android:maxLength="25"
+                android:text="@={createAccountDetailViewModel.firstname}"
+                android:id="@+id/edittext_create_account_firstname" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edittext_create_account_firstname"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/lastname"
+                android:id="@+id/subheader_create_account_lastname" />
+
+            <EditText
+                android:theme="@style/TaskR.EditableText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subheader_create_account_lastname"
+                android:hint="@string/lastname"
+                android:maxLength="250"
+                android:text="@={createAccountDetailViewModel.lastname}"
+                android:id="@+id/edittext_create_account_lastname" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edittext_create_account_lastname"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:textAppearance="@style/TaskR.Text.Subheader"
+                android:text="@string/username"
+                android:id="@+id/subheader_create_account_username" />
+
+            <EditText
+                android:theme="@style/TaskR.EditableText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subheader_create_account_username"
+                android:hint="@string/username"
+                android:maxLength="250"
+                android:text="@={createAccountDetailViewModel.username}"
+                android:id="@+id/edittext_create_account_username" />
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_below="@id/edittext_create_account_username"
+                android:background="@color/colorPrimary"
+                android:onClick="@{() -> createAccountDetailViewModel.save()}"
+                android:text="@string/create_account"
+                android:textColor="#FFF" />
+
+        </RelativeLayout>
+    </ScrollView>
+</layout>
