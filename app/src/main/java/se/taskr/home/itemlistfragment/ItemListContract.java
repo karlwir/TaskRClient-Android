@@ -13,6 +13,7 @@ public interface ItemListContract {
         void navigateToDetailView(WorkItem workItem);
         void updateAdapter();
     }
+
     interface Presenter {
         interface OnItemClickedListener {
             void onItemClicked(int id);

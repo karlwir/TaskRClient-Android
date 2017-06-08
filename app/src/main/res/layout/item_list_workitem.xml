@@ -25,10 +25,10 @@
         android:width="80dp"
         android:layout_marginTop="@dimen/small_margin"
         android:textAlignment="center"
-        android:textColor="#fff"
         android:layout_alignBaseline="@+id/workitem_title"
         android:layout_alignParentRight="true"
         android:gravity="right"
+        android:textAppearance="@style/TaskR.Text.StatusBar"
         android:background="@android:color/darker_gray" />
 
     <TextView

@@ -23,9 +23,7 @@ class WorkItemCursorWrapper extends CursorWrapper {
         String description = getString(getColumnIndexOrThrow(TaskRDbContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION));
         String status = getString(getColumnIndexOrThrow(TaskRDbContract.WorkItemsEntry.COLUMN_NAME_STATUS));
 
-        WorkItem workitem = new WorkItem(id, itemKey, title, description, status);
-
-        return workitem;
+        return new WorkItem(id, itemKey, title, description, status);
     }
 
     WorkItem getFirstWorkItem() {

@@ -34,15 +34,13 @@ public class VectorCircleSegment extends View {
     float angle;
     boolean active;
 
-//    public CircleSegment(Context context, String text, String title, float angle, int resIdBack, int resIdFill) {
-
     public VectorCircleSegment(Context context, AttributeSet attrs, String number, String title, float radius, float angle, int backColor, int fillColor) {
         super(context, attrs);
         this.number = number;
         this.title = title;
         this.angle = angle;
-        if (radius > 150) {
-            radius = 150;
+        if (radius > 190) {
+            radius = 190;
         }
         this.radius = radius;
 
@@ -50,18 +48,12 @@ public class VectorCircleSegment extends View {
         paint.setDither(true);
         paint.setColor(getResources().getColor(fillColor));
         paint.setStyle(Paint.Style.FILL);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(radius / 14.0f);
 
         backPaint = new Paint();
         backPaint.setColor(getResources().getColor(backColor));
         backPaint.setStyle(Paint.Style.FILL);
-        backPaint.setStrokeJoin(Paint.Join.ROUND);
-        backPaint.setStrokeCap(Paint.Cap.ROUND);
         backPaint.setAntiAlias(true);
-        backPaint.setStrokeWidth(radius / 14.0f);
 
         numberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         numberPaint.setTextSize(radius/2);

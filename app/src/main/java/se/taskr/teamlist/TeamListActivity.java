@@ -6,10 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -20,14 +18,10 @@ import java.util.List;
 import se.taskr.R;
 import se.taskr.global.GlobalVariables;
 import se.taskr.model.Team;
-import se.taskr.model.User;
 import se.taskr.repository.TaskRContentProvider;
 import se.taskr.repository.TaskRContentProviderImpl;
 import se.taskr.teamdetail.TeamDetailActivity;
 import se.taskr.utils.TeamListAdapter;
-import se.taskr.utils.UserListAdapter;
-
-import static android.R.attr.clickable;
 
 public class TeamListActivity extends AppCompatActivity {
 

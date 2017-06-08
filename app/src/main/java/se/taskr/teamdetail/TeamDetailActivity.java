@@ -28,7 +28,6 @@ import se.taskr.model.User;
 import se.taskr.repository.TaskRContentProvider;
 import se.taskr.repository.TaskRContentProviderImpl;
 import se.taskr.selectuser.SelectUserActivity;
-import se.taskr.workitemdetail.WorkItemDetailActivity;
 
 import static se.taskr.selectuser.SelectUserActivity.SELECTED_USER_ID;
 

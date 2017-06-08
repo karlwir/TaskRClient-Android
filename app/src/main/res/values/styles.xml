@@ -38,4 +38,9 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="TaskR.Text.StatusBar" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

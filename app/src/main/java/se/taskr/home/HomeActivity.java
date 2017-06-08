@@ -10,14 +10,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-
-import java.util.List;
-import java.util.Random;
 
 import se.taskr.BuildConfig;
 import se.taskr.login.LoginActivity;
@@ -26,8 +22,6 @@ import se.taskr.datadebug.DataDebugActivity;
 import se.taskr.global.GlobalVariables;
 import se.taskr.home.itemlistfragment.ItemListFragment;
 import se.taskr.model.Team;
-import se.taskr.model.User;
-import se.taskr.repository.OnResultEventListener;
 import se.taskr.repository.TaskRContentProvider;
 import se.taskr.repository.TaskRContentProviderImpl;
 import se.taskr.teamdetail.TeamDetailActivity;

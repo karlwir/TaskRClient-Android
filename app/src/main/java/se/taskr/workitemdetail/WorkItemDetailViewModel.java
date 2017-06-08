@@ -3,7 +3,6 @@ package se.taskr.workitemdetail;
 import android.content.Context;
 import android.databinding.Observable;
 import android.databinding.ObservableField;
-import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 import se.taskr.R;

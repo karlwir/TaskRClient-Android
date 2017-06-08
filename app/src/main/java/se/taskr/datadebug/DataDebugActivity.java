@@ -33,10 +33,6 @@ public class DataDebugActivity extends AppCompatActivity {
         TextView debug_users_timestamp = (TextView) findViewById(R.id.debug_users_timestamp);
         TextView debug_teams_timestamp = (TextView) findViewById(R.id.debug_teams_timestamp);
 
-//        debug_workitems_timestamp.setText(workItemTimestamp.toString());
-//        debug_users_timestamp.setText(usersTimestamp.toString());
-//        debug_teams_timestamp.setText(teamsTimestamp.toString());
-
         debug_workitems_timestamp.setText(new Date(workItemTimestamp).toString());
         debug_users_timestamp.setText(new Date(usersTimestamp).toString());
         debug_teams_timestamp.setText(new Date(teamsTimestamp).toString());

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="taskr.se.taskr.datadebug.DataDebugActivity">
+    tools:context="se.taskr.datadebug.DataDebugActivity">
     <LinearLayout
         android:padding="5dp"
         android:layout_width="match_parent"
@@ -14,17 +14,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:textStyle="bold"
-            android:layout_marginBottom="5dp"
+            android:textAppearance="@style/TaskR.Text.Subheader"
+            android:layout_marginTop="@dimen/medium_margin"
             android:text="@string/workitems_synced" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            android:textSize="22sp"
-            android:layout_marginLeft="5dp"
+            android:textAppearance="@style/TaskR.Text.Body"
+            android:layout_marginBottom="@dimen/small_margin"
             android:id="@+id/debug_workitems_timestamp"/>
 
         <View
@@ -38,17 +36,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:textStyle="bold"
-            android:layout_marginBottom="5dp"
+            android:textAppearance="@style/TaskR.Text.Subheader"
+            android:layout_marginTop="@dimen/medium_margin"
             android:text="@string/users_synced" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            android:textSize="22sp"
-            android:layout_marginLeft="5dp"
+            android:textAppearance="@style/TaskR.Text.Body"
+            android:layout_marginBottom="@dimen/small_margin"
             android:id="@+id/debug_users_timestamp"/>
 
         <View
@@ -62,17 +58,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:textStyle="bold"
-            android:layout_marginBottom="5dp"
+            android:textAppearance="@style/TaskR.Text.Subheader"
+            android:layout_marginTop="@dimen/medium_margin"
             android:text="@string/teams_synced" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            android:textSize="22sp"
-            android:layout_marginLeft="5dp"
+            android:textAppearance="@style/TaskR.Text.Body"
+            android:layout_marginBottom="@dimen/small_margin"
             android:id="@+id/debug_teams_timestamp"/>
 
         <View
